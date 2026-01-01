@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.shapely_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/shapely_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.shapely_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;shapely_utils.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Functions to handle shapely operations and conversions - curve, coords, polygon</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">shapely</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Polygon</span><span class="p">,</span>
+    <span class="n">MultiPolygon</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">bl_ext.blender_org.simplify_curves_plus</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">curve_simplify</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..chunk_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">CamPathChunkBuilder</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+
+
+<div class="viewcode-block" id="shapely_remove_doubles">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.shapely_remove_doubles">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shapely_remove_doubles</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">optimize_threshold</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove duplicate points from the boundary of a shape.</span>
+
+<span class="sd">    This function simplifies the boundary of a given shape by removing</span>
+<span class="sd">    duplicate points using the Ramer-Douglas-Peucker algorithm. It iterates</span>
+<span class="sd">    through each contour of the shape, applies the simplification, and adds</span>
+<span class="sd">    the resulting contours to a new shape. The optimization threshold can be</span>
+<span class="sd">    adjusted to control the level of simplification.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        p (Shape): The shape object containing boundaries to be simplified.</span>
+<span class="sd">        optimize_threshold (float): A threshold value that influences the</span>
+<span class="sd">            simplification process.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Shape: A new shape object with simplified boundaries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">optimize_threshold</span> <span class="o">*=</span> <span class="mf">0.000001</span>
+
+    <span class="n">soptions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">,</span> <span class="s2">&quot;distance&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">optimize_threshold</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">optimize_threshold</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">boundary</span><span class="p">):</span>  <span class="c1"># in range(0,len(p)):</span>
+        <span class="n">veclist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">veclist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vector</span><span class="p">((</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">curve_simplify</span><span class="o">.</span><span class="n">simplify_RDP</span><span class="p">(</span><span class="n">veclist</span><span class="p">,</span> <span class="n">soptions</span><span class="p">)</span>
+        <span class="n">nc</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+            <span class="n">nc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">pnew</span><span class="o">.</span><span class="n">addContour</span><span class="p">(</span><span class="n">nc</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">isHole</span><span class="p">(</span><span class="n">ci</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pnew</span><span class="o">.</span><span class="n">addContour</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">ci</span><span class="p">],</span> <span class="n">p</span><span class="o">.</span><span class="n">isHole</span><span class="p">(</span><span class="n">ci</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pnew</span></div>
+
+
+
+<div class="viewcode-block" id="shapely_to_multipolygon">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.shapely_to_multipolygon">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shapely_to_multipolygon</span><span class="p">(</span><span class="n">anydata</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Shapely geometry to a MultiPolygon.</span>
+
+<span class="sd">    This function takes a Shapely geometry object and converts it to a</span>
+<span class="sd">    MultiPolygon. If the input geometry is already a MultiPolygon, it</span>
+<span class="sd">    returns it as is. If the input is a Polygon and not empty, it wraps the</span>
+<span class="sd">    Polygon in a MultiPolygon. If the input is an empty Polygon, it returns</span>
+<span class="sd">    an empty MultiPolygon. For any other geometry type, it prints a message</span>
+<span class="sd">    indicating that the conversion was aborted and returns an empty</span>
+<span class="sd">    MultiPolygon.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        anydata (shapely.geometry.base.BaseGeometry): A Shapely geometry object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        shapely.geometry.MultiPolygon: A MultiPolygon representation of the input</span>
+<span class="sd">        geometry.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Geometry Type: </span><span class="si">{</span><span class="n">anydata</span><span class="o">.</span><span class="n">geom_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Anydata Empty: </span><span class="si">{</span><span class="n">anydata</span><span class="o">.</span><span class="n">is_empty</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1">## bug: empty mesh circle makes anydata empty: geometry type &#39;GeometryCollection&#39;</span>
+    <span class="k">if</span> <span class="n">anydata</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;MultiPolygon&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">anydata</span>
+    <span class="k">elif</span> <span class="n">anydata</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">anydata</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">MultiPolygon</span><span class="p">([</span><span class="n">anydata</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shapely Conversion Aborted&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="shapely_to_coordinates">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.shapely_to_coordinates">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shapely_to_coordinates</span><span class="p">(</span><span class="n">anydata</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Shapely geometry object to a list of coordinates.</span>
+
+<span class="sd">    This function takes a Shapely geometry object and extracts its</span>
+<span class="sd">    coordinates based on the geometry type. It handles various types of</span>
+<span class="sd">    geometries including Polygon, MultiPolygon, LineString, MultiLineString,</span>
+<span class="sd">    and GeometryCollection. If the geometry is empty or of type MultiPoint,</span>
+<span class="sd">    it returns an empty list. The coordinates are returned in a nested list</span>
+<span class="sd">    format, where each sublist corresponds to the exterior or interior</span>
+<span class="sd">    coordinates of the geometries.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        anydata (shapely.geometry.base.BaseGeometry): A Shapely geometry object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of coordinates extracted from the input geometry.</span>
+<span class="sd">        The structure of the list depends on the geometry type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">anydata</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">seq</span>
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">:</span>
+        <span class="n">clen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interior</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">interiors</span><span class="p">:</span>
+            <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;MultiPolygon&quot;</span><span class="p">:</span>
+        <span class="n">clen</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="n">clen</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">interior</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">interiors</span><span class="p">:</span>
+                <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;MultiLineString&quot;</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">linestring</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linestring</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;LineString&quot;</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;MultiPoint&quot;</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;GeometryCollection&quot;</span><span class="p">:</span>
+        <span class="n">clen</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>  <span class="c1"># TODO</span>
+            <span class="n">clen</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="n">seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">interior</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">interiors</span><span class="p">:</span>
+                <span class="n">seq</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">interior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">seq</span></div>
+
+
+
+<div class="viewcode-block" id="shapely_to_curve">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.shapely_to_curve">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shapely_to_curve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cyclic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a 3D curve object in Blender from a Shapely geometry.</span>
+
+<span class="sd">    This function takes a Shapely geometry and converts it into a 3D curve</span>
+<span class="sd">    object in Blender. It extracts the coordinates from the Shapely geometry</span>
+<span class="sd">    and creates a new curve object with the specified name. The curve is</span>
+<span class="sd">    created in the 3D space at the given z-coordinate, with a default weight</span>
+<span class="sd">    for the points.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the curve object to be created.</span>
+<span class="sd">        p (shapely.geometry): A Shapely geometry object from which to extract</span>
+<span class="sd">            coordinates.</span>
+<span class="sd">        z (float): The z-coordinate for all points of the curve.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bpy.types.Object: The newly created curve object in Blender.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+    <span class="n">verts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">shapely_to_coordinates</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># weight</span>
+
+    <span class="n">curvedata</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">curves</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CURVE&quot;</span><span class="p">)</span>
+    <span class="n">curvedata</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="s2">&quot;3D&quot;</span>
+
+    <span class="n">objectdata</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">curvedata</span><span class="p">)</span>
+    <span class="n">objectdata</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># object origin</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">objectdata</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
+        <span class="n">polyline</span> <span class="o">=</span> <span class="n">curvedata</span><span class="o">.</span><span class="n">splines</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;POLY&quot;</span><span class="p">)</span>
+        <span class="n">polyline</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">num</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">num</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">polyline</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">co</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">objectdata</span>
+    <span class="n">objectdata</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">objectdata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">use_cyclic_u</span> <span class="o">=</span> <span class="n">cyclic</span>
+
+    <span class="k">return</span> <span class="n">objectdata</span>  <span class="c1"># bpy.context.active_object</span></div>
+
+
+
+<span class="c1"># this does more cleve chunks to Poly with hierarchies... ;)</span>
+<div class="viewcode-block" id="chunks_to_shapely">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.chunks_to_shapely">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chunks_to_shapely</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="c1"># print (&#39;analyzing paths&#39;)</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># first convert chunk to poly</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># pchunk=[]</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">ppart</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># then add hierarchy relations</span>
+        <span class="k">for</span> <span class="n">ptest</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ppart</span> <span class="o">!=</span> <span class="n">ptest</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">ppart</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ptest</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ptest</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">ppart</span><span class="o">.</span><span class="n">poly</span><span class="p">):</span>
+                        <span class="c1"># hierarchy works like this: - children get milled first.</span>
+                        <span class="n">ppart</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ptest</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># now make only simple polygons with holes, not more polys inside others</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">):</span>
+                    <span class="c1"># nparents serves as temporary storage for parents,</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="p">]</span>
+                    <span class="c1"># not to get mixed with the first parenting during the check</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># then subtract the 1st level holes</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+                <span class="c1"># Polygon( ch.parents[0].poly, ch.poly)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;chunksToShapely oops!&quot;</span><span class="p">)</span>
+
+                <span class="n">lastPt</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">0.0000003</span>
+                <span class="n">newPoints</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">lastPt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                            <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                            <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                        <span class="k">if</span> <span class="n">toleranceXok</span> <span class="ow">or</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                            <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                            <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                        <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+
+                <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">toleranceXok</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                    <span class="n">newPoints</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+                <span class="n">ch</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newPoints</span><span class="p">)</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="c1"># print(&#39;chunksToShapely double oops!&#39;)</span>
+
+                    <span class="n">lastPt</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">0.0000003</span>
+                    <span class="n">newPoints</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                        <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="c1"># print( &#39;{0:.9f}, {0:.9f}, {0:.9f}&#39;.format(pt[0], pt[1], pt[2]) )</span>
+                        <span class="c1"># print(pt)</span>
+                        <span class="k">if</span> <span class="n">lastPt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                                <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                                <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                            <span class="k">if</span> <span class="n">toleranceXok</span> <span class="ow">or</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                                <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                                <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                            <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                        <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                        <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">toleranceXok</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                        <span class="n">newPoints</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="c1"># print(&#39;starting and ending points too close, removing ending point&#39;)</span>
+
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newPoints</span><span class="p">)</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
+                        <span class="n">ch</span><span class="o">.</span><span class="n">poly</span>
+                    <span class="p">)</span>  <span class="c1"># Polygon( ch.parents[0].poly, ch.poly)</span>
+
+    <span class="n">returnpolys</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">polyi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)):</span>  <span class="c1"># export only the booleaned polygons</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">polyi</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">returnpolys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+
+    <span class="n">polys</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">returnpolys</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">polys</span></div>
+
+
+
+<div class="viewcode-block" id="shapely_to_chunks">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/shapely_utils/index.html#fabex.utilities.shapely_utils.shapely_to_chunks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shapely_to_chunks</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">):</span>
+    <span class="n">chunk_builders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">shapely_to_coordinates</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">has_z</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">chunk_builders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">chunk_builders</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>  <span class="c1"># this is for smaller shapes first.</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chunk_builders</span><span class="p">]</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

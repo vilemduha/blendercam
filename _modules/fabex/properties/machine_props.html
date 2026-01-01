@@ -1,0 +1,948 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.properties.machine_props &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/properties/machine_props';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.properties.machine_props</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;machine_settings.py&#39;</span>
+
+
+<span class="sd">All CAM machine properties.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.props</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+    <span class="n">FloatVectorProperty</span><span class="p">,</span>
+    <span class="n">IntProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">PropertyGroup</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">PRECISION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.machine_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">update_machine</span><span class="p">,</span>
+    <span class="n">update_unit_system</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CAM_MACHINE_Properties</span><span class="p">(</span><span class="n">PropertyGroup</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;stores all data for machines&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.path_color">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.path_color">[docs]</a>
+    <span class="n">path_color</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Path Color&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Color of the CAM_path object in the viewport&quot;</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;COLOR&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.wire_color">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.wire_color">[docs]</a>
+    <span class="n">wire_color</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wire Color&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Color of the CAM_Machine box in the viewport&quot;</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;COLOR&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.unit_system">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.unit_system">[docs]</a>
+    <span class="n">unit_system</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Units&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;INCHES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Inches (in)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Dimensions use Inches (Imperial)&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;MILLIMETERS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Millimeters (mm)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Dimensions use Millimeters (Metric)&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">update_unit_system</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+    <span class="c1"># name = StringProperty(name=&quot;Machine Name&quot;, default=&quot;Machine&quot;)</span>
+<div class="viewcode-block" id="CAM_MACHINE_Properties.post_processor">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.post_processor">[docs]</a>
+    <span class="n">post_processor</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Post Processor&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;ISO&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Iso&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Exports standardized gcode ISO 6983 (RS-274)&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;MACH3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Mach3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default mach3&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;EMC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;LinuxCNC - EMC2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Linux based CNC control software - formally EMC2&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;FADAL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Fadal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Fadal VMC&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;GRBL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;grbl&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Optimized gcode for grbl firmware on Arduino with cnc shield&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;HEIDENHAIN&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Heidenhain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Heidenhain&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;HEIDENHAIN530&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Heidenhain530&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Heidenhain530&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TNC151&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Heidenhain TNC151&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Post Processor for the Heidenhain TNC151 machine&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIEGKX1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sieg KX1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sieg KX1&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;HM50&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Hafco HM-50&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Hafco HM-50&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;CENTROID&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Centroid M40&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Centroid M40&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;ANILAM&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Anilam Crusader M&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Anilam Crusader M&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;GRAVOS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Gravos&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Gravos&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;WIN-PC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;WinPC-NC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;German CNC by Burkhard Lewetz&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SHOPBOT MTC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ShopBot MTC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ShopBot MTC&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;LYNX_OTTER_O&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lynx Otter o&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lynx Otter o&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;User Custom&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Customizable User Post Processor (based on ISO)&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Post Processor&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;MACH3&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+    <span class="c1"># position definitions:</span>
+<div class="viewcode-block" id="CAM_MACHINE_Properties.use_position_definitions">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.use_position_definitions">[docs]</a>
+    <span class="n">use_position_definitions</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Use Position Definitions&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Define own positions for op start, toolchange, ending position&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.starting_position">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.starting_position">[docs]</a>
+    <span class="n">starting_position</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Start Position&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">update_machine</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.mtc_position">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.mtc_position">[docs]</a>
+    <span class="n">mtc_position</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MTC Position&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">update_machine</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.ending_position">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.ending_position">[docs]</a>
+    <span class="n">ending_position</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;End Position&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">update_machine</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.working_area">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.working_area">[docs]</a>
+    <span class="n">working_area</span><span class="p">:</span> <span class="n">FloatVectorProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Work Area&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mf">0.500</span><span class="p">,</span> <span class="mf">0.500</span><span class="p">,</span> <span class="mf">0.100</span><span class="p">),</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">update_machine</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.feedrate_min">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.feedrate_min">[docs]</a>
+    <span class="n">feedrate_min</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Feedrate Minimum /min&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.feedrate_max">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.feedrate_max">[docs]</a>
+    <span class="n">feedrate_max</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Feedrate Maximum /min&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.feedrate_default">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.feedrate_default">[docs]</a>
+    <span class="n">feedrate_default</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Feedrate Default /min&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.hourly_rate">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.hourly_rate">[docs]</a>
+    <span class="n">hourly_rate</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Price per Hour&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="c1"># UNSUPPORTED:</span>
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_min">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_min">[docs]</a>
+    <span class="n">spindle_min</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spindle Speed Minimum RPM&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_max">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_max">[docs]</a>
+    <span class="n">spindle_max</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spindle Speed Maximum RPM&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_default">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_default">[docs]</a>
+    <span class="n">spindle_default</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spindle Speed Default RPM&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_start_time">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_start_time">[docs]</a>
+    <span class="n">spindle_start_time</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spindle Start Delay Seconds&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Wait for the spindle to start spinning before starting &quot;</span>
+        <span class="s2">&quot;the feeds , in seconds&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.0000</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="c1"># Spindle Slow Start Settings</span>
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_slow_start_enable">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_slow_start_enable">[docs]</a>
+    <span class="n">spindle_slow_start_enable</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spindle Slow Start Enable&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enable gradual spindle speed ramping from minimum to target speed&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_slow_start_steps">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_slow_start_steps">[docs]</a>
+    <span class="n">spindle_slow_start_steps</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Slow Start Steps&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of intermediate speed steps when ramping from minimum to target spindle speed. More steps = smoother acceleration&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_slow_start_skip_threshold">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_slow_start_skip_threshold">[docs]</a>
+    <span class="n">spindle_slow_start_skip_threshold</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Skip Threshold (RPM)&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If target speed is within this RPM of the minimum speed, skip slow start and go directly to target&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.spindle_slow_start_total_time">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.spindle_slow_start_total_time">[docs]</a>
+    <span class="n">spindle_slow_start_total_time</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Total Ramp Time (seconds)&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Total time in seconds to ramp from minimum to target speed, distributed equally across all steps&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.axis_4">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.axis_4">[docs]</a>
+    <span class="n">axis_4</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;4th Axis&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Machine has 4th axis&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.axis_5">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.axis_5">[docs]</a>
+    <span class="n">axis_5</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;5th Axis&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Machine has 5th axis&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.eval_splitting">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.eval_splitting">[docs]</a>
+    <span class="n">eval_splitting</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Split Files&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Split gcode file with large number of operations&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># split large files</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.split_limit">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.split_limit">[docs]</a>
+    <span class="n">split_limit</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Operations per File&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Split files with larger number of operations than this&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">20000000</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">800000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.collet_size">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.collet_size">[docs]</a>
+    <span class="n">collet_size</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Collet Size&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Collet size for collision detection&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">33</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">320000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="c1"># post processor options</span>
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.output_block_numbers">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.output_block_numbers">[docs]</a>
+    <span class="n">output_block_numbers</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output Block Numbers&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Output block numbers ie N10 at start of line&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.start_block_number">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.start_block_number">[docs]</a>
+    <span class="n">start_block_number</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Start Block Number&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The starting block number ie 10&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.block_number_increment">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.block_number_increment">[docs]</a>
+    <span class="n">block_number_increment</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Block Number Increment&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;How much the block number should &quot;</span> <span class="s2">&quot;increment for the next line&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.output_tool_definitions">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.output_tool_definitions">[docs]</a>
+    <span class="n">output_tool_definitions</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output Tool Definitions&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Output tool definitions&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.output_tool_change">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.output_tool_change">[docs]</a>
+    <span class="n">output_tool_change</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output Tool Change Commands&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Output tool change commands ie: Tn M06&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAM_MACHINE_Properties.output_G43_on_tool_change">
+<a class="viewcode-back" href="../../../autoapi/fabex/properties/machine_props/index.html#fabex.properties.CAM_MACHINE_Properties.output_G43_on_tool_change">[docs]</a>
+    <span class="n">output_G43_on_tool_change</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output G43 on Tool Change&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Output G43 on tool change line&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1187 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.operators.path_ops &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/operators/path_ops/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.operators.position_op" href="../position_op/index.html" />
+    <link rel="prev" title="fabex.operators.pack_op" href="../pack_op/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.operators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/operators/path_ops/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.operators.path_ops</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground"><code class="docutils literal notranslate"><span class="pre">PathsBackground</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.execute"><code class="docutils literal notranslate"><span class="pre">PathsBackground.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_idname"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_label"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_options"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.execute"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops._calc_path"><code class="docutils literal notranslate"><span class="pre">_calc_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath"><code class="docutils literal notranslate"><span class="pre">CalculatePath</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_idname"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_label"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_options"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.poll"><code class="docutils literal notranslate"><span class="pre">CalculatePath.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.execute_async"><code class="docutils literal notranslate"><span class="pre">CalculatePath.execute_async()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll"><code class="docutils literal notranslate"><span class="pre">PathsAll</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.execute"><code class="docutils literal notranslate"><span class="pre">PathsAll.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.draw"><code class="docutils literal notranslate"><span class="pre">PathsAll.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain"><code class="docutils literal notranslate"><span class="pre">PathsChain</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.poll"><code class="docutils literal notranslate"><span class="pre">PathsChain.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.execute_async"><code class="docutils literal notranslate"><span class="pre">PathsChain.execute_async()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain"><code class="docutils literal notranslate"><span class="pre">PathExportChain</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_label"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_options"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.poll"><code class="docutils literal notranslate"><span class="pre">PathExportChain.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.execute"><code class="docutils literal notranslate"><span class="pre">PathExportChain.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport"><code class="docutils literal notranslate"><span class="pre">PathExport</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_label"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_options"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.execute"><code class="docutils literal notranslate"><span class="pre">PathExport.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.operators.path_ops">
+<span id="fabex-operators-path-ops"></span><h1>fabex.operators.path_ops<a class="headerlink" href="#module-fabex.operators.path_ops" title="Link to this heading">#</a></h1>
+<p>Fabex ‘ops.py’ © 2012 Vilem Novak</p>
+<p>Blender Operator definitions are in this file.
+They mostly call the functions from ‘utils.py’</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.path_ops.PathsBackground" title="fabex.operators.path_ops.PathsBackground"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathsBackground</span></code></a></p></td>
+<td><p>Calculate CAM Paths in Background. File Has to Be Saved Before.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.path_ops.KillPathsBackground" title="fabex.operators.path_ops.KillPathsBackground"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KillPathsBackground</span></code></a></p></td>
+<td><p>Remove CAM Path Processes in Background.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.path_ops.CalculatePath" title="fabex.operators.path_ops.CalculatePath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CalculatePath</span></code></a></p></td>
+<td><p>Calculate CAM Paths</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.path_ops.PathsAll" title="fabex.operators.path_ops.PathsAll"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathsAll</span></code></a></p></td>
+<td><p>Calculate All CAM Paths</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.path_ops.PathsChain" title="fabex.operators.path_ops.PathsChain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathsChain</span></code></a></p></td>
+<td><p>Calculate a Chain and Export the G-code Alltogether.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.path_ops.PathExportChain" title="fabex.operators.path_ops.PathExportChain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathExportChain</span></code></a></p></td>
+<td><p>Calculate a Chain and Export the G-code Together.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.path_ops.PathExport" title="fabex.operators.path_ops.PathExport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathExport</span></code></a></p></td>
+<td><p>Export G-code. Can Be Used only when the Path Object Is Present</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.path_ops._calc_path" title="fabex.operators.path_ops._calc_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_calc_path</span></code></a>(operator, context)</p></td>
+<td><p>Calculate the path for a given operator and context.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsBackground">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PathsBackground</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsBackground"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsBackground" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Calculate CAM Paths in Background. File Has to Be Saved Before.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsBackground.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.calculate_cam_paths_background'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsBackground.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsBackground.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsBackground.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Calculate</span> <span class="pre">CAM</span> <span class="pre">Paths</span> <span class="pre">in</span> <span class="pre">Background'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsBackground.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsBackground.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsBackground.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsBackground.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsBackground.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsBackground.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsBackground.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsBackground.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute the CAM operation in the background.</p>
+<p>This method initiates a background process to perform CAM operations
+based on the current scene and active CAM operation. It sets up the
+necessary paths for the script and starts a subprocess to handle the
+CAM computations. Additionally, it manages threading to ensure that
+the main thread remains responsive while the background operation is
+executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context in which the operation is executed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary indicating the completion status of the operation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.KillPathsBackground">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">KillPathsBackground</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#KillPathsBackground"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.KillPathsBackground" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Remove CAM Path Processes in Background.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.KillPathsBackground.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.kill_calculate_cam_paths_background'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#KillPathsBackground.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.KillPathsBackground.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.KillPathsBackground.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Kill</span> <span class="pre">Background</span> <span class="pre">Computation</span> <span class="pre">of</span> <span class="pre">an</span> <span class="pre">Operation'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#KillPathsBackground.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.KillPathsBackground.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.KillPathsBackground.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#KillPathsBackground.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.KillPathsBackground.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.KillPathsBackground.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#KillPathsBackground.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.KillPathsBackground.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute the CAM operation in the given context.</p>
+<p>This method retrieves the active CAM operation from the scene and
+checks if there are any ongoing processes related to CAM path
+calculations. If such processes exist and match the current operation,
+they are terminated. The method then marks the operation as not
+computing and returns a status indicating that the execution has
+finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context in which the operation is executed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with a status key indicating the result of the execution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.operators.path_ops._calc_path">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_calc_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#_calc_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops._calc_path" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the path for a given operator and context.</p>
+<p>This function processes the current scene’s CAM operations based on
+the specified operator and context. It handles different geometry
+sources, checks for valid operation parameters, and manages the
+visibility of objects and collections. The function also retrieves the
+path using an asynchronous operation and handles any exceptions that may
+arise during this process. If the operation is invalid or if certain
+conditions are not met, appropriate error messages are reported to the
+operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>operator</strong> (<em>bpy.types.Operator</em>) – The operator that initiated the path calculation.</p></li>
+<li><p><strong>context</strong> (<em>bpy.types.Context</em>) – The context in which the operation is executed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple indicating the status of the operation.</dt><dd><p>Returns {‘FINISHED’, True} if successful,
+{‘FINISHED’, False} if there was an error,
+or {‘CANCELLED’, False} if the operation was cancelled.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CalculatePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code>, <a class="reference internal" href="../async_op/index.html#fabex.operators.async_op.AsyncOperatorMixin" title="fabex.operators.async_op.AsyncOperatorMixin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fabex.operators.async_op.AsyncOperatorMixin</span></code></a></p>
+<p>Calculate CAM Paths</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.calculate_cam_path'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Calculate</span> <span class="pre">CAM</span> <span class="pre">Paths'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath.poll" title="Link to this definition">#</a></dt>
+<dd><p>Check if the current CAM operation is valid.</p>
+<p>This method checks the active CAM operation in the given context and
+determines if it is valid. It retrieves the active operation from the
+scene’s CAM operations and validates it using the <cite>isValid</cite> function.
+If the operation is valid, it returns True; otherwise, it returns False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<a class="reference internal" href="../../utilities/voronoi_utils/index.html#fabex.utilities.voronoi_utils.Context" title="fabex.utilities.voronoi_utils.Context"><em>Context</em></a>) – The context containing the scene and CAM operations.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the active CAM operation is valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.CalculatePath.execute_async">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#CalculatePath.execute_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.CalculatePath.execute_async" title="Link to this definition">#</a></dt>
+<dd><p>Execute an asynchronous calculation of a path.</p>
+<p>This method performs an asynchronous operation to calculate a path based
+on the provided context. It awaits the result of the calculation and
+prints the success status along with the return value. The return value
+can be used for further processing or analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Any</em>) – The context in which the path calculation is to be executed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the path calculation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PathsAll</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Calculate All CAM Paths</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.calculate_cam_paths_all'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Calculate</span> <span class="pre">All</span> <span class="pre">CAM</span> <span class="pre">Paths'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute CAM operations in the current Blender context.</p>
+<p>This function iterates through the CAM operations defined in the
+current scene and executes the background calculation for each
+operation. It sets the active CAM operation index and prints the name
+of each operation being processed. This is typically used in a Blender
+add-on or script to automate CAM path calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>bpy.context</em>) – The current Blender context.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A dictionary indicating the completion status of the operation,</dt><dd><p>typically {‘FINISHED’}.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsAll.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsAll.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsAll.draw" title="Link to this definition">#</a></dt>
+<dd><p>Draws the user interface elements for the operation selection.</p>
+<p>This method utilizes the Blender layout system to create a property
+search interface for selecting operations related to CAM
+functionalities. It links the current instance’s operation property to
+the available CAM operations defined in the Blender scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>bpy.context</em>) – The context in which the drawing occurs,</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PathsChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code>, <a class="reference internal" href="../async_op/index.html#fabex.operators.async_op.AsyncOperatorMixin" title="fabex.operators.async_op.AsyncOperatorMixin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fabex.operators.async_op.AsyncOperatorMixin</span></code></a></p>
+<p>Calculate a Chain and Export the G-code Alltogether.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.calculate_cam_paths_chain'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Calculate</span> <span class="pre">CAM</span> <span class="pre">Paths</span> <span class="pre">in</span> <span class="pre">Current</span> <span class="pre">Chain</span> <span class="pre">and</span> <span class="pre">Export</span> <span class="pre">Chain</span> <span class="pre">G-code'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain.poll" title="Link to this definition">#</a></dt>
+<dd><p>Check the validity of the active CAM chain in the given context.</p>
+<p>This method retrieves the active CAM chain from the scene and checks
+its validity using the <cite>isChainValid</cite> function. It returns a boolean
+value indicating whether the CAM chain is valid or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<a class="reference internal" href="../../utilities/voronoi_utils/index.html#fabex.utilities.voronoi_utils.Context" title="fabex.utilities.voronoi_utils.Context"><em>Context</em></a>) – The context containing the scene and CAM chain information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the active CAM chain is valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathsChain.execute_async">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathsChain.execute_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathsChain.execute_async" title="Link to this definition">#</a></dt>
+<dd><p>Execute asynchronous operations for CAM path calculations.</p>
+<p>This method sets the object mode for the Blender scene and processes a
+series of CAM operations defined in the active CAM chain. It
+reports the progress of each operation and handles any exceptions that
+may occur during the path calculation. After successful calculations, it
+exports the resulting mesh data to a specified G-code file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>bpy.context</em>) – The Blender context containing scene and</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary indicating the result of the operation,
+typically {‘FINISHED’}.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PathExportChain</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Calculate a Chain and Export the G-code Together.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.cam_export_paths_chain'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Export</span> <span class="pre">CAM</span> <span class="pre">Paths</span> <span class="pre">in</span> <span class="pre">Current</span> <span class="pre">Chain</span> <span class="pre">as</span> <span class="pre">G-code'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain.poll" title="Link to this definition">#</a></dt>
+<dd><p>Check the validity of the active CAM chain in the given context.</p>
+<p>This method retrieves the currently active CAM chain from the scene
+context and checks its validity using the <cite>isChainValid</cite> function. It
+returns a boolean indicating whether the active CAM chain is valid or
+not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>object</em>) – The context containing the scene and CAM chain information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the active CAM chain is valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExportChain.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExportChain.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExportChain.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute the CAM path export process.</p>
+<p>This function retrieves the active CAM chain from the current scene
+and gathers the mesh data associated with the operations of that chain.
+It then exports the G-code path using the specified filename and the
+collected mesh data. The function is designed to be called within the
+context of a Blender operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>bpy.context</em>) – The context in which the operator is executed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A dictionary indicating the completion status of the operation,</dt><dd><p>typically {‘FINISHED’}.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExport">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PathExport</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExport" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Export G-code. Can Be Used only when the Path Object Is Present</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExport.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.cam_export'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExport.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExport.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExport.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Export</span> <span class="pre">Operation</span> <span class="pre">G-code'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExport.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExport.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExport.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExport.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExport.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.path_ops.PathExport.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/path_ops.html#PathExport.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.path_ops.PathExport.execute" title="Link to this definition">#</a></dt>
+<dd><p>Execute the CAM operation and export the G-code path.</p>
+<p>This method retrieves the active CAM operation from the current scene
+and exports the corresponding G-code path to a specified filename. It
+prints the filename and relevant operation details to the console for
+debugging purposes. The G-code path is generated based on the CAM
+path data associated with the active operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context in which the operation is executed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A dictionary indicating the completion status of the operation,</dt><dd><p>typically {‘FINISHED’}.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../pack_op/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.operators.pack_op</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../position_op/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.operators.position_op</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground"><code class="docutils literal notranslate"><span class="pre">PathsBackground</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsBackground.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsBackground.execute"><code class="docutils literal notranslate"><span class="pre">PathsBackground.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_idname"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_label"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.bl_options"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.KillPathsBackground.execute"><code class="docutils literal notranslate"><span class="pre">KillPathsBackground.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops._calc_path"><code class="docutils literal notranslate"><span class="pre">_calc_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath"><code class="docutils literal notranslate"><span class="pre">CalculatePath</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_idname"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_label"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.bl_options"><code class="docutils literal notranslate"><span class="pre">CalculatePath.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.poll"><code class="docutils literal notranslate"><span class="pre">CalculatePath.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.CalculatePath.execute_async"><code class="docutils literal notranslate"><span class="pre">CalculatePath.execute_async()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll"><code class="docutils literal notranslate"><span class="pre">PathsAll</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsAll.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.execute"><code class="docutils literal notranslate"><span class="pre">PathsAll.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsAll.draw"><code class="docutils literal notranslate"><span class="pre">PathsAll.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain"><code class="docutils literal notranslate"><span class="pre">PathsChain</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_label"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.bl_options"><code class="docutils literal notranslate"><span class="pre">PathsChain.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.poll"><code class="docutils literal notranslate"><span class="pre">PathsChain.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathsChain.execute_async"><code class="docutils literal notranslate"><span class="pre">PathsChain.execute_async()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain"><code class="docutils literal notranslate"><span class="pre">PathExportChain</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_label"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.bl_options"><code class="docutils literal notranslate"><span class="pre">PathExportChain.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.poll"><code class="docutils literal notranslate"><span class="pre">PathExportChain.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExportChain.execute"><code class="docutils literal notranslate"><span class="pre">PathExportChain.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport"><code class="docutils literal notranslate"><span class="pre">PathExport</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_idname"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_label"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.bl_options"><code class="docutils literal notranslate"><span class="pre">PathExport.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.path_ops.PathExport.execute"><code class="docutils literal notranslate"><span class="pre">PathExport.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

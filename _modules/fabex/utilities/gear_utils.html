@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.gear_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/gear_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.gear_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;involute_gear.py&#39; Ported by Alain Pelletier Jan 2022</span>
+
+<span class="sd">from:</span>
+<span class="sd">Public Domain Parametric Involute Spur Gear (and involute helical gear and involute rack)</span>
+<span class="sd">version 1.1</span>
+<span class="sd">by Leemon Baird, 2011, Leemon@Leemon.com</span>
+<span class="sd">http:www.thingiverse.com/thing:5505</span>
+
+<span class="sd">This file is public domain.  Use it for any purpose, including commercial</span>
+<span class="sd">applications.  Attribution would be nice, but is not required.  There is</span>
+<span class="sd">no warranty of any kind, including its correctness, usefulness, or safety.</span>
+
+<span class="sd">This is parameterized involute spur (or helical) gear.  It is much simpler and less powerful than</span>
+<span class="sd">others on Thingiverse.  But it is public domain.  I implemented it from scratch from the</span>
+<span class="sd">descriptions and equations on Wikipedia and the web, using Mathematica for calculations and testing,</span>
+<span class="sd">and I now release it into the public domain.</span>
+
+<span class="sd">    http:en.wikipedia.org/wiki/Involute_gear</span>
+<span class="sd">    http:en.wikipedia.org/wiki/Gear</span>
+<span class="sd">    http:en.wikipedia.org/wiki/List_of_gear_nomenclature</span>
+<span class="sd">    http:gtrebaol.free.fr/doc/catia/spur_gear.html</span>
+<span class="sd">    http:www.cs.cmu.edu/~rapidproto/mechanisms/chpt7.html</span>
+
+<span class="sd">The module gear() gives an involute spur gear, with reasonable defaults for all the parameters.</span>
+<span class="sd">Normally, you should just choose the first 4 parameters, and let the rest be default values.</span>
+<span class="sd">The module gear() gives a gear in the XY plane, centered on the origin, with one tooth centered on</span>
+<span class="sd">the positive Y axis.  The various functions below it take the same parameters, and return various</span>
+<span class="sd">measurements for the gear.  The most important is pitch_radius, which tells how far apart to space</span>
+<span class="sd">gears that are meshing, and adendum_radius, which gives the size of the region filled by the gear.</span>
+<span class="sd">A gear has a &quot;pitch circle&quot;, which is an invisible circle that cuts through the middle of each</span>
+<span class="sd">tooth (though not the exact center). In order for two gears to mesh, their pitch circles should</span>
+<span class="sd">just touch.  So the distance between their centers should be pitch_radius() for one, plus pitch_radius()</span>
+<span class="sd">for the other, which gives the radii of their pitch circles.</span>
+
+<span class="sd">In order for two gears to mesh, they must have the same mm_per_tooth and pressure_angle parameters.</span>
+<span class="sd">mm_per_tooth gives the number of millimeters of arc around the pitch circle covered by one tooth and one</span>
+<span class="sd">space between teeth.  The pitch angle controls how flat or bulged the sides of the teeth are.  Common</span>
+<span class="sd">values include 14.5 degrees and 20 degrees, and occasionally 25.  Though I&#39;ve seen 28 recommended for</span>
+<span class="sd">plastic gears. Larger numbers bulge out more, giving stronger teeth, so 28 degrees is the default here.</span>
+
+<span class="sd">The ratio of number_of_teeth for two meshing gears gives how many times one will make a full</span>
+<span class="sd">revolution when the the other makes one full revolution.  If the two numbers are coprime (i.e.</span>
+<span class="sd">are not both divisible by the same number greater than 1), then every tooth on one gear</span>
+<span class="sd">will meet every tooth on the other, for more even wear.  So coprime numbers of teeth are good.</span>
+
+<span class="sd">The module rack() gives a rack, which is a bar with teeth.  A rack can mesh with any</span>
+<span class="sd">gear that has the same mm_per_tooth and pressure_angle.</span>
+
+<span class="sd">Some terminology:</span>
+<span class="sd">The outline of a gear is a smooth circle (the &quot;pitch circle&quot;) which has mountains and valleys</span>
+<span class="sd">added so it is toothed.  So there is an inner circle (the &quot;root circle&quot;) that touches the</span>
+<span class="sd">base of all the teeth, an outer circle that touches the tips of all the teeth,</span>
+<span class="sd">and the invisible pitch circle in between them.  There is also a &quot;base circle&quot;, which can be smaller than</span>
+<span class="sd">all three of the others, which controls the shape of the teeth.  The side of each tooth lies on the path</span>
+<span class="sd">that the end of a string would follow if it were wrapped tightly around the base circle, then slowly unwound.</span>
+<span class="sd">That shape is an &quot;involute&quot;, which gives this type of gear its name.</span>
+
+<span class="sd">An involute spur gear, with reasonable defaults for all the parameters.</span>
+<span class="sd">Normally, you should just choose the first 4 parameters, and let the rest be default values.</span>
+<span class="sd">Meshing gears must match in mm_per_tooth, pressure_angle, and twist,</span>
+<span class="sd">and be separated by the sum of their pitch radii, which can be found with pitch_radius().</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">acos</span><span class="p">,</span>
+    <span class="n">cos</span><span class="p">,</span>
+    <span class="n">degrees</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">sin</span><span class="p">,</span>
+    <span class="n">sqrt</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.shapely_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shapely_to_curve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">deselect</span><span class="p">,</span>
+    <span class="n">duplicate</span><span class="p">,</span>
+    <span class="n">rotate</span><span class="p">,</span>
+    <span class="n">join_multiple</span><span class="p">,</span>
+    <span class="n">active_name</span><span class="p">,</span>
+    <span class="n">union</span><span class="p">,</span>
+    <span class="n">remove_doubles</span><span class="p">,</span>
+    <span class="n">difference</span><span class="p">,</span>
+    <span class="n">add_rectangle</span><span class="p">,</span>
+    <span class="n">move</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="gear_polar">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.gear_polar">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gear_polar</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert gear_polar to Cartesian coordinates&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">r</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">r</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gear_iang">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.gear_iang">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gear_iang</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unwind a string (x) Degrees to go from Radius r1 to r2&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">r2</span> <span class="o">/</span> <span class="n">r1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r2</span> <span class="o">/</span> <span class="n">r1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">acos</span><span class="p">(</span><span class="n">r1</span> <span class="o">/</span> <span class="n">r2</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gear_q7">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.gear_q7">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gear_q7</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Radius a fraction (f) up the curved side of the Tooth&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">gear_q6</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span> <span class="o">*</span> <span class="n">r2</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gear_q6">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.gear_q6">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gear_q6</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Point at Radius (d) on the involute curve&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">gear_polar</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="n">gear_iang</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="gear">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.gear">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gear</span><span class="p">(</span>
+    <span class="n">mm_per_tooth</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span>
+    <span class="n">number_of_teeth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">hole_diameter</span><span class="o">=</span><span class="mf">0.003175</span><span class="p">,</span>
+    <span class="n">pressure_angle</span><span class="o">=</span><span class="mf">0.3488</span><span class="p">,</span>
+    <span class="n">clearance</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">backlash</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">rim_size</span><span class="o">=</span><span class="mf">0.0005</span><span class="p">,</span>
+    <span class="n">hub_diameter</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span>
+    <span class="n">spokes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a 3D gear model based on specified parameters.</span>
+
+<span class="sd">    This function creates a 3D representation of a gear using the provided</span>
+<span class="sd">    parameters such as the circular pitch, number of teeth, hole diameter,</span>
+<span class="sd">    pressure angle, clearance, backlash, rim size, hub diameter, and the</span>
+<span class="sd">    number of spokes. The gear is constructed by calculating various radii</span>
+<span class="sd">    and angles based on the input parameters and then using geometric</span>
+<span class="sd">    operations to form the final shape. The resulting gear is named</span>
+<span class="sd">    according to its specifications.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mm_per_tooth (float): The circular pitch of the gear in millimeters (default is 0.003).</span>
+<span class="sd">        number_of_teeth (int): The total number of teeth on the gear (default is 5).</span>
+<span class="sd">        hole_diameter (float): The diameter of the central hole in millimeters (default is 0.003175).</span>
+<span class="sd">        pressure_angle (float): The angle that controls the shape of the tooth sides in radians (default</span>
+<span class="sd">            is 0.3488).</span>
+<span class="sd">        clearance (float): The gap between the top of a tooth and the bottom of a valley on a</span>
+<span class="sd">            meshing gear in millimeters (default is 0.0).</span>
+<span class="sd">        backlash (float): The gap between two meshing teeth along the circumference of the pitch</span>
+<span class="sd">            circle in millimeters (default is 0.0).</span>
+<span class="sd">        rim_size (float): The size of the rim around the gear in millimeters (default is 0.0005).</span>
+<span class="sd">        hub_diameter (float): The diameter of the hub in millimeters (default is 0.006).</span>
+<span class="sd">        spokes (int): The number of spokes on the gear (default is 4).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies the Blender scene to</span>
+<span class="sd">            include the generated gear model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">deselect</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="n">number_of_teeth</span> <span class="o">/</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># radius of pitch circle</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">mm_per_tooth</span> <span class="o">/</span> <span class="n">pi</span> <span class="o">-</span> <span class="n">clearance</span>  <span class="c1"># radius of outer circle</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">pressure_angle</span><span class="p">)</span>  <span class="c1"># radius of base circle</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">clearance</span>  <span class="c1"># radius of root circle</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">mm_per_tooth</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">backlash</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># tooth thickness at pitch circle</span>
+    <span class="c1"># angle to where involute meets base circle on each side of tooth</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="o">-</span><span class="n">gear_iang</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">p</span>
+    <span class="n">shapely_gear</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">gear_polar</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">k</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="o">-</span><span class="n">pi</span> <span class="o">/</span> <span class="n">number_of_teeth</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_q7</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">gear_polar</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="n">k</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">else</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">number_of_teeth</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">shapely_to_curve</span><span class="p">(</span><span class="s2">&quot;tooth&quot;</span><span class="p">,</span> <span class="n">shapely_gear</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">number_of_teeth</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">rotate</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">number_of_teeth</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">join_multiple</span><span class="p">(</span><span class="s2">&quot;tooth&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_teeth&quot;</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_radius</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hub&quot;</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_gear&quot;</span><span class="p">)</span>
+    <span class="n">remove_doubles</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">spokes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+            <span class="n">Simple_radius</span><span class="o">=</span><span class="n">r</span> <span class="o">-</span> <span class="n">rim_size</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+            <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hole&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;_gear&quot;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+            <span class="n">Simple_radius</span><span class="o">=</span><span class="n">hub_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+            <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hub&quot;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+            <span class="n">Simple_radius</span><span class="o">=</span><span class="n">hole_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+            <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hub_hole&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_hub&quot;</span><span class="p">,</span> <span class="s2">&quot;_hub&quot;</span><span class="p">)</span>
+
+        <span class="n">join_multiple</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+        <span class="n">add_rectangle</span><span class="p">(</span>
+            <span class="n">r</span> <span class="o">-</span> <span class="n">rim_size</span> <span class="o">-</span> <span class="p">((</span><span class="n">hub_diameter</span> <span class="o">-</span> <span class="n">hole_diameter</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">hole_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">hub_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">center_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="n">hub_diameter</span> <span class="o">-</span> <span class="n">hole_diameter</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">hole_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_spoke&quot;</span><span class="p">)</span>
+
+        <span class="n">angle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">spokes</span>
+        <span class="k">while</span> <span class="n">spokes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">spokes</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_spoke&quot;</span><span class="p">)</span>
+        <span class="n">remove_doubles</span><span class="p">()</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+            <span class="n">Simple_radius</span><span class="o">=</span><span class="n">hole_diameter</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+            <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hole&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;_gear&quot;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;gear-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot;mm-pitch-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number_of_teeth</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot;teeth-PA-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">degrees</span><span class="p">(</span><span class="n">pressure_angle</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rack">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/gear_utils/index.html#fabex.utilities.gear_utils.rack">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rack</span><span class="p">(</span>
+    <span class="n">mm_per_tooth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">number_of_teeth</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mf">0.012</span><span class="p">,</span>
+    <span class="n">pressure_angle</span><span class="o">=</span><span class="mf">0.3488</span><span class="p">,</span>
+    <span class="n">backlash</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">hole_diameter</span><span class="o">=</span><span class="mf">0.003175</span><span class="p">,</span>
+    <span class="n">tooth_per_hole</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a rack gear profile based on specified parameters.</span>
+
+<span class="sd">    This function creates a rack gear by calculating the geometry based on</span>
+<span class="sd">    the provided parameters such as millimeters per tooth, number of teeth,</span>
+<span class="sd">    height, pressure angle, backlash, hole diameter, and teeth per hole. It</span>
+<span class="sd">    constructs the gear shape using the Shapely library and duplicates the</span>
+<span class="sd">    tooth to create the full rack. If a hole diameter is specified, it also</span>
+<span class="sd">    creates holes along the rack. The resulting gear is named based on the</span>
+<span class="sd">    input parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mm_per_tooth (float): The distance in millimeters for each tooth. Default is 0.01.</span>
+<span class="sd">        number_of_teeth (int): The total number of teeth on the rack. Default is 11.</span>
+<span class="sd">        height (float): The height of the rack. Default is 0.012.</span>
+<span class="sd">        pressure_angle (float): The pressure angle in radians. Default is 0.3488.</span>
+<span class="sd">        backlash (float): The backlash distance in millimeters. Default is 0.0.</span>
+<span class="sd">        hole_diameter (float): The diameter of the holes in millimeters. Default is 0.003175.</span>
+<span class="sd">        tooth_per_hole (int): The number of teeth per hole. Default is 4.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">deselect</span><span class="p">()</span>
+    <span class="n">mm_per_tooth</span> <span class="o">*=</span> <span class="mi">1000</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">mm_per_tooth</span> <span class="o">/</span> <span class="n">pi</span>  <span class="c1"># addendum</span>
+    <span class="c1"># tooth side is tilted so top/bottom corners move this amount</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">pressure_angle</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="n">mm_per_tooth</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="n">t</span> <span class="o">/=</span> <span class="mi">1000</span>
+
+    <span class="n">shapely_gear</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="mf">1.001</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="n">height</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="mf">1.001</span> <span class="o">-</span> <span class="n">backlash</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">backlash</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">backlash</span> <span class="o">+</span> <span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">backlash</span> <span class="o">-</span> <span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">backlash</span> <span class="o">+</span> <span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="mf">1.001</span> <span class="o">+</span> <span class="n">backlash</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="mf">1.001</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="n">height</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">shapely_to_curve</span><span class="p">(</span><span class="s2">&quot;_tooth&quot;</span><span class="p">,</span> <span class="n">shapely_gear</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">number_of_teeth</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">duplicate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mm_per_tooth</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_tooth&quot;</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hole_diameter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+            <span class="n">Simple_radius</span><span class="o">=</span><span class="n">hole_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+            <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_hole&quot;</span><span class="p">)</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">number_of_teeth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">mm_per_tooth</span>
+        <span class="k">while</span> <span class="n">distance</span> <span class="o">&gt;</span> <span class="n">tooth_per_hole</span> <span class="o">*</span> <span class="n">mm_per_tooth</span><span class="p">:</span>
+            <span class="n">duplicate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">tooth_per_hole</span> <span class="o">*</span> <span class="n">mm_per_tooth</span><span class="p">)</span>
+            <span class="n">distance</span> <span class="o">-=</span> <span class="n">tooth_per_hole</span> <span class="o">*</span> <span class="n">mm_per_tooth</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;_tooth&quot;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;rack-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mm_per_tooth</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">name</span> <span class="o">+=</span> <span class="s2">&quot;-PA-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">degrees</span><span class="p">(</span><span class="n">pressure_angle</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

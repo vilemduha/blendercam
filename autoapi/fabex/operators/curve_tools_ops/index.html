@@ -1,0 +1,1329 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.operators.curve_tools_ops &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/operators/curve_tools_ops/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.operators.gcode_import_op" href="../gcode_import_op/index.html" />
+    <link rel="prev" title="fabex.operators.curve_equation_ops" href="../curve_equation_ops/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.operators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/operators/curve_tools_ops/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.operators.curve_tools_ops</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.boolean_type"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.boolean_type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.tolerance"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.tolerance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.backlight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.perimeter_cut"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.perimeter_cut</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.base_thickness"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.base_thickness</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.intarsion_thickness"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.intarsion_thickness</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight_depth_from_top"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.backlight_depth_from_top</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.threshold"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.do_outer"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.do_outer</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invert"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.invert</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.style"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.threshold"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_outer"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.do_outer</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_invert"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.do_invert</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.other_edge"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.other_edge</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.merge_distance"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.merge_distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.keep_bezier"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.keep_bezier</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.draw"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.draw()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_label"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_options"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.threshold"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.z_limit"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.z_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.poll"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.execute"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_label"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_options"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.offset"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.mitre_limit"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.mitre_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.style"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.caps"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.caps</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.align"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.align</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.open_type"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.open_type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.poll"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.is_straight"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.is_straight()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.execute"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.draw"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.draw()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.invoke"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_label"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_options"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.poll"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.execute"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.operators.curve_tools_ops">
+<span id="fabex-operators-curve-tools-ops"></span><h1>fabex.operators.curve_tools_ops<a class="headerlink" href="#module-fabex.operators.curve_tools_ops" title="Link to this heading">#</a></h1>
+<p>Fabex ‘curve_cam_tools.py’ © 2012 Vilem Novak, 2021 Alain Pelletier</p>
+<p>Operators that perform various functions on existing curves.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveBoolean" title="fabex.operators.curve_tools_ops.CamCurveBoolean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveBoolean</span></code></a></p></td>
+<td><p>Perform Boolean Operation on Two or More Curves</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull" title="fabex.operators.curve_tools_ops.CamCurveConvexHull"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveConvexHull</span></code></a></p></td>
+<td><p>Perform Hull Operation on Single or Multiple Curves</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion" title="fabex.operators.curve_tools_ops.CamCurveIntarsion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveIntarsion</span></code></a></p></td>
+<td><p>Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts" title="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts</span></code></a></p></td>
+<td><p>Adds Simple Fillets / Overcuts for Slots</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts" title="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts</span></code></a></p></td>
+<td><p>Adds Dogbone, T-bone Fillets / Overcuts for Slots</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles" title="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles</span></code></a></p></td>
+<td><p>Remove Duplicate Points from the Selected Curve</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets" title="fabex.operators.curve_tools_ops.CamMeshGetPockets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamMeshGetPockets</span></code></a></p></td>
+<td><p>Detect Pockets in a Mesh and Extract Them as Curves</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete" title="fabex.operators.curve_tools_ops.CamOffsetSilhouete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamOffsetSilhouete</span></code></a></p></td>
+<td><p>Offset Object Silhouette</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette" title="fabex.operators.curve_tools_ops.CamObjectSilhouette"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamObjectSilhouette</span></code></a></p></td>
+<td><p>Create Object Silhouette</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveBoolean</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Perform Boolean Operation on Two or More Curves</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.curve_boolean'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Curve</span> <span class="pre">Boolean'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.boolean_type">
+<span class="sig-name descname"><span class="pre">boolean_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'UNION'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Union'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'DIFFERENCE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Difference'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'INTERSECT'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Intersect'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Boolean</span> <span class="pre">type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'UNION'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.boolean_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.boolean_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoolean.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoolean.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveConvexHull</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Perform Hull Operation on Single or Multiple Curves</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.convex_hull'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Convex</span> <span class="pre">Hull'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveConvexHull.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveConvexHull.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveIntarsion</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.curve_intarsion'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Intarsion'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.diameter">
+<span class="sig-name descname"><span class="pre">diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Cutter</span> <span class="pre">Diameter'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.025</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.diameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.diameter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.tolerance">
+<span class="sig-name descname"><span class="pre">tolerance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Cutout</span> <span class="pre">Tolerance'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.005</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.tolerance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.tolerance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight">
+<span class="sig-name descname"><span class="pre">backlight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Backlight</span> <span class="pre">Seat'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.01</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.backlight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.perimeter_cut">
+<span class="sig-name descname"><span class="pre">perimeter_cut</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Perimeter</span> <span class="pre">Cut</span> <span class="pre">Offset'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.perimeter_cut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.perimeter_cut" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.base_thickness">
+<span class="sig-name descname"><span class="pre">base_thickness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Base</span> <span class="pre">Material</span> <span class="pre">Thickness'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.base_thickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.base_thickness" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.intarsion_thickness">
+<span class="sig-name descname"><span class="pre">intarsion_thickness</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Intarsion</span> <span class="pre">Material</span> <span class="pre">Thickness'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.intarsion_thickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.intarsion_thickness" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight_depth_from_top">
+<span class="sig-name descname"><span class="pre">backlight_depth_from_top</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Backlight</span> <span class="pre">Well</span> <span class="pre">Depth'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.backlight_depth_from_top"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight_depth_from_top" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveIntarsion.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveIntarsion.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveSimpleOvercuts</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Adds Simple Fillets / Overcuts for Slots</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.curve_overcuts'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Simple</span> <span class="pre">Fillet</span> <span class="pre">Overcuts'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.diameter">
+<span class="sig-name descname"><span class="pre">diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Diameter'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.003175</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.diameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.diameter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty(name='Threshold',</span> <span class="pre">default=pi</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">0.99,</span> <span class="pre">min=-3.14,</span> <span class="pre">max=3.14,</span> <span class="pre">precision=4,</span> <span class="pre">step=500,</span> <span class="pre">subtype='ANGLE',</span> <span class="pre">unit='ROTATION')</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.threshold" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.do_outer">
+<span class="sig-name descname"><span class="pre">do_outer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Outer</span> <span class="pre">Polygons'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.do_outer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.do_outer" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invert">
+<span class="sig-name descname"><span class="pre">invert</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Invert'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invert" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveSimpleOvercuts.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveBoneFilletOvercuts</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Adds Dogbone, T-bone Fillets / Overcuts for Slots</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.curve_overcuts_b'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Bone</span> <span class="pre">Fillet</span> <span class="pre">Overcuts'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.diameter">
+<span class="sig-name descname"><span class="pre">diameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Tool</span> <span class="pre">Diameter'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.003175</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Tool</span> <span class="pre">bit</span> <span class="pre">diameter</span> <span class="pre">used</span> <span class="pre">in</span> <span class="pre">cut</span> <span class="pre">operation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.diameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.diameter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.style">
+<span class="sig-name descname"><span class="pre">style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Style'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'OPEDGE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'opposite</span> <span class="pre">edge'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'place</span> <span class="pre">corner</span> <span class="pre">overcuts</span> <span class="pre">on</span> <span class="pre">opposite</span> <span class="pre">edges'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'DOGBONE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Dog-bone</span> <span class="pre">/</span> <span class="pre">Corner</span> <span class="pre">Point'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'place</span> <span class="pre">overcuts</span> <span class="pre">at</span> <span class="pre">center</span> <span class="pre">of</span> <span class="pre">corners'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'TBONE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'T-bone'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'place</span> <span class="pre">corner</span> <span class="pre">overcuts</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">edge'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'DOGBONE'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'style</span> <span class="pre">of</span> <span class="pre">overcut</span> <span class="pre">to</span> <span class="pre">use'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.style" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty(name='Max</span> <span class="pre">Inside</span> <span class="pre">Angle',</span> <span class="pre">default=pi</span> <span class="pre">/</span> <span class="pre">2,</span> <span class="pre">min=-3.14,</span> <span class="pre">max=3.14,</span> <span class="pre">description='The</span> <span class="pre">maximum</span> <span class="pre">angle</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">considered</span> <span class="pre">as</span> <span class="pre">an</span> <span class="pre">inside</span> <span class="pre">corner',</span> <span class="pre">precision=4,</span> <span class="pre">step=500,</span> <span class="pre">subtype='ANGLE',</span> <span class="pre">unit='ROTATION')</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.threshold" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_outer">
+<span class="sig-name descname"><span class="pre">do_outer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Include</span> <span class="pre">Outer</span> <span class="pre">Curve'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Include</span> <span class="pre">the</span> <span class="pre">outer</span> <span class="pre">curve</span> <span class="pre">if</span> <span class="pre">there</span> <span class="pre">are</span> <span class="pre">curves</span> <span class="pre">inside'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.do_outer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_outer" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_invert">
+<span class="sig-name descname"><span class="pre">do_invert</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Invert'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'invert</span> <span class="pre">overcut</span> <span class="pre">operation</span> <span class="pre">on</span> <span class="pre">all</span> <span class="pre">curves'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.do_invert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_invert" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.other_edge">
+<span class="sig-name descname"><span class="pre">other_edge</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Other</span> <span class="pre">Edge'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'change</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">other</span> <span class="pre">edge</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">overcut</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">on'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.other_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.other_edge" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveBoneFilletOvercuts.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCurveRemoveDoubles</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Remove Duplicate Points from the Selected Curve</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.curve_remove_doubles'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Remove</span> <span class="pre">Curve</span> <span class="pre">Doubles'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.merge_distance">
+<span class="sig-name descname"><span class="pre">merge_distance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Merge</span> <span class="pre">distance'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.01</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.merge_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.merge_distance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.keep_bezier">
+<span class="sig-name descname"><span class="pre">keep_bezier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Keep</span> <span class="pre">bezier'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.keep_bezier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.keep_bezier" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.draw" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamCurveRemoveDoubles.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamMeshGetPockets</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Detect Pockets in a Mesh and Extract Them as Curves</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.mesh_get_pockets'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Get</span> <span class="pre">Pocket</span> <span class="pre">Surfaces'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Horizontal</span> <span class="pre">Threshold'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'How</span> <span class="pre">horizontal</span> <span class="pre">the</span> <span class="pre">surface</span> <span class="pre">must</span> <span class="pre">be</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">pocket:</span> <span class="pre">1.0</span> <span class="pre">perfectly</span> <span class="pre">flat,</span> <span class="pre">0.0</span> <span class="pre">is</span> <span class="pre">any</span> <span class="pre">orientation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.99</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.threshold" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.z_limit">
+<span class="sig-name descname"><span class="pre">z_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Z</span> <span class="pre">Limit'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Maximum</span> <span class="pre">z</span> <span class="pre">height</span> <span class="pre">considered</span> <span class="pre">for</span> <span class="pre">pocket</span> <span class="pre">operation,</span> <span class="pre">default</span> <span class="pre">is</span> <span class="pre">0.0'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">1000.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1000.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.z_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.z_limit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamMeshGetPockets.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamMeshGetPockets.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamOffsetSilhouete</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Offset Object Silhouette</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.silhouette_offset'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Silhouette</span> <span class="pre">&amp;</span> <span class="pre">Offset'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Offset'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.003</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.offset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.mitre_limit">
+<span class="sig-name descname"><span class="pre">mitre_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Mitre</span> <span class="pre">Limit'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-08</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">20</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.mitre_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.mitre_limit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.style">
+<span class="sig-name descname"><span class="pre">style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Corner</span> <span class="pre">Type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Round'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Mitre'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'3'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Bevel'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.style" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.caps">
+<span class="sig-name descname"><span class="pre">caps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Cap</span> <span class="pre">Type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'round'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Round'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'square'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Square'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'flat'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Flat'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.caps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.caps" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.align">
+<span class="sig-name descname"><span class="pre">align</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Alignment'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'worldxy'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'World</span> <span class="pre">XY'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'bottom'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Base</span> <span class="pre">Bottom'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'top'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Base</span> <span class="pre">Top'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.align"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.align" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.open_type">
+<span class="sig-name descname"><span class="pre">open_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Curve</span> <span class="pre">Type'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'dilate'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Dilate</span> <span class="pre">open</span> <span class="pre">curve'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'leaveopen'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Leave</span> <span class="pre">curve</span> <span class="pre">open'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'closecurve'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Close</span> <span class="pre">curve'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">''</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'closecurve'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.open_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.open_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.is_straight">
+<span class="sig-name descname"><span class="pre">is_straight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.is_straight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.is_straight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.draw" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamOffsetSilhouete.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamOffsetSilhouete.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.invoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamObjectSilhouette</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Create Object Silhouette</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.silhouette'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Object</span> <span class="pre">Silhouette'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette.poll">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.poll" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_tools_ops.CamObjectSilhouette.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_tools_ops.html#CamObjectSilhouette.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../curve_equation_ops/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.operators.curve_equation_ops</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../gcode_import_op/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.operators.gcode_import_op</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.boolean_type"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.boolean_type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoolean.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveBoolean.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveConvexHull.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveConvexHull.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.tolerance"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.tolerance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.backlight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.perimeter_cut"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.perimeter_cut</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.base_thickness"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.base_thickness</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.intarsion_thickness"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.intarsion_thickness</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.backlight_depth_from_top"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.backlight_depth_from_top</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveIntarsion.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveIntarsion.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.threshold"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.do_outer"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.do_outer</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invert"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.invert</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveSimpleOvercuts.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveSimpleOvercuts.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.diameter"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.diameter</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.style"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.threshold"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_outer"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.do_outer</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.do_invert"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.do_invert</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.other_edge"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.other_edge</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveBoneFilletOvercuts.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveBoneFilletOvercuts.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.merge_distance"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.merge_distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.keep_bezier"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.keep_bezier</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.poll"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.execute"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.draw"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.draw()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamCurveRemoveDoubles.invoke"><code class="docutils literal notranslate"><span class="pre">CamCurveRemoveDoubles.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_label"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.bl_options"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.threshold"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.z_limit"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.z_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.poll"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamMeshGetPockets.execute"><code class="docutils literal notranslate"><span class="pre">CamMeshGetPockets.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_label"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.bl_options"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.offset"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.mitre_limit"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.mitre_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.style"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.caps"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.caps</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.align"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.align</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.open_type"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.open_type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.poll"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.is_straight"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.is_straight()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.execute"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.execute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.draw"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.draw()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamOffsetSilhouete.invoke"><code class="docutils literal notranslate"><span class="pre">CamOffsetSilhouete.invoke()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_label"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.bl_options"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.poll"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.poll()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_tools_ops.CamObjectSilhouette.execute"><code class="docutils literal notranslate"><span class="pre">CamObjectSilhouette.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

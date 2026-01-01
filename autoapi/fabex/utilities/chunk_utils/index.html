@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.utilities.chunk_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/utilities/chunk_utils/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.utilities.collision_utils" href="../collision_utils/index.html" />
+    <link rel="prev" title="fabex.utilities.bounds_utils" href="../bounds_utils/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/utilities/chunk_utils/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.utilities.chunk_utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_refine"><code class="docutils literal notranslate"><span class="pre">chunks_refine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_refine_threshold"><code class="docutils literal notranslate"><span class="pre">chunks_refine_threshold()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunk_to_shapely"><code class="docutils literal notranslate"><span class="pre">chunk_to_shapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.set_chunks_z"><code class="docutils literal notranslate"><span class="pre">set_chunks_z()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.optimize_chunk"><code class="docutils literal notranslate"><span class="pre">optimize_chunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.extend_chunks_5_axis"><code class="docutils literal notranslate"><span class="pre">extend_chunks_5_axis()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.get_closest_chunk"><code class="docutils literal notranslate"><span class="pre">get_closest_chunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_coherency"><code class="docutils literal notranslate"><span class="pre">chunks_coherency()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.limit_chunks"><code class="docutils literal notranslate"><span class="pre">limit_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_chunks_n_axis"><code class="docutils literal notranslate"><span class="pre">sample_chunks_n_axis()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_path_low"><code class="docutils literal notranslate"><span class="pre">sample_path_low()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_chunks"><code class="docutils literal notranslate"><span class="pre">sample_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.connect_chunks_low"><code class="docutils literal notranslate"><span class="pre">connect_chunks_low()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sort_chunks"><code class="docutils literal notranslate"><span class="pre">sort_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_to_mesh"><code class="docutils literal notranslate"><span class="pre">chunks_to_mesh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.utilities.chunk_utils">
+<span id="fabex-utilities-chunk-utils"></span><h1>fabex.utilities.chunk_utils<a class="headerlink" href="#module-fabex.utilities.chunk_utils" title="Link to this heading">#</a></h1>
+<p>Fabex ‘chunk_utils.py’ © 2012 Vilem Novak</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.chunks_refine" title="fabex.utilities.chunk_utils.chunks_refine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunks_refine</span></code></a>(chunks, o)</p></td>
+<td><p>Add Extra Points in Between for Chunks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.chunks_refine_threshold" title="fabex.utilities.chunk_utils.chunks_refine_threshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunks_refine_threshold</span></code></a>(chunks, distance, limitdistance)</p></td>
+<td><p>Add Extra Points in Between for Chunks. for Medial Axis Strategy only!</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.chunk_to_shapely" title="fabex.utilities.chunk_utils.chunk_to_shapely"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunk_to_shapely</span></code></a>(chunk)</p></td>
+<td><p>Converts CAM path chunks into Shapely Polygon</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.set_chunks_z" title="fabex.utilities.chunk_utils.set_chunks_z"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_chunks_z</span></code></a>(chunks, z)</p></td>
+<td><p>Sets the Depth of CAM path chunks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.optimize_chunk" title="fabex.utilities.chunk_utils.optimize_chunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimize_chunk</span></code></a>(chunk, operation)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.extend_chunks_5_axis" title="fabex.utilities.chunk_utils.extend_chunks_5_axis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend_chunks_5_axis</span></code></a>(chunks, o)</p></td>
+<td><p>Extend chunks with 5-axis cutter start and end points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.get_closest_chunk" title="fabex.utilities.chunk_utils.get_closest_chunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_closest_chunk</span></code></a>(o, pos, chunks)</p></td>
+<td><p>Find the closest chunk to a given position.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.chunks_coherency" title="fabex.utilities.chunk_utils.chunks_coherency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunks_coherency</span></code></a>(chunks)</p></td>
+<td><p>Checks CAM path chunks for Stability for Pencil path</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.limit_chunks" title="fabex.utilities.chunk_utils.limit_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">limit_chunks</span></code></a>(chunks, o[, force])</p></td>
+<td><p>Prevent excluded CAM path chunks from being Processed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.sample_chunks_n_axis" title="fabex.utilities.chunk_utils.sample_chunks_n_axis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_chunks_n_axis</span></code></a>(o, pathSamples, layers)</p></td>
+<td><p>Sample chunks along a specified axis based on provided paths and layers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.sample_path_low" title="fabex.utilities.chunk_utils.sample_path_low"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_path_low</span></code></a>(o, ch1, ch2, dosample)</p></td>
+<td><p>Generate a sample path between two channels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.sample_chunks" title="fabex.utilities.chunk_utils.sample_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_chunks</span></code></a>(o, pathSamples, layers)</p></td>
+<td><p>Sample chunks of paths based on the provided parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.connect_chunks_low" title="fabex.utilities.chunk_utils.connect_chunks_low"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect_chunks_low</span></code></a>(chunks, o)</p></td>
+<td><p>Connects chunks that are close to each other without lifting, sampling</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.sort_chunks" title="fabex.utilities.chunk_utils.sort_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort_chunks</span></code></a>(chunks, o[, last_pos])</p></td>
+<td><p>Sort a list of chunks based on a specified strategy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.chunk_utils.chunks_to_mesh" title="fabex.utilities.chunk_utils.chunks_to_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunks_to_mesh</span></code></a>(chunks, o)</p></td>
+<td><p>Convert sampled chunks into a mesh path for a given optimization object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.chunks_refine">
+<span class="sig-name descname"><span class="pre">chunks_refine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#chunks_refine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.chunks_refine" title="Link to this definition">#</a></dt>
+<dd><p>Add Extra Points in Between for Chunks</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.chunks_refine_threshold">
+<span class="sig-name descname"><span class="pre">chunks_refine_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limitdistance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#chunks_refine_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.chunks_refine_threshold" title="Link to this definition">#</a></dt>
+<dd><p>Add Extra Points in Between for Chunks. for Medial Axis Strategy only!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.chunk_to_shapely">
+<span class="sig-name descname"><span class="pre">chunk_to_shapely</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#chunk_to_shapely"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.chunk_to_shapely" title="Link to this definition">#</a></dt>
+<dd><p>Converts CAM path chunks into Shapely Polygon</p>
+<p>This function takes a CAM path chunk, uses the chunk points
+to create a Shapely Polygon, and returns the Polygon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.set_chunks_z">
+<span class="sig-name descname"><span class="pre">set_chunks_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#set_chunks_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.set_chunks_z" title="Link to this definition">#</a></dt>
+<dd><p>Sets the Depth of CAM path chunks</p>
+<p>This function takes a group of CAM path chunks, and a depth
+setting, creates copies of the chunks, assigns the depth
+value and then returns the copied chunks as a new list.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.optimize_chunk">
+<span class="sig-name descname"><span class="pre">optimize_chunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#optimize_chunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.optimize_chunk" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.extend_chunks_5_axis">
+<span class="sig-name descname"><span class="pre">extend_chunks_5_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#extend_chunks_5_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.extend_chunks_5_axis" title="Link to this definition">#</a></dt>
+<dd><p>Extend chunks with 5-axis cutter start and end points.</p>
+<p>This function modifies the provided chunks by appending calculated start
+and end points for a cutter based on the specified orientation and
+movement parameters. It determines the starting position of the cutter
+based on the machine’s settings and the object’s movement constraints.
+The function iterates through each point in the chunks and updates their
+start and end points accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chunks</strong> (<em>list</em>) – A list of chunk objects that will be modified.</p></li>
+<li><p><strong>o</strong> (<em>object</em>) – An object containing movement and orientation data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.get_closest_chunk">
+<span class="sig-name descname"><span class="pre">get_closest_chunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#get_closest_chunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.get_closest_chunk" title="Link to this definition">#</a></dt>
+<dd><p>Find the closest chunk to a given position.</p>
+<p>This function iterates through a list of chunks and determines which
+chunk is closest to the specified position. It checks if each chunk’s
+children are sorted before calculating the distance. The chunk with the
+minimum distance to the given position is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – An object representing the origin point.</p></li>
+<li><p><strong>pos</strong> – A position to which the closest chunk is calculated.</p></li>
+<li><p><strong>chunks</strong> (<em>list</em>) – A list of chunk objects to evaluate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The closest chunk object to the specified position, or None if no valid</dt><dd><p>chunk is found.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Chunk</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.chunks_coherency">
+<span class="sig-name descname"><span class="pre">chunks_coherency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#chunks_coherency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.chunks_coherency" title="Link to this definition">#</a></dt>
+<dd><p>Checks CAM path chunks for Stability for Pencil path</p>
+<p>This function checks if the vectors direction doesn’t change too quickly,
+if this happens it splits the chunk at that point, and if the change is too great
+the chunk will be deleted. This prevents the router/spindle from slowing down too
+much, but also means that some parts detected by cavity algorithm won’t be milled.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.limit_chunks">
+<span class="sig-name descname"><span class="pre">limit_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#limit_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.limit_chunks" title="Link to this definition">#</a></dt>
+<dd><p>Prevent excluded CAM path chunks from being Processed</p>
+<p>This function checks if there are limitations on the area to be
+milled, like limit curves, and rebuilds the chunk list without the
+excluded chunks.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.sample_chunks_n_axis">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_chunks_n_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathSamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#sample_chunks_n_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.sample_chunks_n_axis" title="Link to this definition">#</a></dt>
+<dd><p>Sample chunks along a specified axis based on provided paths and layers.</p>
+<p>This function processes a set of path samples and organizes them into
+chunks according to specified layers. It prepares the collision world if
+necessary, updates the cutter’s rotation based on the path samples, and
+handles the sampling of points along the paths. The function also
+manages the relationships between the sampled points and their
+respective layers, ensuring that the correct points are added to each
+chunk. The resulting chunks can be used for further processing in a 3D
+environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<em>object</em>) – An object containing properties such as min/max coordinates,
+cutter shape, and other relevant parameters.</p></li>
+<li><p><strong>pathSamples</strong> (<em>list</em>) – A list of path samples, each containing start points,
+end points, and rotations.</p></li>
+<li><p><strong>layers</strong> (<em>list</em>) – A list of layer definitions that specify the boundaries
+for sampling.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of sampled chunks organized by layers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.sample_path_low">
+<span class="sig-name descname"><span class="pre">sample_path_low</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dosample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#sample_path_low"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.sample_path_low" title="Link to this definition">#</a></dt>
+<dd><p>Generate a sample path between two channels.</p>
+<p>This function computes a series of points that form a path between two
+given channels. It calculates the direction vector from the end of the
+first channel to the start of the second channel and generates points
+along this vector up to a specified distance. If sampling is enabled, it
+modifies the z-coordinate of the generated points based on the cutter
+shape or image sampling, ensuring that the path accounts for any
+obstacles or features in the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – An object containing optimization parameters and properties related to
+the path generation.</p></li>
+<li><p><strong>ch1</strong> – The first channel object, which provides a point for the starting
+location of the path.</p></li>
+<li><p><strong>ch2</strong> – The second channel object, which provides a point for the ending
+location of the path.</p></li>
+<li><p><strong>dosample</strong> (<em>bool</em>) – A flag indicating whether to perform sampling along the generated path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An object representing the generated path points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CamPathChunk</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.sample_chunks">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathSamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#sample_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.sample_chunks" title="Link to this definition">#</a></dt>
+<dd><p>Sample chunks of paths based on the provided parameters.</p>
+<p>This function processes the given path samples and layers to generate
+chunks of points that represent the sampled paths. It takes into account
+various optimization settings and strategies to determine how the points
+are sampled and organized into layers. The function handles different
+scenarios based on the object’s properties and the specified layers,
+ensuring that the resulting chunks are correctly structured for further
+processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<em>object</em>) – An object containing various properties and settings
+related to the sampling process.</p></li>
+<li><p><strong>pathSamples</strong> (<em>list</em>) – A list of path samples to be processed.</p></li>
+<li><p><strong>layers</strong> (<em>list</em>) – A list of layers defining the z-coordinate ranges
+for sampling.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list of sampled chunks, each containing points that represent</dt><dd><p>the sampled paths.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.connect_chunks_low">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect_chunks_low</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#connect_chunks_low"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.connect_chunks_low" title="Link to this definition">#</a></dt>
+<dd><p>Connects chunks that are close to each other without lifting, sampling
+them ‘low’.</p>
+<p>This function processes a list of chunks and connects those that are
+within a specified distance based on the provided options. It takes into
+account various strategies for connecting the chunks, including ‘CARVE’,
+‘PENCIL’, and ‘MEDIAL_AXIS’, and adjusts the merging distance
+accordingly. The function also handles specific movement settings, such
+as whether to stay low or to merge distances, and may resample chunks if
+certain optimization conditions are met.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chunks</strong> (<em>list</em>) – A list of chunk objects to be connected.</p></li>
+<li><p><strong>o</strong> (<em>object</em>) – An options object containing movement and strategy parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of connected chunk objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.sort_chunks">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sort_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#sort_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.sort_chunks" title="Link to this definition">#</a></dt>
+<dd><p>Sort a list of chunks based on a specified strategy.</p>
+<p>This function sorts a list of chunks according to the provided options
+and the current position. It utilizes a recursive approach to find the
+closest chunk to the current position and adapts its distance if it has
+not been sorted before. The function also handles progress updates
+asynchronously and adjusts the recursion limit to accommodate deep
+recursion scenarios.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chunks</strong> (<em>list</em>) – A list of chunk objects to be sorted.</p></li>
+<li><p><strong>o</strong> (<em>object</em>) – An options object that contains sorting strategy and other parameters.</p></li>
+<li><p><strong>last_pos</strong> (<em>tuple?</em>) – The last known position as a tuple of coordinates.
+Defaults to None, which initializes the position to (0, 0, 0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sorted list of chunk objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.chunk_utils.chunks_to_mesh">
+<span class="sig-name descname"><span class="pre">chunks_to_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/chunk_utils.html#chunks_to_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.chunk_utils.chunks_to_mesh" title="Link to this definition">#</a></dt>
+<dd><p>Convert sampled chunks into a mesh path for a given optimization object.</p>
+<p>This function takes a list of sampled chunks and converts them into a
+mesh path based on the specified optimization parameters. It handles
+different machine axes configurations and applies optimizations as
+needed. The resulting mesh is created in the Blender context, and the
+function also manages the lifting and dropping of the cutter based on
+the chunk positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chunks</strong> (<em>list</em>) – A list of chunk objects to be converted into a mesh.</p></li>
+<li><p><strong>o</strong> (<em>object</em>) – An object containing optimization parameters and settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function creates a mesh in the Blender context but does not return a</dt><dd><p>value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../bounds_utils/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.utilities.bounds_utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../collision_utils/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.utilities.collision_utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_refine"><code class="docutils literal notranslate"><span class="pre">chunks_refine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_refine_threshold"><code class="docutils literal notranslate"><span class="pre">chunks_refine_threshold()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunk_to_shapely"><code class="docutils literal notranslate"><span class="pre">chunk_to_shapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.set_chunks_z"><code class="docutils literal notranslate"><span class="pre">set_chunks_z()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.optimize_chunk"><code class="docutils literal notranslate"><span class="pre">optimize_chunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.extend_chunks_5_axis"><code class="docutils literal notranslate"><span class="pre">extend_chunks_5_axis()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.get_closest_chunk"><code class="docutils literal notranslate"><span class="pre">get_closest_chunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_coherency"><code class="docutils literal notranslate"><span class="pre">chunks_coherency()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.limit_chunks"><code class="docutils literal notranslate"><span class="pre">limit_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_chunks_n_axis"><code class="docutils literal notranslate"><span class="pre">sample_chunks_n_axis()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_path_low"><code class="docutils literal notranslate"><span class="pre">sample_path_low()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sample_chunks"><code class="docutils literal notranslate"><span class="pre">sample_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.connect_chunks_low"><code class="docutils literal notranslate"><span class="pre">connect_chunks_low()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.sort_chunks"><code class="docutils literal notranslate"><span class="pre">sort_chunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.chunk_utils.chunks_to_mesh"><code class="docutils literal notranslate"><span class="pre">chunks_to_mesh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

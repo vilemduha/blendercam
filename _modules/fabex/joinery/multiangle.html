@@ -1,0 +1,1265 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.joinery.multiangle &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/joinery/multiangle';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.joinery.multiangle</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cos</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">sin</span><span class="p">,</span>
+    <span class="n">sqrt</span><span class="p">,</span>
+    <span class="n">tan</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.arc_bar</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">arc</span><span class="p">,</span>
+    <span class="n">bar</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.finger</span><span class="w"> </span><span class="kn">import</span> <span class="n">fingers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.interlock_twist</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">distributed_interlock</span><span class="p">,</span>
+    <span class="n">twist_female</span><span class="p">,</span>
+    <span class="n">twist_male</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">DT</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.compare_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">angle</span> <span class="k">as</span> <span class="n">compare_angle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.shapely_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shapely_to_curve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">duplicate</span><span class="p">,</span>
+    <span class="n">mirror_x</span><span class="p">,</span>
+    <span class="n">mirror_y</span><span class="p">,</span>
+    <span class="n">union</span><span class="p">,</span>
+    <span class="n">intersect</span><span class="p">,</span>
+    <span class="n">rename</span><span class="p">,</span>
+    <span class="n">difference</span><span class="p">,</span>
+    <span class="n">active_name</span><span class="p">,</span>
+    <span class="n">move</span><span class="p">,</span>
+    <span class="n">rotate</span><span class="p">,</span>
+    <span class="n">make_active</span><span class="p">,</span>
+    <span class="n">remove_multiple</span><span class="p">,</span>
+    <span class="n">join_multiple</span><span class="p">,</span>
+    <span class="n">remove_doubles</span><span class="p">,</span>
+    <span class="n">add_rectangle</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="multiangle">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.multiangle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiangle</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">,</span>
+    <span class="n">thick</span><span class="p">,</span>
+    <span class="n">angle</span><span class="p">,</span>
+    <span class="n">diameter</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">twist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tneck</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">tthick</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">combination</span><span class="o">=</span><span class="s2">&quot;MFF&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a multi-angle joint based on specified parameters.</span>
+
+<span class="sd">    This function creates a multi-angle joint by generating various</span>
+<span class="sd">    geometric shapes using the provided parameters such as radius,</span>
+<span class="sd">    thickness, angle, diameter, and tolerance. It utilizes Blender&#39;s</span>
+<span class="sd">    operations to create and manipulate curves, resulting in a joint that</span>
+<span class="sd">    can be customized with different combinations of male and female parts.</span>
+<span class="sd">    The function also allows for automatic generation of the number of</span>
+<span class="sd">    fingers in the joint and includes options for twisting and neck</span>
+<span class="sd">    dimensions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radius (float): The radius of the curve.</span>
+<span class="sd">        thick (float): The thickness of the bar.</span>
+<span class="sd">        angle (float): The angle of the female part.</span>
+<span class="sd">        diameter (float): The diameter of the tool for joint creation.</span>
+<span class="sd">        tolerance (float): Tolerance in the joint.</span>
+<span class="sd">        amount (int?): The amount of fingers in the joint; 0 means auto-generate. Defaults to</span>
+<span class="sd">            0.</span>
+<span class="sd">        stem (float?): The amount of radius the stem or neck of the joint will have. Defaults</span>
+<span class="sd">            to 1.</span>
+<span class="sd">        twist (bool?): Indicates if a twist lock addition is required. Defaults to False.</span>
+<span class="sd">        tneck (float?): Percentage the twist neck will have compared to thickness. Defaults to</span>
+<span class="sd">            0.5.</span>
+<span class="sd">        tthick (float?): Thickness of the twist material. Defaults to 0.01.</span>
+<span class="sd">        combination (str?): Specifies which joint to generate (&#39;M&#39;, &#39;F&#39;, &#39;MF&#39;, &#39;MFF&#39;, &#39;MMF&#39;).</span>
+<span class="sd">            Defaults to &#39;MFF&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but performs operations in</span>
+<span class="sd">            Blender.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">r_exterior</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">r_interior</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">height</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">r_exterior</span> <span class="o">*</span> <span class="n">r_exterior</span> <span class="o">-</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">+</span> <span class="n">r_interior</span> <span class="o">/</span> <span class="mi">4</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="n">r_interior</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">r_interior</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_rect&quot;</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Circle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_sides</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">Simple_radius</span><span class="o">=</span><span class="n">r_interior</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">radius</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpCircle&quot;</span><span class="p">)</span>
+
+    <span class="n">arc</span><span class="p">(</span>
+        <span class="n">radius</span><span class="p">,</span>
+        <span class="n">thick</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">,</span>
+        <span class="n">diameter</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+        <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+        <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+        <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+        <span class="n">which</span><span class="o">=</span><span class="s2">&quot;MF&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;MFF&quot;</span><span class="p">:</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">mirror_x</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;MMF&quot;</span><span class="p">:</span>
+        <span class="n">arc</span><span class="p">(</span>
+            <span class="n">radius</span><span class="p">,</span>
+            <span class="n">thick</span><span class="p">,</span>
+            <span class="n">angle</span><span class="p">,</span>
+            <span class="n">diameter</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+            <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+            <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+            <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+            <span class="n">which</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">mirror_y</span><span class="p">()</span>
+        <span class="n">rotate</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp_&quot;</span><span class="p">)</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;multiAngle60&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="t">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.t">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span>
+    <span class="n">length</span><span class="p">,</span>
+    <span class="n">thick</span><span class="p">,</span>
+    <span class="n">diameter</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">twist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tneck</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">tthick</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">combination</span><span class="o">=</span><span class="s2">&quot;MF&quot;</span><span class="p">,</span>
+    <span class="n">base_gender</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>
+    <span class="n">corner</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a 3D model based on specified parameters.</span>
+
+<span class="sd">    This function creates a 3D model by manipulating geometric shapes based</span>
+<span class="sd">    on the provided parameters. It handles different combinations of shapes</span>
+<span class="sd">    and orientations based on the specified gender and corner options. The</span>
+<span class="sd">    function utilizes several helper functions to perform operations such as</span>
+<span class="sd">    moving, duplicating, and uniting shapes to form the final model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        length (float): The length of the model.</span>
+<span class="sd">        thick (float): The thickness of the model.</span>
+<span class="sd">        diameter (float): The diameter of the model.</span>
+<span class="sd">        tolerance (float): The tolerance level for the model dimensions.</span>
+<span class="sd">        amount (int?): The amount of material to use. Defaults to 0.</span>
+<span class="sd">        stem (int?): The stem value for the model. Defaults to 1.</span>
+<span class="sd">        twist (bool?): Whether to apply a twist to the model. Defaults to False.</span>
+<span class="sd">        tneck (float?): The neck thickness. Defaults to 0.5.</span>
+<span class="sd">        tthick (float?): The thickness for the neck. Defaults to 0.01.</span>
+<span class="sd">        combination (str?): The combination type (&#39;MF&#39;, &#39;F&#39;, &#39;M&#39;). Defaults to &#39;MF&#39;.</span>
+<span class="sd">        base_gender (str?): The base gender for the model (&#39;M&#39; or &#39;F&#39;). Defaults to &#39;M&#39;.</span>
+<span class="sd">        corner (bool?): Whether to apply corner adjustments. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies the 3D model</span>
+<span class="sd">            directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">corner</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span><span class="p">:</span>
+            <span class="n">base_gender</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
+            <span class="n">combination</span> <span class="o">=</span> <span class="s2">&quot;f&quot;</span>
+        <span class="k">elif</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+            <span class="n">base_gender</span> <span class="o">=</span> <span class="s2">&quot;F&quot;</span>
+            <span class="n">combination</span> <span class="o">=</span> <span class="s2">&quot;f&quot;</span>
+        <span class="k">elif</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+            <span class="n">base_gender</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
+            <span class="n">combination</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+
+    <span class="n">bar</span><span class="p">(</span>
+        <span class="n">length</span><span class="p">,</span>
+        <span class="n">thick</span><span class="p">,</span>
+        <span class="n">diameter</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+        <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+        <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+        <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+        <span class="n">which</span><span class="o">=</span><span class="n">base_gender</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+    <span class="n">fingers</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span> <span class="ow">or</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="ow">or</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;m&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+        <span class="n">mirror_y</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span> <span class="ow">or</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span> <span class="ow">or</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">combination</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">)</span>
+        <span class="n">mirror_y</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">)</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="curved_t">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.curved_t">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">curved_t</span><span class="p">(</span>
+    <span class="n">length</span><span class="p">,</span>
+    <span class="n">thick</span><span class="p">,</span>
+    <span class="n">radius</span><span class="p">,</span>
+    <span class="n">diameter</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">twist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tneck</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">tthick</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">combination</span><span class="o">=</span><span class="s2">&quot;MF&quot;</span><span class="p">,</span>
+    <span class="n">base_gender</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a curved shape based on specified parameters.</span>
+
+<span class="sd">    This function generates a 3D curved shape using the provided dimensions</span>
+<span class="sd">    and characteristics. It utilizes the `bar` and `arc` functions to create</span>
+<span class="sd">    the desired geometry and applies transformations such as mirroring and</span>
+<span class="sd">    union operations to achieve the final shape. The function also allows</span>
+<span class="sd">    for customization based on the gender specification, which influences</span>
+<span class="sd">    the shape&#39;s design.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        length (float): The length of the bar.</span>
+<span class="sd">        thick (float): The thickness of the bar.</span>
+<span class="sd">        radius (float): The radius of the arc.</span>
+<span class="sd">        diameter (float): The diameter used in arc creation.</span>
+<span class="sd">        tolerance (float): The tolerance level for the shape.</span>
+<span class="sd">        amount (int?): The amount parameter for the shape generation. Defaults to 0.</span>
+<span class="sd">        stem (int?): The stem parameter for the shape generation. Defaults to 1.</span>
+<span class="sd">        twist (bool?): A flag indicating whether to apply a twist to the shape. Defaults to</span>
+<span class="sd">            False.</span>
+<span class="sd">        tneck (float?): The neck thickness parameter. Defaults to 0.5.</span>
+<span class="sd">        tthick (float?): The thickness parameter for the neck. Defaults to 0.01.</span>
+<span class="sd">        combination (str?): The combination type for the shape. Defaults to &#39;MF&#39;.</span>
+<span class="sd">        base_gender (str?): The base gender for the shape design. Defaults to &#39;M&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies the 3D model in the</span>
+<span class="sd">            environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bar</span><span class="p">(</span>
+        <span class="n">length</span><span class="p">,</span>
+        <span class="n">thick</span><span class="p">,</span>
+        <span class="n">diameter</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+        <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+        <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+        <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+        <span class="n">which</span><span class="o">=</span><span class="n">combination</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpbar&quot;</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">radius</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">thick</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_rect&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">base_gender</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span><span class="p">:</span>
+        <span class="n">arc</span><span class="p">(</span>
+            <span class="n">radius</span><span class="p">,</span>
+            <span class="n">thick</span><span class="p">,</span>
+            <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">diameter</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+            <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+            <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+            <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+            <span class="n">which</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">arc</span><span class="p">(</span>
+            <span class="n">radius</span><span class="p">,</span>
+            <span class="n">thick</span><span class="p">,</span>
+            <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">diameter</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+            <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+            <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+            <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+            <span class="n">which</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+        <span class="n">mirror_y</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">mirror_x</span><span class="p">()</span>
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp_&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arc</span><span class="p">(</span>
+            <span class="n">radius</span><span class="p">,</span>
+            <span class="n">thick</span><span class="p">,</span>
+            <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">diameter</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+            <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">,</span>
+            <span class="n">twist</span><span class="o">=</span><span class="n">twist</span><span class="p">,</span>
+            <span class="n">tneck</span><span class="o">=</span><span class="n">tneck</span><span class="p">,</span>
+            <span class="n">tthick</span><span class="o">=</span><span class="n">tthick</span><span class="p">,</span>
+            <span class="n">which</span><span class="o">=</span><span class="n">base_gender</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp_&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_arc&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">base_gender</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+            <span class="n">move</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">move</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">mirror_x</span><span class="p">()</span>
+
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;curved_t&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="mitre">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.mitre">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mitre</span><span class="p">(</span>
+    <span class="n">length</span><span class="p">,</span>
+    <span class="n">thick</span><span class="p">,</span>
+    <span class="n">angle</span><span class="p">,</span>
+    <span class="n">angleb</span><span class="p">,</span>
+    <span class="n">diameter</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">twist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">tneck</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">tthick</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">which</span><span class="o">=</span><span class="s2">&quot;MF&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a mitre joint based on specified parameters.</span>
+
+<span class="sd">    This function creates a 3D representation of a mitre joint using</span>
+<span class="sd">    Blender&#39;s bpy.ops.curve.simple operations. It generates a base rectangle</span>
+<span class="sd">    and cutout shapes, then constructs male and female sections of the joint</span>
+<span class="sd">    based on the provided angles and dimensions. The function allows for</span>
+<span class="sd">    customization of various parameters such as thickness, diameter,</span>
+<span class="sd">    tolerance, and the number of fingers in the joint. The resulting joint</span>
+<span class="sd">    can be either male, female, or a combination of both.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        length (float): The total width of the segments including 2 * radius and thickness.</span>
+<span class="sd">        thick (float): The thickness of the bar.</span>
+<span class="sd">        angle (float): The angle of the female part.</span>
+<span class="sd">        angleb (float): The angle of the male part.</span>
+<span class="sd">        diameter (float): The diameter of the tool for joint creation.</span>
+<span class="sd">        tolerance (float): Tolerance in the joint.</span>
+<span class="sd">        amount (int?): Amount of fingers in the joint; 0 means auto-generate. Defaults to 0.</span>
+<span class="sd">        stem (float?): Amount of radius the stem or neck of the joint will have. Defaults to 1.</span>
+<span class="sd">        twist (bool?): Indicates if a twist lock addition is required. Defaults to False.</span>
+<span class="sd">        tneck (float?): Percentage the twist neck will have compared to thickness. Defaults to</span>
+<span class="sd">            0.5.</span>
+<span class="sd">        tthick (float?): Thickness of the twist material. Defaults to 0.01.</span>
+<span class="sd">        which (str?): Specifies which joint to generate (&#39;M&#39;, &#39;F&#39;, &#39;MF&#39;). Defaults to &#39;MF&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># generate base rectangle</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="n">length</span> <span class="o">*</span> <span class="mf">1.005</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">thick</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">thick</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+
+    <span class="c1"># generate cutout shapes</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">thick</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="mi">6</span> <span class="o">*</span> <span class="n">thick</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">thick</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpmitreright&quot;</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">thick</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="mi">6</span> <span class="o">*</span> <span class="n">thick</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">thick</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">angleb</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">mirror_x</span><span class="p">()</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpmitreleft&quot;</span><span class="p">)</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+    <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+
+    <span class="n">fingers</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">)</span>
+
+    <span class="c1">#  Generate male section and join to the base</span>
+    <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="ow">or</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpfingers&quot;</span><span class="p">)</span>
+        <span class="n">rotate</span><span class="p">(</span><span class="n">angle</span> <span class="o">-</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">thick</span> <span class="o">/</span> <span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">/=</span> <span class="mi">2</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">y</span><span class="o">=-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+            <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpfingers&quot;</span><span class="p">)</span>
+            <span class="n">rotate</span><span class="p">(</span><span class="n">angleb</span> <span class="o">-</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">thick</span> <span class="o">/</span> <span class="n">cos</span><span class="p">(</span><span class="n">angleb</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">/=</span> <span class="mi">2</span>
+            <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">angleb</span><span class="p">),</span> <span class="n">y</span><span class="o">=-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">mirror_x</span><span class="p">()</span>
+
+        <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate female section and join to base</span>
+    <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;MF&quot;</span> <span class="ow">or</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">)</span>
+        <span class="n">mirror_y</span><span class="p">()</span>
+        <span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmpreceptacle&quot;</span><span class="p">)</span>
+        <span class="n">rotate</span><span class="p">(</span><span class="n">angleb</span> <span class="o">-</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">thick</span> <span class="o">/</span> <span class="n">cos</span><span class="p">(</span><span class="n">angleb</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">/=</span> <span class="mi">2</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">angleb</span><span class="p">),</span> <span class="n">y</span><span class="o">=-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">mirror_x</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+            <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpreceptacle2&quot;</span><span class="p">)</span>
+            <span class="n">rotate</span><span class="p">(</span><span class="n">angle</span> <span class="o">-</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">thick</span> <span class="o">/</span> <span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">/=</span> <span class="mi">2</span>
+            <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">y</span><span class="o">=-</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">)</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">,</span> <span class="s2">&quot;mitre&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="open_curve">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.open_curve">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_curve</span><span class="p">(</span>
+    <span class="n">line</span><span class="p">,</span>
+    <span class="n">thick</span><span class="p">,</span>
+    <span class="n">diameter</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">twist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">t_neck</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">t_thick</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">twist_amount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">which</span><span class="o">=</span><span class="s2">&quot;MF&quot;</span><span class="p">,</span>
+    <span class="n">twist_keep</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open a curve and add puzzle connectors with optional twist lock</span>
+<span class="sd">    connectors.</span>
+
+<span class="sd">    This function takes a shapely LineString and creates an open curve with</span>
+<span class="sd">    specified parameters such as thickness, diameter, tolerance, and twist</span>
+<span class="sd">    options. It generates puzzle connectors at the ends of the curve and can</span>
+<span class="sd">    optionally add twist lock connectors along the curve. The function also</span>
+<span class="sd">    handles the creation of the joint based on the provided parameters,</span>
+<span class="sd">    ensuring that the resulting geometry meets the specified design</span>
+<span class="sd">    requirements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        line (LineString): A shapely LineString representing the path of the curve.</span>
+<span class="sd">        thick (float): The thickness of the bar used in the joint.</span>
+<span class="sd">        diameter (float): The diameter of the tool for joint creation.</span>
+<span class="sd">        tolerance (float): The tolerance in the joint.</span>
+<span class="sd">        amount (int?): The number of fingers in the joint; 0 means auto-generate. Defaults to</span>
+<span class="sd">            0.</span>
+<span class="sd">        stem (float?): The amount of radius the stem or neck of the joint will have. Defaults</span>
+<span class="sd">            to 1.</span>
+<span class="sd">        twist (bool?): Whether to add twist lock connectors. Defaults to False.</span>
+<span class="sd">        t_neck (float?): The percentage the twist neck will have compared to thickness. Defaults</span>
+<span class="sd">            to 0.5.</span>
+<span class="sd">        t_thick (float?): The thickness of the twist material. Defaults to 0.01.</span>
+<span class="sd">        twist_amount (int?): The amount of twist distributed on the curve, not counting joint twists.</span>
+<span class="sd">            Defaults to 1.</span>
+<span class="sd">        which (str?): Specifies the type of joint; options include &#39;M&#39;, &#39;F&#39;, &#39;MF&#39;, &#39;MM&#39;, &#39;FF&#39;.</span>
+<span class="sd">            Defaults to &#39;MF&#39;.</span>
+<span class="sd">        twist_keep (bool?): Whether to keep the twist lock connectors. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies the geometry in the</span>
+<span class="sd">            Blender context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting Open Curve Function&quot;</span><span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="n">start_angle</span> <span class="o">=</span> <span class="n">compare_angle</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">end_angle</span> <span class="o">=</span> <span class="n">compare_angle</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">p_start</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">p_end</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start Angle </span><span class="si">{</span><span class="n">start_angle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;End Angle </span><span class="si">{</span><span class="n">end_angle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="n">thick</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">thick</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created Open Curve&quot;</span><span class="p">)</span>
+
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">thick</span><span class="p">)</span>
+    <span class="n">duplicate</span><span class="p">()</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">start_angle</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">end_angle</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmprect&quot;</span><span class="p">)</span>
+    <span class="n">dilated</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">thick</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># expand shapely object to thickness</span>
+    <span class="n">shapely_to_curve</span><span class="p">(</span><span class="s2">&quot;tmp_curve&quot;</span><span class="p">,</span> <span class="n">dilated</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Dilated and Processed with Shapely&quot;</span><span class="p">)</span>
+
+    <span class="c1"># truncate curve at both ends with the rectangles</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_curve&quot;</span><span class="p">)</span>
+    <span class="n">fingers</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">)</span>
+    <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">end_angle</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_fingers&quot;</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;tmp_&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_curve&quot;</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Adding Twists&quot;</span><span class="p">)</span>
+
+    <span class="n">twist_male</span><span class="p">(</span>
+        <span class="s2">&quot;tmp_curve&quot;</span><span class="p">,</span>
+        <span class="n">thick</span><span class="p">,</span>
+        <span class="n">diameter</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">twist</span><span class="p">,</span>
+        <span class="n">t_neck</span><span class="p">,</span>
+        <span class="n">t_thick</span><span class="p">,</span>
+        <span class="n">end_angle</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">p_end</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">twist_keep</span><span class="o">=</span><span class="n">twist_keep</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">twist_female</span><span class="p">(</span>
+        <span class="s2">&quot;receptacle&quot;</span><span class="p">,</span>
+        <span class="n">thick</span><span class="p">,</span>
+        <span class="n">diameter</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">twist</span><span class="p">,</span>
+        <span class="n">t_neck</span><span class="p">,</span>
+        <span class="n">t_thick</span><span class="p">,</span>
+        <span class="n">twist_keep</span><span class="o">=</span><span class="n">twist_keep</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp&quot;</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">start_angle</span> <span class="o">+</span> <span class="n">pi</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_curve&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">twist_keep</span><span class="p">:</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;twist_keep_f&quot;</span><span class="p">)</span>
+        <span class="n">rotate</span><span class="p">(</span><span class="n">start_angle</span> <span class="o">+</span> <span class="n">pi</span><span class="p">)</span>
+        <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">p_start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">twist_amount</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">twist</span><span class="p">:</span>
+        <span class="n">twist_start</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="p">(</span><span class="n">twist_amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">distributed_interlock</span><span class="p">(</span>
+            <span class="n">line</span><span class="p">,</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+            <span class="n">thick</span><span class="p">,</span>
+            <span class="n">t_thick</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">twist_amount</span><span class="p">,</span>
+            <span class="n">tangent</span><span class="o">=</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">fixed_angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">twist_start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">twist_start</span><span class="p">,</span>
+            <span class="n">closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;TWIST&quot;</span><span class="p">,</span>
+            <span class="n">twist_percentage</span><span class="o">=</span><span class="n">t_neck</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">twist_keep</span><span class="p">:</span>
+            <span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;twist_keep&quot;</span><span class="p">)</span>
+            <span class="n">join_multiple</span><span class="p">(</span><span class="s2">&quot;twist_keep&quot;</span><span class="p">)</span>
+            <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;interlock&quot;</span><span class="p">)</span>
+
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tmp_twist&quot;</span><span class="p">)</span>
+        <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp_curve&quot;</span><span class="p">)</span>
+        <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;puzzle_curve&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="tile">
+<a class="viewcode-back" href="../../../autoapi/fabex/joinery/multiangle/index.html#fabex.joinery.multiangle.tile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tile</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">tile_x_amount</span><span class="p">,</span> <span class="n">tile_y_amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a tile shape based on specified dimensions and parameters.</span>
+
+<span class="sd">    This function calculates the dimensions of a tile based on the provided</span>
+<span class="sd">    diameter and tolerance, as well as the number of tiles in the x and y</span>
+<span class="sd">    directions. It constructs the tile shape by creating a base and adding</span>
+<span class="sd">    features such as fingers for interlocking. The function also handles</span>
+<span class="sd">    transformations such as moving, rotating, and performing boolean</span>
+<span class="sd">    operations to achieve the desired tile geometry.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        diameter (float): The diameter of the tile.</span>
+<span class="sd">        tolerance (float): The tolerance to be applied to the tile dimensions.</span>
+<span class="sd">        tile_x_amount (int): The number of tiles along the x-axis.</span>
+<span class="sd">        tile_y_amount (int): The number of tiles along the y-axis.</span>
+<span class="sd">        stem (int?): A parameter affecting the tile&#39;s features. Defaults to 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies global state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">diameter</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">*</span> <span class="n">DT</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="p">((</span><span class="n">tile_x_amount</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stem</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">diameter</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="p">((</span><span class="n">tile_y_amount</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">stem</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">diameter</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Size: </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fingers</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">tile_x_amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">)</span>
+    <span class="n">add_rectangle</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+
+    <span class="n">make_active</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_fingers&quot;</span><span class="p">)</span>
+    <span class="n">intersect</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;_fingers&quot;</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;intersection&quot;</span><span class="p">,</span> <span class="s2">&quot;_fingers&quot;</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+    <span class="n">remove_doubles</span><span class="p">()</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">,</span> <span class="s2">&quot;_receptacle&quot;</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">y</span><span class="o">=-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">)</span>
+    <span class="n">fingers</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">tile_y_amount</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="n">stem</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+    <span class="n">remove_doubles</span><span class="p">()</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;fingers&quot;</span><span class="p">,</span> <span class="s2">&quot;_fingers&quot;</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;receptacle&quot;</span><span class="p">,</span> <span class="s2">&quot;_receptacle&quot;</span><span class="p">)</span>
+    <span class="n">rotate</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">difference</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;_base&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;tile_ &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tile_x_amount</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tile_y_amount</span><span class="p">))</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

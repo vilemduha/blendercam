@@ -1,0 +1,1039 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.operators.curve_equation_ops &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/operators/curve_equation_ops/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.operators.curve_tools_ops" href="../curve_tools_ops/index.html" />
+    <link rel="prev" title="fabex.operators.curve_create_ops" href="../curve_create_ops/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.operators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/operators/curve_equation_ops/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.operators.curve_equation_ops</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve"><code class="docutils literal notranslate"><span class="pre">CamSineCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.axis"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.axis</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.amplitude"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.amplitude</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.period"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.period</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.beat_period"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.beat_period</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.shift"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.shift</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.offset"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_distance"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_angle_offset"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_angle_offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_amount"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_amount</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.wave_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.wave_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_z"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_z"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.shift"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.shift</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.typecurve"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.typecurve</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.R"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.R</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.r"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.r</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.d"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.d</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.dip"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.dip</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.x_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.x_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.y_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.y_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.z_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.z_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.operators.curve_equation_ops">
+<span id="fabex-operators-curve-equation-ops"></span><h1>fabex.operators.curve_equation_ops<a class="headerlink" href="#module-fabex.operators.curve_equation_ops" title="Link to this heading">#</a></h1>
+<p>Fabex ‘curve_cam_equation.py’ © 2021, 2022 Alain Pelletier</p>
+<p>Operators to create a number of geometric shapes with curves.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_equation_ops.CamSineCurve" title="fabex.operators.curve_equation_ops.CamSineCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamSineCurve</span></code></a></p></td>
+<td><p>Create a Sine Wave Curve</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_equation_ops.CamLissajousCurve" title="fabex.operators.curve_equation_ops.CamLissajousCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamLissajousCurve</span></code></a></p></td>
+<td><p>Create a Lissajous Curve (Knot / Weave Pattern)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve" title="fabex.operators.curve_equation_ops.CamHypotrochoidCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamHypotrochoidCurve</span></code></a></p></td>
+<td><p>Create a Hypotrochoid Curve (Spirograph-type Pattern)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.operators.curve_equation_ops.CamCustomCurve" title="fabex.operators.curve_equation_ops.CamCustomCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamCustomCurve</span></code></a></p></td>
+<td><p>Create a Curve based on User Defined Variables</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamSineCurve</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Create a Sine Wave Curve</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.sine'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Periodic</span> <span class="pre">Wave'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.axis">
+<span class="sig-name descname"><span class="pre">axis</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Displacement</span> <span class="pre">Axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'XY'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Y</span> <span class="pre">to</span> <span class="pre">displace</span> <span class="pre">X</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Y</span> <span class="pre">constant;</span> <span class="pre">X</span> <span class="pre">sine</span> <span class="pre">displacement'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'YX'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'X</span> <span class="pre">to</span> <span class="pre">displace</span> <span class="pre">Y</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'X</span> <span class="pre">constant;</span> <span class="pre">Y</span> <span class="pre">sine</span> <span class="pre">displacement'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ZX'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'X</span> <span class="pre">to</span> <span class="pre">displace</span> <span class="pre">Z</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'X</span> <span class="pre">constant;</span> <span class="pre">Y</span> <span class="pre">sine</span> <span class="pre">displacement'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ZY'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Y</span> <span class="pre">to</span> <span class="pre">displace</span> <span class="pre">Z</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'X</span> <span class="pre">constant;</span> <span class="pre">Y</span> <span class="pre">sine</span> <span class="pre">displacement'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'ZX'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.axis" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.wave">
+<span class="sig-name descname"><span class="pre">wave</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Triangle</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle</span> <span class="pre">wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'cycloid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Cycloid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">wave</span> <span class="pre">rectification'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'invcycloid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Inverse</span> <span class="pre">Cycloid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">wave</span> <span class="pre">rectification'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.wave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.amplitude">
+<span class="sig-name descname"><span class="pre">amplitude</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Amplitude'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.01</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.amplitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.amplitude" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.period">
+<span class="sig-name descname"><span class="pre">period</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Period'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.period" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.beat_period">
+<span class="sig-name descname"><span class="pre">beat_period</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Beat</span> <span class="pre">Period</span> <span class="pre">Offset'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.beat_period"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.beat_period" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.shift">
+<span class="sig-name descname"><span class="pre">shift</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Phase</span> <span class="pre">Shift'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="m"><span class="pre">360</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">360</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'ROTATION'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.shift" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Offset'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.offset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.iteration">
+<span class="sig-name descname"><span class="pre">iteration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Iteration'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">50</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2000</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.iteration" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.max_t">
+<span class="sig-name descname"><span class="pre">max_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Ends</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">3.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.max_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.max_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.min_t">
+<span class="sig-name descname"><span class="pre">min_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Starts</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">3.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.min_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.min_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.wave_distance">
+<span class="sig-name descname"><span class="pre">wave_distance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Distance</span> <span class="pre">Between</span> <span class="pre">Multiple</span> <span class="pre">Waves'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.wave_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_distance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.wave_angle_offset">
+<span class="sig-name descname"><span class="pre">wave_angle_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty(name='Angle</span> <span class="pre">Offset</span> <span class="pre">for</span> <span class="pre">Multiple</span> <span class="pre">Waves',</span> <span class="pre">default=pi</span> <span class="pre">/</span> <span class="pre">2,</span> <span class="pre">min=-200</span> <span class="pre">*</span> <span class="pre">pi,</span> <span class="pre">max=200</span> <span class="pre">*</span> <span class="pre">pi,</span> <span class="pre">precision=4,</span> <span class="pre">step=100,</span> <span class="pre">unit='ROTATION')</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.wave_angle_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_angle_offset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.wave_amount">
+<span class="sig-name descname"><span class="pre">wave_amount</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Amount</span> <span class="pre">of</span> <span class="pre">Multiple</span> <span class="pre">Waves'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2000</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.wave_amount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_amount" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamSineCurve.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamSineCurve.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamSineCurve.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamLissajousCurve</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Create a Lissajous Curve (Knot / Weave Pattern)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.lissajous'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Lissajous</span> <span class="pre">Figure'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_a">
+<span class="sig-name descname"><span class="pre">amplitude_a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Amplitude</span> <span class="pre">A'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.amplitude_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_a" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.wave_a">
+<span class="sig-name descname"><span class="pre">wave_a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Triangle</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle</span> <span class="pre">wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.wave_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_a" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_b">
+<span class="sig-name descname"><span class="pre">amplitude_b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Amplitude</span> <span class="pre">B'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.amplitude_b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_b" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.wave_b">
+<span class="sig-name descname"><span class="pre">wave_b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Y'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sine</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Triangle</span> <span class="pre">Wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'triangle</span> <span class="pre">wave'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'sine'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.wave_b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_b" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.period_a">
+<span class="sig-name descname"><span class="pre">period_a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Period</span> <span class="pre">A'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.period_a"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_a" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.period_b">
+<span class="sig-name descname"><span class="pre">period_b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Period</span> <span class="pre">B'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.period_b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_b" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.period_z">
+<span class="sig-name descname"><span class="pre">period_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Period</span> <span class="pre">Z'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.period_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_z" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_z">
+<span class="sig-name descname"><span class="pre">amplitude_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Amplitude</span> <span class="pre">Z'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.amplitude_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_z" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.shift">
+<span class="sig-name descname"><span class="pre">shift</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Phase</span> <span class="pre">Shift'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="m"><span class="pre">360</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">360</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'ROTATION'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.shift" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.iteration">
+<span class="sig-name descname"><span class="pre">iteration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Iteration'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">500</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">50</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">10000</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.iteration" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.max_t">
+<span class="sig-name descname"><span class="pre">max_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Ends</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">11</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">3.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1000000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.max_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.max_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.min_t">
+<span class="sig-name descname"><span class="pre">min_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Starts</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">10.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.min_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.min_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamLissajousCurve.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamLissajousCurve.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamHypotrochoidCurve</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Create a Hypotrochoid Curve (Spirograph-type Pattern)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.hypotrochoid'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Spirograph</span> <span class="pre">Type</span> <span class="pre">Figure'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.typecurve">
+<span class="sig-name descname"><span class="pre">typecurve</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Type</span> <span class="pre">of</span> <span class="pre">Curve'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'hypo'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Hypotrochoid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Inside</span> <span class="pre">ring'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'epi'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Epicycloid'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Outside</span> <span class="pre">inner</span> <span class="pre">ring'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.typecurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.typecurve" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.R">
+<span class="sig-name descname"><span class="pre">R</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Big</span> <span class="pre">Circle</span> <span class="pre">Radius'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.25</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.R"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.R" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.r">
+<span class="sig-name descname"><span class="pre">r</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Small</span> <span class="pre">Circle</span> <span class="pre">Radius'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.18</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0001</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.r"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.r" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.d">
+<span class="sig-name descname"><span class="pre">d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Distance</span> <span class="pre">from</span> <span class="pre">Center</span> <span class="pre">of</span> <span class="pre">Interior</span> <span class="pre">Circle'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.d" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.dip">
+<span class="sig-name descname"><span class="pre">dip</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Variable</span> <span class="pre">Depth</span> <span class="pre">from</span> <span class="pre">Center'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.dip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.dip" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamHypotrochoidCurve.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamHypotrochoidCurve.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CamCustomCurve</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.Operator</span></code></p>
+<p>Create a Curve based on User Defined Variables</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object.customcurve'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.bl_idname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_idname" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Custom</span> <span class="pre">Curve'</span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.bl_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_label" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.bl_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.x_string">
+<span class="sig-name descname"><span class="pre">x_string</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">StringProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'X</span> <span class="pre">Equation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Equation</span> <span class="pre">x=F(t)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'t'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.x_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.x_string" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.y_string">
+<span class="sig-name descname"><span class="pre">y_string</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">StringProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Y</span> <span class="pre">Equation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Equation</span> <span class="pre">y=F(t)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'0'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.y_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.y_string" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.z_string">
+<span class="sig-name descname"><span class="pre">z_string</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">StringProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Z</span> <span class="pre">Equation'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Equation</span> <span class="pre">z=F(t)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'0.05*sin(2*pi*4*t)'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.z_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.z_string" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.iteration">
+<span class="sig-name descname"><span class="pre">iteration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Iteration'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">50</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2000</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.iteration" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.max_t">
+<span class="sig-name descname"><span class="pre">max_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Ends</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">3.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.max_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.max_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.min_t">
+<span class="sig-name descname"><span class="pre">min_t</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wave</span> <span class="pre">Starts</span> <span class="pre">at</span> <span class="pre">X'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="p"><span class="pre">-</span></span><span class="pre">3.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.min_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.min_t" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.operators.curve_equation_ops.CamCustomCurve.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/operators/curve_equation_ops.html#CamCustomCurve.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.operators.curve_equation_ops.CamCustomCurve.execute" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../curve_create_ops/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.operators.curve_create_ops</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../curve_tools_ops/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.operators.curve_tools_ops</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve"><code class="docutils literal notranslate"><span class="pre">CamSineCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.axis"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.axis</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.amplitude"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.amplitude</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.period"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.period</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.beat_period"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.beat_period</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.shift"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.shift</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.offset"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_distance"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_angle_offset"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_angle_offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.wave_amount"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.wave_amount</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamSineCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamSineCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.wave_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.wave_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.wave_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_a"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_a</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_b"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_b</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.period_z"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.period_z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.amplitude_z"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.amplitude_z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.shift"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.shift</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamLissajousCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamLissajousCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.typecurve"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.typecurve</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.R"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.R</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.r"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.r</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.d"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.d</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.dip"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.dip</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamHypotrochoidCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamHypotrochoidCurve.execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_idname"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_idname</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_label"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.bl_options"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.bl_options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.x_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.x_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.y_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.y_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.z_string"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.z_string</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.iteration"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.iteration</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.max_t"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.max_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.min_t"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.min_t</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.operators.curve_equation_ops.CamCustomCurve.execute"><code class="docutils literal notranslate"><span class="pre">CamCustomCurve.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.silhouette_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/silhouette_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.silhouette_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">bmesh</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.ops</span><span class="w"> </span><span class="kn">import</span> <span class="n">unary_union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultiPolygon</span><span class="p">,</span>
+    <span class="n">Polygon</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.curve_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">curve_to_shapely</span><span class="p">,</span>
+    <span class="n">curve_to_chunks</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.image_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">image_to_chunks</span><span class="p">,</span>
+    <span class="n">render_sample_image</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.shapely_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">chunks_to_shapely</span><span class="p">,</span>
+    <span class="n">shapely_to_curve</span><span class="p">,</span>
+    <span class="n">shapely_to_multipolygon</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># separate function in blender, so you can offset any curve.</span>
+<span class="c1"># FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.</span>
+<div class="viewcode-block" id="silhouette_offset">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html#fabex.utilities.silhouette_utils.silhouette_offset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">silhouette_offset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mitrelimit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Offset the silhouette of a curve or font object in Blender.</span>
+
+<span class="sd">    This function takes an active curve or font object in Blender and</span>
+<span class="sd">    creates an offset silhouette based on the specified parameters. It first</span>
+<span class="sd">    retrieves the silhouette of the object and then applies a buffer</span>
+<span class="sd">    operation to create the offset shape. The resulting shape is then</span>
+<span class="sd">    converted back into a curve object in the Blender scene.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context (bpy.context): The current Blender context.</span>
+<span class="sd">        offset (float): The distance to offset the silhouette.</span>
+<span class="sd">        style (int?): The join style for the offset. Defaults to 1.</span>
+<span class="sd">        mitrelimit (float?): The mitre limit for the offset. Defaults to 1.0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary indicating the operation is finished.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+
+    <span class="n">silhs</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">curve_to_shapely</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CURVE&quot;</span><span class="p">,</span> <span class="s2">&quot;FONT&quot;</span><span class="p">]</span>
+        <span class="k">else</span> <span class="n">get_object_silhouette</span><span class="p">(</span><span class="s2">&quot;OBJECTS&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">ob</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">mp</span> <span class="o">=</span> <span class="n">silhs</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span>
+        <span class="n">offset</span><span class="p">,</span>
+        <span class="n">cap_style</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">join_style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">mitre_limit</span><span class="o">=</span><span class="n">mitrelimit</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">shapely_to_curve</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_offset_</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">,</span> <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_object_silhouette">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html#fabex.utilities.silhouette_utils.get_object_silhouette">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_object_silhouette</span><span class="p">(</span><span class="n">stype</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_modifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the silhouette of objects based on the specified type.</span>
+
+<span class="sd">    This function computes the silhouette of a given set of objects in</span>
+<span class="sd">    Blender based on the specified type. It can handle both curves and mesh</span>
+<span class="sd">    objects, converting curves to polygon format and calculating the</span>
+<span class="sd">    silhouette for mesh objects. The function also considers the use of</span>
+<span class="sd">    modifiers if specified. The silhouette is generated by processing the</span>
+<span class="sd">    geometry of the objects and returning a Shapely representation of the</span>
+<span class="sd">    silhouette.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stype (str): The type of silhouette to generate (&#39;CURVES&#39; or &#39;OBJECTS&#39;).</span>
+<span class="sd">        objects (list?): A list of Blender objects to process. Defaults to None.</span>
+<span class="sd">        use_modifiers (bool?): Whether to apply modifiers to the objects. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        shapely.geometry.MultiPolygon: The computed silhouette as a Shapely MultiPolygon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- ADDED ---</span>
+    <span class="n">allchunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># ---------------</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Silhouette Type: </span><span class="si">{</span><span class="n">stype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;CURVES&quot;</span><span class="p">:</span>  <span class="c1"># curve conversion to polygon format</span>
+        <span class="c1"># allchunks = []</span>
+
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="n">chunks</span> <span class="o">=</span> <span class="n">curve_to_chunks</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+            <span class="n">allchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+
+        <span class="n">silhouette</span> <span class="o">=</span> <span class="n">chunks_to_shapely</span><span class="p">(</span><span class="n">allchunks</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;OBJECTS&quot;</span><span class="p">:</span>
+        <span class="n">totfaces</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">polys</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># moved here EH</span>
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="c1"># --- ADDED EH---</span>
+            <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MESH&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">polygons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># If the mesh has edges but no faces (like a default circle)</span>
+                <span class="n">bm</span> <span class="o">=</span> <span class="n">bmesh</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+                <span class="n">bm</span><span class="o">.</span><span class="n">from_mesh</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+                <span class="c1"># Try to create a face from the existing edges</span>
+                <span class="c1"># edgeloop_fill is great for circles</span>
+                <span class="n">bmesh</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">edgeloop_fill</span><span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="n">bm</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
+
+                <span class="c1"># Now use this temporary &#39;filled&#39; bmesh for your silhouette</span>
+                <span class="c1"># instead of the empty ob.data</span>
+                <span class="n">mw</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">matrix_world</span>
+                <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">bm</span><span class="o">.</span><span class="n">faces</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="p">[(</span><span class="n">mw</span> <span class="o">@</span> <span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">xy</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">face</span><span class="o">.</span><span class="n">verts</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+                            <span class="n">polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mf">0.000001</span><span class="p">))</span>
+                <span class="n">bm</span><span class="o">.</span><span class="n">free</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CURVE&quot;</span><span class="p">:</span>
+                <span class="n">chunks</span> <span class="o">=</span> <span class="n">curve_to_chunks</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+                <span class="n">allchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+                <span class="c1"># ---------------END EH------------</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">totfaces</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">polygons</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">totfaces</span> <span class="o">&lt;</span> <span class="mi">20000000</span><span class="p">:</span>
+            <span class="c1"># boolean polygons method originaly was 20 000 poly limit, now limitless,</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Shapely Getting Silhouette&quot;</span><span class="p">)</span>
+            <span class="c1"># polys = [] #removed EH</span>
+
+            <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Object: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">use_modifiers</span><span class="p">:</span>
+                    <span class="n">ob</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">evaluated_get</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">evaluated_depsgraph_get</span><span class="p">())</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">to_mesh</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span>
+
+                <span class="n">mw</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">matrix_world</span>
+                <span class="n">mwi</span> <span class="o">=</span> <span class="n">mw</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">rotation_euler</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">calc_loop_triangles</span><span class="p">()</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="mf">0.000001</span>
+                <span class="n">scaleup</span> <span class="o">=</span> <span class="mi">100</span>
+
+                <span class="k">for</span> <span class="n">tri</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">loop_triangles</span><span class="p">:</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">tri</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">n</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">tri</span><span class="o">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span><span class="o">.</span><span class="n">z</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">tri</span><span class="o">.</span><span class="n">center</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">xy</span>
+
+                        <span class="k">for</span> <span class="n">vert_index</span> <span class="ow">in</span> <span class="n">tri</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
+                            <span class="n">v</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">m</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">vert_index</span><span class="p">]</span><span class="o">.</span><span class="n">co</span>
+                            <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">p</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+                                <span class="n">polys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+                        <span class="nb">id</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">totfaces</span> <span class="o">&lt;</span> <span class="mi">20000</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bigshapes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">part</span> <span class="o">=</span> <span class="mi">20000</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing in Parts&quot;</span><span class="p">)</span>
+
+                <span class="k">while</span> <span class="n">i</span> <span class="o">*</span> <span class="n">part</span> <span class="o">&lt;</span> <span class="n">totfaces</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">ar</span> <span class="o">=</span> <span class="n">polys</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">part</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="n">part</span><span class="p">]</span>
+                    <span class="n">bigshapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unary_union</span><span class="p">(</span><span class="n">ar</span><span class="p">))</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">part</span> <span class="o">&lt;</span> <span class="n">totfaces</span><span class="p">:</span>
+                    <span class="n">last_ar</span> <span class="o">=</span> <span class="n">polys</span><span class="p">[(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">part</span> <span class="p">:]</span>
+                    <span class="n">bigshapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unary_union</span><span class="p">(</span><span class="n">last_ar</span><span class="p">))</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Joining&quot;</span><span class="p">)</span>
+
+                <span class="n">p</span> <span class="o">=</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">bigshapes</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time: </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="c1"># --- FIX STARTS HERE EH---</span>
+            <span class="c1"># Ensure p is a MultiPolygon before passing it on</span>
+            <span class="n">p_multi</span> <span class="o">=</span> <span class="n">ensure_multipolygon</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">mp1</span> <span class="o">=</span> <span class="n">shapely_to_multipolygon</span><span class="p">(</span><span class="n">p_multi</span><span class="p">)</span>
+
+            <span class="c1"># Do the same for mp2 just in case chunks_to_shapely returns a Polygon</span>
+            <span class="n">mp2_raw</span> <span class="o">=</span> <span class="n">chunks_to_shapely</span><span class="p">(</span><span class="n">allchunks</span><span class="p">)</span>
+            <span class="n">mp2</span> <span class="o">=</span> <span class="n">ensure_multipolygon</span><span class="p">(</span><span class="n">mp2_raw</span><span class="p">)</span>
+
+            <span class="c1"># The union of two MultiPolygons can still result in a single Polygon</span>
+            <span class="c1"># so we wrap the final result as well.</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">mp1</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">mp2</span><span class="p">)</span>
+            <span class="n">silhouette</span> <span class="o">=</span> <span class="n">ensure_multipolygon</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="c1"># --- FIX ENDS HERE EH---</span>
+
+    <span class="k">return</span> <span class="n">silhouette</span></div>
+
+
+
+<span class="c1"># --- ADDED HELPER EH---</span>
+<div class="viewcode-block" id="ensure_multipolygon">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html#fabex.utilities.silhouette_utils.ensure_multipolygon">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_multipolygon</span><span class="p">(</span><span class="n">geom</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures a geometry is a MultiPolygon, even if it is a single Polygon.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">geom</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">([</span><span class="n">geom</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">MultiPolygon</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">geom</span>
+    <span class="c1"># Handle GeometryCollections (extract only polygons)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="s2">&quot;geoms&quot;</span><span class="p">):</span>
+        <span class="n">polys</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">geoms</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">(</span><span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">MultiPolygon</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_operation_silhouette">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html#fabex.utilities.silhouette_utils.get_operation_silhouette">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_operation_silhouette</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the silhouette for the given operation.</span>
+
+<span class="sd">    This function determines the silhouette of an operation using image</span>
+<span class="sd">    thresholding techniques. It handles different geometry sources, such as</span>
+<span class="sd">    objects or images, and applies specific methods based on the type of</span>
+<span class="sd">    geometry. If the geometry source is &#39;OBJECT&#39; or &#39;COLLECTION&#39;, it checks</span>
+<span class="sd">    whether to process curves or not. The function also considers the number</span>
+<span class="sd">    of faces in mesh objects to decide on the appropriate method for</span>
+<span class="sd">    silhouette extraction.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operation (Operation): An object containing the necessary data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Silhouette: The computed silhouette for the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">update_silhouette_tag</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">geometry_source</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">,</span> <span class="s2">&quot;COLLECTION&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">operation</span><span class="o">.</span><span class="n">onlycurves</span><span class="p">:</span>
+                <span class="n">stype</span> <span class="o">=</span> <span class="s2">&quot;OBJECTS&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stype</span> <span class="o">=</span> <span class="s2">&quot;CURVES&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stype</span> <span class="o">=</span> <span class="s2">&quot;IMAGE&quot;</span>
+
+        <span class="n">totfaces</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># totfaces += [</span>
+        <span class="c1">#     len(ob.data.polygons)</span>
+        <span class="c1">#     for ob in operation.objects</span>
+        <span class="c1">#     if ob.type == &quot;MESH&quot; and stype == &quot;OBJECT&quot;</span>
+        <span class="c1"># ]</span>
+
+        <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;OBJECTS&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">operation</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MESH&quot;</span><span class="p">:</span>
+                    <span class="n">totfaces</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">polygons</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;OBJECTS&quot;</span> <span class="ow">and</span> <span class="n">totfaces</span> <span class="o">&gt;</span> <span class="mi">200000</span><span class="p">)</span> <span class="ow">or</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;IMAGE&quot;</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Image Method&quot;</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">render_sample_image</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s2">&quot;OBJECTS&quot;</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="n">operation</span><span class="o">.</span><span class="n">min_z</span> <span class="o">-</span> <span class="mf">0.0000001</span>
+                <span class="c1"># #the small number solves issue with totally flat meshes, which people tend to mill instead of</span>
+                <span class="c1"># proper pockets. then the minimum was also maximum, and it didn&#39;t detect contour.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># this fixes another numeric imprecision.</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">zbuffer_image</span><span class="p">)</span>
+
+            <span class="n">chunks</span> <span class="o">=</span> <span class="n">image_to_chunks</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">silhouette</span> <span class="o">=</span> <span class="n">chunks_to_shapely</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+        <span class="c1"># this conversion happens because we need the silh to be oriented, for milling directions.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;~ Object Method for Retrieving Silhouette ~&quot;</span><span class="p">)</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">silhouette</span> <span class="o">=</span> <span class="n">get_object_silhouette</span><span class="p">(</span>
+                <span class="n">stype</span><span class="p">,</span>
+                <span class="n">objects</span><span class="o">=</span><span class="n">operation</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span>
+                <span class="n">use_modifiers</span><span class="o">=</span><span class="n">operation</span><span class="o">.</span><span class="n">use_modifiers</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">operation</span><span class="o">.</span><span class="n">update_silhouette_tag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">operation</span><span class="o">.</span><span class="n">silhouette</span></div>
+
+
+
+<div class="viewcode-block" id="get_object_outline">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html#fabex.utilities.silhouette_utils.get_object_outline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_object_outline</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">Offset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the outline of a geometric object based on specified parameters.</span>
+
+<span class="sd">    This function generates an outline for a given geometric object by</span>
+<span class="sd">    applying a buffer operation to its polygons. The buffer radius can be</span>
+<span class="sd">    adjusted based on the `radius` parameter, and the operation can be</span>
+<span class="sd">    offset based on the `Offset` flag. The function also considers whether</span>
+<span class="sd">    the polygons should be merged or not, depending on the properties of the</span>
+<span class="sd">    object `o`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radius (float): The radius for the buffer operation.</span>
+<span class="sd">        o (object): An object containing properties that influence the outline generation.</span>
+<span class="sd">        Offset (bool): A flag indicating whether to apply a positive or negative offset.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        MultiPolygon: The resulting outline of the geometric object as a MultiPolygon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># FIXME: make this one operation independent</span>
+    <span class="c1"># circle detail, optimize, optimize thresold.</span>
+
+    <span class="n">polygons</span> <span class="o">=</span> <span class="n">get_operation_silhouette</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">Offset</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">outlines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">join</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">straight</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="n">polygon_list</span> <span class="o">=</span> <span class="n">polygons</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polygons</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">polygons</span><span class="o">.</span><span class="n">geoms</span>
+
+    <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">polygon_list</span><span class="p">:</span>  <span class="c1"># sort by size before this???</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span>
+                <span class="n">radius</span> <span class="o">*</span> <span class="n">offset</span><span class="p">,</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">,</span>
+                <span class="n">join_style</span><span class="o">=</span><span class="n">join</span><span class="p">,</span>
+                <span class="n">mitre_limit</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">outlines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+
+    <span class="n">outline</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">outlines</span><span class="p">)</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">dont_merge</span> <span class="k">else</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">outlines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outline</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

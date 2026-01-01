@@ -1,0 +1,989 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.addon_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/addon_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.addon_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;addon_utils.py&#39; © 2012 Vilem Novak&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.app.handlers</span><span class="w"> </span><span class="kn">import</span> <span class="n">persistent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">_IS_LOADING_DEFAULTS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CamException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">__package__</span> <span class="k">as</span> <span class="n">base_package</span>
+
+
+<div class="viewcode-block" id="addon_dependencies">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.addon_dependencies">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addon_dependencies</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for and installs Blender addon dependencies.</span>
+
+<span class="sd">    This function installs a number of addons that previously came</span>
+<span class="sd">    with Blender, but now have to be downloaded from an online repository.</span>
+<span class="sd">    It checks for the addon in the users Blender install, and if it</span>
+<span class="sd">    can&#39;t find them, attempts to download them from Blender.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">preferences</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">preferences</span>
+    <span class="n">addons</span> <span class="o">=</span> <span class="n">preferences</span><span class="o">.</span><span class="n">addons</span>
+    <span class="n">online_access</span> <span class="o">=</span> <span class="n">preferences</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">use_online_access</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># Objects &amp; Tools</span>
+        <span class="s2">&quot;extra_mesh_objects&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extra_curve_objectes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;simplify_curves_plus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;curve_tools&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;print3d_toolbox&quot;</span><span class="p">,</span>
+        <span class="c1"># File Formats</span>
+        <span class="s2">&quot;stl_format_legacy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;import_autocad_dxf_format_dxf&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;export_autocad_dxf_format_dxf&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">online_access</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">addons</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">addons</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;bl_ext.blender_org.</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">extensions</span><span class="o">.</span><span class="n">package_install</span><span class="p">(</span><span class="n">repo_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pkg_id</span><span class="o">=</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not Access Online Addon Repository!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">CamException</span><span class="p">(</span>
+            <span class="s2">&quot;Fabex couldn&#39;t install required addons - &#39;Enable Online Access&#39; in &#39;Preferences &gt; System&#39;&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="python_dependencies">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.python_dependencies">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">python_dependencies</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for and installs Python library dependencies.</span>
+
+<span class="sd">    This function checks for required Python packages. These should</span>
+<span class="sd">    be installed via the included &#39;wheels&#39;, but if there is a version</span>
+<span class="sd">    mismatch this function will attempt to install them via pip.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">installed_modules</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span>
+
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;llvmlite&quot;</span><span class="p">,</span> <span class="s2">&quot;numba&quot;</span><span class="p">,</span> <span class="s2">&quot;opencamlib&quot;</span><span class="p">,</span> <span class="s2">&quot;shapely&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">installed_modules</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="n">module</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Python Dependencies Not Found!&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">CamException</span><span class="p">(</span>
+                    <span class="s2">&quot;Fabex couldn&#39;t install required Python libraries! Check your Blender Python Version and Location!&quot;</span>
+                <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_defaults">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.load_defaults">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_defaults</span><span class="p">(</span><span class="n">addon_prefs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assigns scene settings based on user preferences.</span>
+
+<span class="sd">    When Fabex is activated it will restore the user&#39;s scene settings.</span>
+<span class="sd">    This includes the interface level (Beginner - Experimental), viewport</span>
+<span class="sd">    shading, panel layout and machine preset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">interface</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">interface</span>
+
+    <span class="c1"># set interface level to previously used level for a new file</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">:</span>
+        <span class="n">_IS_LOADING_DEFAULTS</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">interface</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_interface_level</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">shading</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_shading</span>
+
+        <span class="n">interface</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_layout</span>
+
+        <span class="n">interface</span><span class="o">.</span><span class="n">main_location</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_main_location</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">operation_location</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_operation_location</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">tools_location</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_tools_location</span>
+
+        <span class="n">machine_preset</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">machine_preset</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_machine_preset</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">machine_preset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading Preset: </span><span class="si">{</span><span class="n">machine_preset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># load last used machine preset</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">script</span><span class="o">.</span><span class="n">execute_preset</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">machine_preset</span><span class="p">,</span>
+                <span class="n">menu_idname</span><span class="o">=</span><span class="s2">&quot;CAM_MACHINE_MT_presets&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">_IS_LOADING_DEFAULTS</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="copy_if_not_exists">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.copy_if_not_exists">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_if_not_exists</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy a file from source to destination if it does not already exist.</span>
+
+<span class="sd">    This function checks if the destination file exists. If it does not, the</span>
+<span class="sd">    function copies the source file to the destination using a high-level</span>
+<span class="sd">    file operation that preserves metadata.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        src (str): The path to the source file to be copied.</span>
+<span class="sd">        dst (str): The path to the destination where the file should be copied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="copy_presets">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.copy_presets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_presets</span><span class="p">(</span><span class="n">addon_prefs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copies Presets from the addon to Blender&#39;s Script Directory</span>
+
+<span class="sd">    This function copies new presets without overwriting the existing presets,</span>
+<span class="sd">    unless it detects that the presets have not been updated to the current spec,</span>
+<span class="sd">    in which case it will overwrite them with the addon presets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># copy presets if not there yet</span>
+    <span class="n">preset_source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;presets&quot;</span>
+    <span class="n">preset_target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">script_path_user</span><span class="p">())</span> <span class="o">/</span> <span class="s2">&quot;presets&quot;</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
+        <span class="n">preset_source_path</span><span class="p">,</span>
+        <span class="n">preset_target_path</span><span class="p">,</span>
+        <span class="n">copy_function</span><span class="o">=</span><span class="n">copy_if_not_exists</span><span class="p">,</span>
+        <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">save_userpref</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">op_preset_update</span><span class="p">:</span>
+        <span class="c1"># Update the Operation presets</span>
+        <span class="n">op_presets_source</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;cam_operations&quot;</span>
+        <span class="n">op_presets_target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">script_path_user</span><span class="p">())</span> <span class="o">/</span> <span class="s2">&quot;presets&quot;</span> <span class="o">/</span> <span class="s2">&quot;cam_operations&quot;</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">op_presets_source</span><span class="p">,</span> <span class="n">op_presets_target</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">addon_prefs</span><span class="o">.</span><span class="n">op_preset_update</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+
+<span class="nd">@bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">persistent</span>
+<div class="viewcode-block" id="on_blender_startup">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.on_blender_startup">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">on_blender_startup</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks for any broken computations on load and resets them.</span>
+
+<span class="sd">    This function verifies the presence of necessary Blender add-ons and</span>
+<span class="sd">    installs any that are missing. It also resets any ongoing computations</span>
+<span class="sd">    in CAM operations and sets the interface level to the previously used</span>
+<span class="sd">    level when loading a new file. If the add-on has been updated, it copies</span>
+<span class="sd">    the necessary presets from the source to the target directory.</span>
+<span class="sd">    Additionally, it checks for updates to the CAM plugin and updates</span>
+<span class="sd">    operation presets if required.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: The context in which the function is executed, typically containing</span>
+<span class="sd">            information about</span>
+<span class="sd">            the current Blender environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Blender Startup&quot;</span><span class="p">)</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">render_engine</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">engine</span>
+    <span class="n">interface_layout</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">layout</span>
+
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">computing</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">computing</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">python_dependencies</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found / Installed Python Dependencies&quot;</span><span class="p">)</span>
+
+    <span class="n">addon_dependencies</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found / Installed Addon Dependencies&quot;</span><span class="p">)</span>
+
+    <span class="n">add_asset_library</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found / Installed Asset Library&quot;</span><span class="p">)</span>
+
+    <span class="n">add_workspace</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found / Installed Workspace&quot;</span><span class="p">)</span>
+
+    <span class="n">addon_prefs</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">addons</span><span class="p">[</span><span class="n">base_package</span><span class="p">]</span><span class="o">.</span><span class="n">preferences</span>
+    <span class="n">copy_presets</span><span class="p">(</span><span class="n">addon_prefs</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Preset Files Copied&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Use the Message Bus to notify when the Render Engine is changed</span>
+    <span class="c1"># And run the &#39;on_engine_change&#39; function</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Scene</span><span class="o">.</span><span class="n">engine_check</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">subscribe_to</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">RenderSettings</span><span class="p">,</span> <span class="s2">&quot;engine&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">msgbus</span><span class="o">.</span><span class="n">subscribe_rna</span><span class="p">(</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">subscribe_to</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Scene</span><span class="o">.</span><span class="n">engine_check</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">notify</span><span class="o">=</span><span class="n">on_engine_change</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">render_engine</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CNCCAM_RENDER&quot;</span><span class="p">,</span> <span class="s2">&quot;BLENDERCAM_RENDER&quot;</span><span class="p">]:</span>
+        <span class="n">render_engine</span> <span class="o">=</span> <span class="s2">&quot;FABEX_RENDER&quot;</span>
+
+    <span class="k">if</span> <span class="n">render_engine</span> <span class="o">==</span> <span class="s2">&quot;FABEX_RENDER&quot;</span><span class="p">:</span>
+        <span class="n">interface_layout</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_layout</span>
+
+        <span class="n">add_collections</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Collections Added to Scene&quot;</span><span class="p">)</span>
+        <span class="n">load_defaults</span><span class="p">(</span><span class="n">addon_prefs</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading Fabex Settings&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fabex Activated&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="on_engine_change">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.on_engine_change">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">on_engine_change</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callback function to setup Fabex when activated.</span>
+
+<span class="sd">    In combination with a message bus (msgbus) listener, this function will</span>
+<span class="sd">    run when the Render Engine is changed. If it detects that Fabex is active</span>
+<span class="sd">    it will call the required setup functions, and log the Fabex activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+
+    <span class="n">render_engine</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">engine</span>
+    <span class="n">interface_layout</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">layout</span>
+
+    <span class="n">addon_prefs</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">addons</span><span class="p">[</span><span class="n">base_package</span><span class="p">]</span><span class="o">.</span><span class="n">preferences</span>
+
+    <span class="k">if</span> <span class="n">render_engine</span> <span class="o">==</span> <span class="s2">&quot;FABEX_RENDER&quot;</span><span class="p">:</span>
+        <span class="n">interface_layout</span> <span class="o">=</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">default_layout</span>
+
+        <span class="n">add_collections</span><span class="p">()</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Collections Added to Scene&quot;</span><span class="p">)</span>
+        <span class="n">load_defaults</span><span class="p">(</span><span class="n">addon_prefs</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading Fabex Settings&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fabex Activated&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialize an Operation if one hasn&#39;t already been created</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operation_add</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Added Default Operation&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="fix_units">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.fix_units">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fix_units</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up units for Fabex.</span>
+
+<span class="sd">    This function configures the unit settings for the current Blender</span>
+<span class="sd">    scene. It sets the rotation system to degrees and the scale length to</span>
+<span class="sd">    1.0, ensuring that the units are appropriately configured for use within</span>
+<span class="sd">    Fabex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system_rotation</span> <span class="o">=</span> <span class="s2">&quot;DEGREES&quot;</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">scale_length</span> <span class="o">=</span> <span class="mf">1.0</span></div>
+
+    <span class="c1"># Blender CAM doesn&#39;t respect this property and there were users reporting problems, not seeing this was changed.</span>
+
+
+<div class="viewcode-block" id="keymap_register">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.keymap_register">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">keymap_register</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a Keyboard Shortcut to the Active Key Config</span>
+
+<span class="sd">    This function binds the keyboard shortcut &#39;Alt+C&#39; to the Fabex</span>
+<span class="sd">    Pie Menu, and adds that shortcut to the user&#39;s active key configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+    <span class="n">addon_kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">addon</span>
+
+    <span class="n">km</span> <span class="o">=</span> <span class="n">addon_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Object Mode&quot;</span><span class="p">)</span>
+    <span class="n">kmi</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+        <span class="s2">&quot;wm.call_menu_pie&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PRESS&quot;</span><span class="p">,</span>
+        <span class="n">alt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">kmi</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;VIEW3D_MT_PIE_CAM&quot;</span>
+    <span class="n">kmi</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="keymap_unregister">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.keymap_unregister">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">keymap_unregister</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes a Keyboard Shortcut from the Active Key Config</span>
+
+<span class="sd">    This function removes the keyboard shortcut &#39;Alt+C&#39; from</span>
+<span class="sd">    the user&#39;s active key configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+    <span class="n">active_kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">active</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">active_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="p">[</span><span class="s2">&quot;Object Mode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keymap_items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">idname</span> <span class="o">==</span> <span class="s2">&quot;wm.call_menu&quot;</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;VIEW3D_MT_PIE_CAM&quot;</span><span class="p">:</span>
+            <span class="n">active_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="p">[</span><span class="s2">&quot;Object Mode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="add_asset_library">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.add_asset_library">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_asset_library</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Installs the Fabex Asset Library.</span>
+
+<span class="sd">    This function adds the /assets/ folder from Fabex to the users&#39;</span>
+<span class="sd">    Asset Library, which adds a number of Material and Geometry Node</span>
+<span class="sd">    assets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filepaths</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">filepaths</span>
+    <span class="n">libraries</span> <span class="o">=</span> <span class="n">filepaths</span><span class="o">.</span><span class="n">asset_libraries</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Fabex Assets&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">libraries</span><span class="p">:</span>
+        <span class="n">library_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;assets&quot;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">asset_library_add</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">library_path</span><span class="p">)</span>
+        <span class="n">filepaths</span><span class="o">.</span><span class="n">asset_libraries</span><span class="p">[</span><span class="s2">&quot;assets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Fabex Assets&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="add_workspace">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.add_workspace">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_workspace</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Installs the Fabex Workspace</span>
+
+<span class="sd">    This function adds the Fabex Workspace to the users&#39; default Blender</span>
+<span class="sd">    startup scene.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">workspaces</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">workspaces</span>
+    <span class="k">if</span> <span class="s2">&quot;FabexCNC&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">workspaces</span><span class="p">:</span>
+        <span class="n">workspace_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;assets&quot;</span> <span class="o">/</span> <span class="s2">&quot;Fabex_Assets.blend/WorkSpace/&quot;</span>
+        <span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">wm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">workspace_file</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;FabexCNC&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="add_collections">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.add_collections">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_collections</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds color-coded Collection folders to the scene.</span>
+
+<span class="sd">    This function adds three collections to aid in scene management.</span>
+<span class="sd">    Bridges, Paths and Simulations are now auto-sorted into their</span>
+<span class="sd">    own collections upon creation, which can be shown or hidden as</span>
+<span class="sd">    groups.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">collections</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">collections</span>
+    <span class="n">cam_names</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_names</span>
+    <span class="n">path_prefix</span> <span class="o">=</span> <span class="n">cam_names</span><span class="o">.</span><span class="n">path_prefix</span>
+    <span class="n">simulation_prefix</span> <span class="o">=</span> <span class="n">cam_names</span><span class="o">.</span><span class="n">simulation_prefix</span>
+
+    <span class="n">scene_collection</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span>
+    <span class="n">default_collection</span> <span class="o">=</span> <span class="n">collections</span><span class="p">[</span><span class="s2">&quot;Collection&quot;</span><span class="p">]</span>
+    <span class="n">fabex_collections</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;Bridges (Tabs)&quot;</span><span class="p">,</span> <span class="s2">&quot;COLOR_06&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;Paths&quot;</span><span class="p">,</span> <span class="s2">&quot;COLOR_04&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;Simulations&quot;</span><span class="p">,</span> <span class="s2">&quot;COLOR_05&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">collection</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">fabex_collections</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">collection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">:</span>
+            <span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
+            <span class="n">scene_collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">])</span>
+            <span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">]</span><span class="o">.</span><span class="n">color_tag</span> <span class="o">=</span> <span class="n">color</span>
+
+    <span class="n">bridges_collection</span> <span class="o">=</span> <span class="n">collections</span><span class="p">[</span><span class="s2">&quot;Bridges (Tabs)&quot;</span><span class="p">]</span>
+    <span class="n">paths_collection</span> <span class="o">=</span> <span class="n">collections</span><span class="p">[</span><span class="s2">&quot;Paths&quot;</span><span class="p">]</span>
+    <span class="n">simulations_collection</span> <span class="o">=</span> <span class="n">collections</span><span class="p">[</span><span class="s2">&quot;Simulations&quot;</span><span class="p">]</span>
+
+    <span class="n">children</span> <span class="o">=</span> <span class="n">default_collection</span><span class="o">.</span><span class="n">children</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">(</span><span class="s2">&quot;bridge&quot;</span><span class="p">):</span>
+            <span class="n">bridges_collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="n">default_collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">default_collection</span><span class="o">.</span><span class="n">objects</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">paths_collection</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                <span class="n">paths_collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">(</span><span class="n">simulation_prefix</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">simulations_collection</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                <span class="n">simulations_collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">,</span> <span class="n">simulation_prefix</span><span class="p">]:</span>
+            <span class="n">default_collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="edit_user_post_processor">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.edit_user_post_processor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_user_post_processor</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open and Edit the User Post Processor file in the Text Editor</span>
+
+<span class="sd">    This function finds the path to the &#39;user.py&#39; post processor file</span>
+<span class="sd">    and opens it for editing in Blender&#39;s Text Editor. In order to open</span>
+<span class="sd">    the file Blender&#39;s Context must be overridden to ensure the Text Editor</span>
+<span class="sd">    actions can run no matter what Context the user is currently in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_processor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;post_processors&quot;</span> <span class="o">/</span> <span class="s2">&quot;user.py&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">user_processor_path</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">user_processor_path</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">areas</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">workspaces</span><span class="p">[</span><span class="s2">&quot;Scripting&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s2">&quot;Scripting&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">areas</span>
+        <span class="n">text_editor</span> <span class="o">=</span> <span class="p">[</span><span class="n">area</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">area</span> <span class="ow">in</span> <span class="n">areas</span> <span class="k">if</span> <span class="n">area</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;TEXT_EDITOR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">with</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">temp_override</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="n">text_editor</span><span class="p">):</span>
+            <span class="n">text_editor</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">texts</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;user.py&quot;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="append_asset_from_library">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/addon_utils/index.html#fabex.append_asset_from_library">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">append_asset_from_library</span><span class="p">(</span><span class="n">asset_type</span><span class="p">,</span> <span class="n">asset_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append an Asset from the Fabex Asset Library</span>
+
+<span class="sd">    This function adds an asset from the Fabex Asset Library to the</span>
+<span class="sd">    current file. The path to the library is automatically filled, but</span>
+<span class="sd">    the user must provide the type and name of the asset they wish to</span>
+<span class="sd">    append. Currently the library contains materials, node groups and</span>
+<span class="sd">    scenes, and separate logic is provided for each.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">library_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;assets&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">library_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">library_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">library_path</span><span class="p">))</span> <span class="k">as</span> <span class="p">(</span><span class="n">data_from</span><span class="p">,</span> <span class="n">data_to</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">asset_type</span> <span class="o">==</span> <span class="s2">&quot;scene&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset_name</span> <span class="ow">in</span> <span class="n">data_from</span><span class="o">.</span><span class="n">scenes</span><span class="p">:</span>
+                <span class="n">data_to</span><span class="o">.</span><span class="n">scenes</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_name</span><span class="p">]</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">scenes</span><span class="p">[</span><span class="n">asset_name</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">asset_type</span> <span class="o">==</span> <span class="s2">&quot;node_group&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset_name</span> <span class="ow">in</span> <span class="n">data_from</span><span class="o">.</span><span class="n">node_groups</span><span class="p">:</span>
+                <span class="n">data_to</span><span class="o">.</span><span class="n">node_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_name</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">asset_type</span> <span class="o">==</span> <span class="s2">&quot;material&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset_name</span> <span class="ow">in</span> <span class="n">data_from</span><span class="o">.</span><span class="n">materials</span><span class="p">:</span>
+                <span class="n">data_to</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_name</span><span class="p">]</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

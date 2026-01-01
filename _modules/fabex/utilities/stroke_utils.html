@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.stroke_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/stroke_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.stroke_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">Euler</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..chunk_builder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamPathChunk</span><span class="p">,</span>
+    <span class="n">CamPathChunkBuilder</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.geom_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_circle_binary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.image_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">prepare_area</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.operation_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_move_and_spin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parent_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">parent_child_distance</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="crazy_stroke_image">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.crazy_stroke_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">crazy_stroke_image</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a toolpath for a milling operation using a crazy stroke</span>
+<span class="sd">    strategy.</span>
+
+<span class="sd">    This function computes a path for a milling cutter based on the provided</span>
+<span class="sd">    parameters and the offset image. It utilizes a circular cutter</span>
+<span class="sd">    representation and evaluates potential cutting positions based on</span>
+<span class="sd">    various thresholds. The algorithm iteratively tests different angles and</span>
+<span class="sd">    lengths for the cutter&#39;s movement until the desired cutting area is</span>
+<span class="sd">    achieved or the maximum number of tests is reached.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing parameters such as cutter diameter,</span>
+<span class="sd">            optimization settings, movement type, and thresholds for</span>
+<span class="sd">            determining cutting effectiveness.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of chunks representing the computed toolpath for the milling</span>
+<span class="sd">            operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.</span>
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>
+    <span class="n">climb_CW</span><span class="p">,</span> <span class="n">climb_CCW</span><span class="p">,</span> <span class="n">conventional_CW</span><span class="p">,</span> <span class="n">conventional_CCW</span> <span class="o">=</span> <span class="n">get_move_and_spin</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+    <span class="n">coef</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="n">ar</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">maxarx</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">maxary</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cutterArray</span> <span class="o">=</span> <span class="n">get_circle_binary</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">cutterArrayNegative</span> <span class="o">=</span> <span class="o">-</span><span class="n">cutterArray</span>
+    <span class="n">cutterimagepix</span> <span class="o">=</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="c1"># a threshold which says if it is valuable to cut in a direction</span>
+    <span class="n">satisfypix</span> <span class="o">=</span> <span class="n">cutterimagepix</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_1</span>
+    <span class="n">toomuchpix</span> <span class="o">=</span> <span class="n">cutterimagepix</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_2</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>  <span class="c1"># first get white pixels</span>
+    <span class="n">startpix</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1">#</span>
+    <span class="n">totpix</span> <span class="o">=</span> <span class="n">startpix</span>
+    <span class="n">chunk_builders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span>
+
+    <span class="k">if</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span>
+
+    <span class="k">if</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="n">nchunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)])</span>  <span class="c1"># startposition</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># vector is 3d, blender somehow doesn&#39;t rotate 2d vectors with angles.</span>
+    <span class="n">lastvect</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># multiply *2 not to get values &lt;1 pixel</span>
+    <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="n">r</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">rot</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">perc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totaltests</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maxtests</span> <span class="o">=</span> <span class="mi">500</span>
+    <span class="n">maxtotaltests</span> <span class="o">=</span> <span class="mi">1000000</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xs</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ys</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArrayNegative</span>
+    <span class="p">)</span>
+    <span class="c1"># range for angle of toolpath vector versus material vector</span>
+    <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">]</span>
+    <span class="n">testangleinit</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">angleincrement</span> <span class="o">=</span> <span class="mf">0.05</span>
+
+    <span class="k">if</span> <span class="n">climb_CCW</span> <span class="ow">or</span> <span class="n">conventional_CW</span><span class="p">:</span>
+        <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">testangleinit</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">angleincrement</span> <span class="o">=</span> <span class="o">-</span><span class="n">angleincrement</span>
+    <span class="k">elif</span> <span class="n">conventional_CCW</span> <span class="ow">or</span> <span class="n">climb_CW</span><span class="p">:</span>
+        <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pi</span><span class="p">]</span>
+        <span class="n">testangleinit</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">angleincrement</span> <span class="o">=</span> <span class="n">angleincrement</span>
+
+    <span class="k">while</span> <span class="n">totpix</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">totaltests</span> <span class="o">&lt;</span> <span class="n">maxtotaltests</span><span class="p">:</span>  <span class="c1"># a ratio when the algorithm is allowed to end</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># define a vector which gets varied throughout the testing, growing and growing angle to sides.</span>
+        <span class="n">testangle</span> <span class="o">=</span> <span class="n">testangleinit</span>
+        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">testlength</span> <span class="o">=</span> <span class="n">r</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">testvect</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">ys</span> <span class="o">=</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">testvect</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">xs</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ys</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">testar</span> <span class="o">=</span> <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArray</span>
+                <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">testar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">satisfypix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xs</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ys</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">testlength</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">testangle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">lastvect</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">testvect</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">totpix</span><span class="p">)</span>
+
+                <span class="n">eatpix</span> <span class="o">=</span> <span class="n">testar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                <span class="n">cindices</span> <span class="o">=</span> <span class="n">testar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+                <span class="n">cx</span> <span class="o">=</span> <span class="n">cindices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">eatpix</span>
+                <span class="n">cy</span> <span class="o">=</span> <span class="n">cindices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">eatpix</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">cx</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">r</span><span class="p">))</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">testvect</span><span class="o">.</span><span class="n">to_2d</span><span class="p">()</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="c1"># this could be righthanded milling? lets see :)</span>
+
+                <span class="k">if</span> <span class="n">anglerange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="n">anglerange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">toomuchpix</span> <span class="o">&gt;</span> <span class="n">eatpix</span> <span class="o">&gt;</span> <span class="n">satisfypix</span><span class="p">:</span>
+                        <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">])</span>
+                <span class="n">lastvect</span> <span class="o">=</span> <span class="n">testvect</span>
+                <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">ar</span><span class="p">[</span>
+                    <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span>
+                <span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">cutterArray</span><span class="p">)</span>
+                <span class="n">totpix</span> <span class="o">-=</span> <span class="n">eatpix</span>
+                <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Success&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xs</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ys</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">testlength</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">testangle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">lastvect</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">testvect</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">itests</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># TODO: after all angles were tested into material higher than toomuchpix, it should cancel,</span>
+                <span class="c1">#  otherwise there is no problem with long travel in free space.....</span>
+                <span class="c1"># TODO:the testing should start not from the same angle as lastvector, but more towards material.</span>
+                <span class="c1">#  So values closer to toomuchpix are obtained rather than satisfypix</span>
+                <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="n">testlength</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">testangleinit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># meander</span>
+                    <span class="k">if</span> <span class="n">testleftright</span><span class="p">:</span>
+                        <span class="n">testangle</span> <span class="o">=</span> <span class="o">-</span><span class="n">testangle</span>
+                        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">testangle</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">testangle</span><span class="p">)</span> <span class="o">+</span> <span class="n">angleincrement</span>  <span class="c1"># increment angle</span>
+                        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># climb/conv.</span>
+                    <span class="n">testangle</span> <span class="o">+=</span> <span class="n">angleincrement</span>
+
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">testangle</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_3</span><span class="p">:</span>  <span class="c1"># /testlength</span>
+                    <span class="n">testangle</span> <span class="o">=</span> <span class="n">testangleinit</span>
+                    <span class="n">testlength</span> <span class="o">+=</span> <span class="n">r</span> <span class="o">/</span> <span class="mf">4.0</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">maxarx</span> <span class="o">-</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">maxarx</span> <span class="o">-</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">maxary</span> <span class="o">-</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">maxary</span> <span class="o">-</span> <span class="n">r</span>
+
+                <span class="n">rot</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">testangle</span>
+                <span class="n">testvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+
+            <span class="n">itests</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">totaltests</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">itests</span> <span class="o">&gt;</span> <span class="n">maxtests</span> <span class="ow">or</span> <span class="n">testlength</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+                <span class="n">chunk_builders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nchunk</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">xs</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span>
+
+                    <span class="k">if</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                        <span class="n">xs</span> <span class="o">=</span> <span class="n">r</span>
+                    <span class="n">ys</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span>
+
+                    <span class="k">if</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                        <span class="n">ys</span> <span class="o">=</span> <span class="n">r</span>
+                    <span class="n">nchunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)])</span>  <span class="c1"># startposition</span>
+                    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArrayNegative</span>
+                    <span class="p">)</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>
+                    <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+                    <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># multiply *2 not to get values &lt;1 pixel</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="n">lastvect</span> <span class="o">=</span> <span class="n">testvect</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;100 Succesfull Tests Done&quot;</span><span class="p">)</span>
+            <span class="n">totpix</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">totpix</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">totaltests</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">chunk_builders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nchunk</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunk_builders</span><span class="p">:</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="p">)):</span>
+            <span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">)</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">+</span> <span class="n">minx</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">)</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">+</span> <span class="n">miny</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chunk_builders</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="crazy_stroke_image_binary">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.crazy_stroke_image_binary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">crazy_stroke_image_binary</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">ar</span><span class="p">,</span> <span class="n">avoidar</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a milling operation using a binary image representation.</span>
+
+<span class="sd">    This function implements a strategy for milling by navigating through a</span>
+<span class="sd">    binary image. It starts from a defined point and attempts to move in</span>
+<span class="sd">    various directions, evaluating the cutter load to determine the</span>
+<span class="sd">    appropriate path. The algorithm continues until it either exhausts the</span>
+<span class="sd">    available pixels to cut or reaches a predefined limit on the number of</span>
+<span class="sd">    tests. The function modifies the input array to represent the areas that</span>
+<span class="sd">    have been milled and returns the generated path as a list of chunks.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing parameters for the milling operation, including</span>
+<span class="sd">            cutter diameter, thresholds, and movement type.</span>
+<span class="sd">        ar (np.ndarray): A 2D binary array representing the image to be milled.</span>
+<span class="sd">        avoidar (np.ndarray): A 2D binary array indicating areas to avoid during milling.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of chunks representing the path taken during the milling</span>
+<span class="sd">            operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.</span>
+    <span class="c1"># works like this:</span>
+    <span class="c1"># start &#39;somewhere&#39;</span>
+    <span class="c1"># try to go in various directions.</span>
+    <span class="c1"># if somewhere the cutter load is appropriate - it is correct magnitude and side, continue in that directon</span>
+    <span class="c1"># try to continue straight or around that, looking</span>
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>
+    <span class="n">climb_CW</span><span class="p">,</span> <span class="n">climb_CCW</span><span class="p">,</span> <span class="n">conventional_CW</span><span class="p">,</span> <span class="n">conventional_CCW</span> <span class="o">=</span> <span class="n">get_move_and_spin</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="c1"># TODO this should be somewhere else, but here it is now to get at least some ambient for start of the operation.</span>
+    <span class="n">ar</span><span class="p">[:</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ar</span><span class="p">[</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ar</span><span class="p">[:,</span> <span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ar</span><span class="p">[:,</span> <span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># ceil((o.cutter_diameter/12)/o.optimisation.pixsize)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+    <span class="n">coef</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="n">maxarx</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">maxary</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">cutterArray</span> <span class="o">=</span> <span class="n">get_circle_binary</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">cutterArrayNegative</span> <span class="o">=</span> <span class="o">-</span><span class="n">cutterArray</span>
+
+    <span class="n">cutterimagepix</span> <span class="o">=</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">anglelimit</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_3</span>
+    <span class="c1"># a threshold which says if it is valuable to cut in a direction</span>
+    <span class="n">satisfypix</span> <span class="o">=</span> <span class="n">cutterimagepix</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_1</span>
+    <span class="n">toomuchpix</span> <span class="o">=</span> <span class="n">cutterimagepix</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_2</span>  <span class="c1"># same, but upper limit</span>
+    <span class="c1"># (satisfypix+toomuchpix)/2.0# the ideal eating ratio</span>
+    <span class="n">optimalpix</span> <span class="o">=</span> <span class="n">cutterimagepix</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_5</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>  <span class="c1"># first get white pixels</span>
+
+    <span class="n">startpix</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1">#</span>
+    <span class="n">totpix</span> <span class="o">=</span> <span class="n">startpix</span>
+
+    <span class="n">chunk_builders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># try to find starting point here</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span>
+    <span class="k">if</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="n">nchunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)])</span>  <span class="c1"># startposition</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># vector is 3d, blender somehow doesn&#39;t rotate 2d vectors with angles.</span>
+    <span class="n">lastvect</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># multiply *2 not to get values &lt;1 pixel</span>
+    <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="n">r</span> <span class="o">/</span> <span class="mf">4.0</span>
+    <span class="n">rot</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totaltests</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maxtests</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="n">maxtotaltests</span> <span class="o">=</span> <span class="mi">20000</span>  <span class="c1"># 1000000</span>
+
+    <span class="n">margin</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># print(xs,ys,indices[0][0],indices[1][0],r)</span>
+    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArrayNegative</span>
+    <span class="p">)</span>
+    <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">]</span>
+    <span class="c1"># range for angle of toolpath vector versus material vector -</span>
+    <span class="c1"># probably direction negative to the force applied on cutter by material.</span>
+    <span class="n">testangleinit</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">angleincrement</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_4</span>
+
+    <span class="k">if</span> <span class="n">climb_CCW</span> <span class="ow">or</span> <span class="n">conventional_CW</span><span class="p">:</span>
+        <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">testangleinit</span> <span class="o">=</span> <span class="n">anglelimit</span>
+        <span class="n">angleincrement</span> <span class="o">=</span> <span class="o">-</span><span class="n">angleincrement</span>
+    <span class="k">elif</span> <span class="n">conventional_CCW</span> <span class="ow">or</span> <span class="n">climb_CW</span><span class="p">:</span>
+        <span class="n">anglerange</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">pi</span><span class="p">]</span>
+        <span class="n">testangleinit</span> <span class="o">=</span> <span class="o">-</span><span class="n">anglelimit</span>
+        <span class="n">angleincrement</span> <span class="o">=</span> <span class="n">angleincrement</span>
+
+    <span class="k">while</span> <span class="n">totpix</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">totaltests</span> <span class="o">&lt;</span> <span class="n">maxtotaltests</span><span class="p">:</span>  <span class="c1"># a ratio when the algorithm is allowed to end</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># define a vector which gets varied throughout the testing, growing and growing angle to sides.</span>
+        <span class="n">testangle</span> <span class="o">=</span> <span class="n">testangleinit</span>
+        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">testlength</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">foundsolutions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">ys</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">xs</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">+</span> <span class="n">margin</span>
+                <span class="ow">and</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">-</span> <span class="n">margin</span>
+                <span class="ow">and</span> <span class="n">ys</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">+</span> <span class="n">margin</span>
+                <span class="ow">and</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">ar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="o">-</span> <span class="n">margin</span>
+            <span class="p">):</span>
+                <span class="c1"># avoidtest=avoidar[xs-r:xs+r,ys-r:ys+r]*cutterArray</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">avoidar</span><span class="p">[</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">]:</span>
+                    <span class="n">testar</span> <span class="o">=</span> <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArray</span>
+                    <span class="n">eatpix</span> <span class="o">=</span> <span class="n">testar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                    <span class="n">cindices</span> <span class="o">=</span> <span class="n">testar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+                    <span class="n">cx</span> <span class="o">=</span> <span class="n">cindices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">eatpix</span>
+                    <span class="n">cy</span> <span class="o">=</span> <span class="n">cindices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">eatpix</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">cx</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">r</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">angle</span> <span class="o">=</span> <span class="n">testvect</span><span class="o">.</span><span class="n">to_2d</span><span class="p">()</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">anglerange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="n">anglerange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="ow">and</span> <span class="n">toomuchpix</span> <span class="o">&gt;</span> <span class="n">eatpix</span> <span class="o">&gt;</span> <span class="n">satisfypix</span>
+                        <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">eatpix</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">totpix</span> <span class="o">&lt;</span> <span class="n">startpix</span> <span class="o">*</span> <span class="mf">0.025</span><span class="p">):</span>
+                            <span class="c1"># this could be righthanded milling?</span>
+                            <span class="c1"># lets see :)</span>
+                            <span class="n">foundsolutions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">testvect</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">eatpix</span><span class="p">])</span>
+                            <span class="c1"># or totpix &lt; startpix*0.025:</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">foundsolutions</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+                                <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">itests</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">totaltests</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="c1"># fist, try to inter/extrapolate the recieved results.</span>
+                <span class="n">closest</span> <span class="o">=</span> <span class="mi">100000000</span>
+
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">foundsolutions</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">optimalpix</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">closest</span><span class="p">:</span>
+                        <span class="n">bestsolution</span> <span class="o">=</span> <span class="n">s</span>
+                        <span class="n">closest</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">optimalpix</span><span class="p">)</span>
+
+                <span class="c1"># v1#+(v2-v1)*ratio#rewriting with interpolated vect.</span>
+                <span class="n">testvect</span> <span class="o">=</span> <span class="n">bestsolution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">xs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">ys</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">])</span>
+                <span class="n">lastvect</span> <span class="o">=</span> <span class="n">testvect</span>
+
+                <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArrayNegative</span>
+                <span class="p">)</span>
+                <span class="n">totpix</span> <span class="o">-=</span> <span class="n">bestsolution</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">totaltests</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># TODO: after all angles were tested into material higher than toomuchpix,</span>
+                <span class="c1">#  it should cancel, otherwise there is no problem with long travel in free space.....</span>
+                <span class="c1"># TODO:the testing should start not from the same angle as lastvector, but more towards material.</span>
+                <span class="c1">#  So values closer to toomuchpix are obtained rather than satisfypix</span>
+                <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="n">testlength</span>
+
+                <span class="k">if</span> <span class="n">testangleinit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># meander</span>
+                    <span class="k">if</span> <span class="n">testleftright</span><span class="p">:</span>
+                        <span class="n">testangle</span> <span class="o">=</span> <span class="o">-</span><span class="n">testangle</span> <span class="o">-</span> <span class="n">angleincrement</span>
+                        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">testangle</span> <span class="o">=</span> <span class="o">-</span><span class="n">testangle</span> <span class="o">+</span> <span class="n">angleincrement</span>  <span class="c1"># increment angle</span>
+                        <span class="n">testleftright</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># climb/conv.</span>
+                    <span class="n">testangle</span> <span class="o">+=</span> <span class="n">angleincrement</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">testangle</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">crazy_threshold_3</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                    <span class="nb">abs</span><span class="p">(</span><span class="n">testangle</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>
+                <span class="p">):</span>
+                    <span class="n">testangle</span> <span class="o">=</span> <span class="n">testangleinit</span>
+                    <span class="n">testlength</span> <span class="o">+=</span> <span class="n">r</span> <span class="o">/</span> <span class="mf">4.0</span>
+
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">maxarx</span> <span class="o">-</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">maxarx</span> <span class="o">-</span> <span class="n">r</span>
+                <span class="k">if</span> <span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">maxary</span> <span class="o">-</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">testvect</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">maxary</span> <span class="o">-</span> <span class="n">r</span>
+
+                <span class="n">rot</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">testangle</span>
+                <span class="n">testvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">itests</span> <span class="o">&gt;</span> <span class="n">maxtests</span> <span class="ow">or</span> <span class="n">testlength</span> <span class="o">&gt;</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
+                    <span class="n">andar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">avoidar</span><span class="p">))</span>
+                    <span class="n">indices</span> <span class="o">=</span> <span class="n">andar</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">parent_child_distance</span><span class="p">([</span><span class="n">nchunk</span><span class="p">],</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+                        <span class="n">chunk_builders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nchunk</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">totpix</span> <span class="o">&gt;</span> <span class="n">startpix</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">:</span>
+                        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">ftests</span> <span class="o">=</span> <span class="mi">0</span>
+
+                        <span class="k">while</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+                            <span class="c1"># look for next start point:</span>
+                            <span class="n">index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="n">xs</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+                            <span class="n">ys</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+                            <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                            <span class="n">randomrot</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>
+                            <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">randomrot</span><span class="p">))</span>
+                            <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="n">xs</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                            <span class="n">ys</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">xs</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                                <span class="n">xs</span> <span class="o">=</span> <span class="n">r</span>
+                            <span class="k">if</span> <span class="n">ys</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">:</span>
+                                <span class="n">ys</span> <span class="o">=</span> <span class="n">r</span>
+                            <span class="k">if</span> <span class="n">avoidar</span><span class="p">[</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">testarsum</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
+                                <span class="p">)</span>
+
+                                <span class="k">if</span> <span class="n">toomuchpix</span> <span class="o">&gt;</span> <span class="n">testarsum</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">totpix</span> <span class="o">&lt;</span> <span class="n">startpix</span> <span class="o">*</span> <span class="mf">0.025</span><span class="p">):</span>
+                                    <span class="c1"># 0 now instead of satisfypix</span>
+                                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">nchunk</span> <span class="o">=</span> <span class="n">CamPathChunk</span><span class="p">([(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)])</span>  <span class="c1"># startposition</span>
+                                    <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                                        <span class="n">ar</span><span class="p">[</span><span class="n">xs</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">ys</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">cutterArrayNegative</span>
+                                    <span class="p">)</span>
+                                    <span class="c1"># lastvect=Vector((r,0,0))#vector is 3d,</span>
+                                    <span class="c1"># blender somehow doesn&#39;t rotate 2d vectors with angles.</span>
+                                    <span class="n">randomrot</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>
+                                    <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">randomrot</span><span class="p">))</span>
+                                    <span class="n">testvect</span> <span class="o">=</span> <span class="n">lastvect</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span>
+                                    <span class="c1"># multiply *2 not to get values &lt;1 pixel</span>
+                                    <span class="n">testvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                                    <span class="n">lastvect</span> <span class="o">=</span> <span class="n">testvect</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">ftests</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">:</span>
+                                <span class="n">totpix</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># this quits the process now.</span>
+                            <span class="n">ftests</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">itests</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;100 Succesfull Tests Done&quot;</span><span class="p">)</span>
+            <span class="n">totpix</span> <span class="o">=</span> <span class="n">ar</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">totpix</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">totaltests</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nchunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parent_child_distance</span><span class="p">([</span><span class="n">nchunk</span><span class="p">],</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">chunk_builders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nchunk</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunk_builders</span><span class="p">:</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="p">)):</span>
+            <span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">)</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">+</span> <span class="n">minx</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">ch</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">)</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">+</span> <span class="n">miny</span><span class="p">,</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">min_z</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_chunk</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chunk_builders</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="crazy_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.crazy_path">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">crazy_path</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a greedy adaptive algorithm for path planning.</span>
+
+<span class="sd">    This function prepares an area based on the provided object `o`,</span>
+<span class="sd">    calculates the dimensions of the area, and initializes a mill image and</span>
+<span class="sd">    cutter array. The dimensions are determined by the maximum and minimum</span>
+<span class="sd">    coordinates of the object, adjusted by the simulation detail and border</span>
+<span class="sd">    width. The function is currently a stub and requires further</span>
+<span class="sd">    implementation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties such as max, min, optimisation, and</span>
+<span class="sd">            borderwidth.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: try to do something with this  stuff, it&#39;s just a stub. It should be a greedy adaptive algorithm.</span>
+    <span class="c1">#  started another thing below.</span>
+    <span class="k">await</span> <span class="n">prepare_area</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="n">resx</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sx</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+    <span class="n">resy</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sy</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">millimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">resx</span><span class="p">,</span> <span class="n">resy</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="c1"># getting inverted cutter</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">cutterArray</span> <span class="o">=</span> <span class="o">-</span><span class="n">get_cutter_array</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="build_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.build_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_stroke</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">cutterArray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a stroke array based on start and end points.</span>
+
+<span class="sd">    This function generates a 2D stroke array that represents a stroke from</span>
+<span class="sd">    a starting point to an ending point. It calculates the length of the</span>
+<span class="sd">    stroke and creates a grid that is filled based on the positions defined</span>
+<span class="sd">    by the start and end coordinates. The function uses a cutter array to</span>
+<span class="sd">    determine how the stroke interacts with the grid.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start (tuple): A tuple representing the starting coordinates (x, y, z).</span>
+<span class="sd">        end (tuple): A tuple representing the ending coordinates (x, y, z).</span>
+<span class="sd">        cutterArray: An object that contains size information used to modify</span>
+<span class="sd">            the stroke array.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D array representing the stroke, filled with</span>
+<span class="sd">            calculated values based on the input parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">strokelength</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">size_x</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">size_y</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">strokeArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">size_x</span><span class="p">,</span> <span class="n">size_y</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">samplesx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+    <span class="n">samplesy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+    <span class="n">samplesz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">strokelength</span><span class="p">)):</span>
+        <span class="n">strokeArray</span><span class="p">[</span><span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">strokeArray</span><span class="p">[</span><span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">],</span>
+                <span class="n">cutterArray</span> <span class="o">+</span> <span class="n">samplesz</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">strokeArray</span></div>
+
+
+
+<div class="viewcode-block" id="test_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.test_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_stroke</span><span class="p">():</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="apply_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.apply_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_stroke</span><span class="p">():</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="test_stroke_binary">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/stroke_utils/index.html#fabex.utilities.stroke_utils.test_stroke_binary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_stroke_binary</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">stroke</span><span class="p">):</span>
+    <span class="k">pass</span>  <span class="c1"># buildstroke()</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

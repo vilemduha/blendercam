@@ -1,0 +1,1062 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Code Overview &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=38568b08"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'overview';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Style Guide" href="style.html" />
+    <link rel="prev" title="Developer Guide" href="developers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="developers.html">Developer Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/overview.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Code Overview</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-functions">Core Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-functions">Extra Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-files">Reference Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blender-files">Blender Files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties">Properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operators">Operators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#user-interface">User Interface</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-addon-layout">Complete Addon Layout</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="code-overview">
+<h1>Code Overview<a class="headerlink" href="#code-overview" title="Link to this heading">#</a></h1>
+<p><strong>Fabex</strong> <em>(formerly BlenderCAM)</em> code can be broken down into categories:</p>
+<ol class="arabic simple">
+<li><p><strong>Core Functions</strong></p></li>
+<li><p><strong>Extra Functions</strong></p></li>
+<li><p><strong>Utility Functions</strong></p></li>
+<li><p><strong>Blender Files</strong></p></li>
+<li><p><strong>Reference Files</strong></p></li>
+<li><p><strong>Dependencies</strong></p></li>
+</ol>
+<section id="core-functions">
+<h2>Core Functions<a class="headerlink" href="#core-functions" title="Link to this heading">#</a></h2>
+<p>The core function of <strong>Fabex</strong> is to take the active object in the viewport, generate toolpaths along that object according to a milling strategy set by the user, and export that path as Gcode so that it can be run on a CNC machine.</p>
+<p>These Operations can be exported alone, or combined into Chains to be exported and run together.</p>
+<p><strong>Core Functions</strong> can be found in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam_chunk</span></code> - breaks paths into chunks and layers for calculation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collision</span></code> - sweep collision functions for cutter tip positioning</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">constants</span></code> - static values for precision, offsets, etc</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exception</span></code> - handles CAM-related exceptions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gcode_import_parser</span></code> - builds toolpaths from imported Gcode files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gcode_path</span></code> - builds and exports toolpaths using functions from <code class="docutils literal notranslate"><span class="pre">pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">strategy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pattern</span></code> - build path patterns for various milling strategies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy</span></code> - milling strategy function definitions - how each strategy is calculated</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although there is a file called <code class="docutils literal notranslate"><span class="pre">engine</span></code>, it is not actually part of the Core functionality, and mostly functions as a way to collect and register the UI panels that will be shown when <strong>Fabex</strong> is activated.</p>
+</div>
+</section>
+<section id="extra-functions">
+<h2>Extra Functions<a class="headerlink" href="#extra-functions" title="Link to this heading">#</a></h2>
+<p>Beyond simply creating toolpaths for existing objects, <strong>Fabex</strong> can also create objects and edit them a number of ways.</p>
+<p>There are modules dedicated to creating Reliefs, Joinery, Puzzle Joinery and Gears.</p>
+<p>There is also a Simulation module to allow a preview of what the finished Operation will look like.</p>
+<p><strong>Extra Functions</strong> can be found in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bas_relief</span></code> - generate a Relief mesh using <strong>Blender</strong>’s Camera</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bridges</span></code> - generate and place Bridges / Tabs for Cutout Operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">involute_gear</span></code> - generate a customizable Rack or Pinion Gear curve</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">joinery</span></code> - create mortise, twist, finger, etc. joints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pack</span></code> - arrange curves on a sheet for bulk cutting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parametric</span></code> - creates curves with input functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">puzzle_joinery</span></code> - create jigsaw puzzle joints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulation</span></code> - generate a mesh preview of the result of the selected toolpath</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slice</span></code> - cut objects into vertical slices</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">testing</span></code> - test function definitions for the Test Suite</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">voronoi</span></code> - generate <a class="reference external" href="https://en.wikipedia.org/wiki/Voronoi_diagram">Voronoi</a> tesselations</p></li>
+</ul>
+</section>
+<section id="utility-functions">
+<h2>Utility Functions<a class="headerlink" href="#utility-functions" title="Link to this heading">#</a></h2>
+<p>Utilities are generally low-level, depend only on external code (no local imports), and power Core and Extra functions as well as some Blender-specific functionality.</p>
+<p><strong>Utility Functions</strong> can be found in the <code class="docutils literal notranslate"><span class="pre">utilities/</span></code> folder, and have been broken down into files containing related functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addon_utils</span></code> - check and load dependencies, presets, keymaps and UI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">async_utils</span></code> - asynchronous function for non-blocking updates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bounds_utils</span></code> - get and update bounding boxes in worldspace</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chunk_utils</span></code> - low-level CAM chunk-related functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_utils</span></code> - basic comparisons - equal, overlapping etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict_utils</span></code> - simple Python dict functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">geom_utils</span></code> - define or create simple geometry</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image_utils</span></code> - image creation, conversion and manipulation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index_utils</span></code> - related to Indexing Operations - multi-sided jobs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loop_utils</span></code> - add or remove nested loops</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">machine_utils</span></code> - add or update the <strong>CAM_Machine</strong> area object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">material_utils</span></code> - add or update the <strong>CAM_Material</strong> object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numba_utils</span></code> - add or bypass <code class="docutils literal notranslate"><span class="pre">numba</span></code> acceleration, if available</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ocl_utils</span></code> - <code class="docutils literal notranslate"><span class="pre">opencamlib</span></code> library helpers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">operation_utils</span></code> - add, update, sort Operations and Chains</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">orient_utils</span></code> - add or convert Orientation objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shapely_utils</span></code> - <code class="docutils literal notranslate"><span class="pre">shapely</span></code> library helpers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simple_utils</span></code> - select, delete, duplicate, rename etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy_utils</span></code> - update available strategies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thread_utils</span></code> - monitor threads for CAM updates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version_utils</span></code> - get and set the Extension version</p></li>
+</ul>
+</section>
+<section id="reference-files">
+<h2>Reference Files<a class="headerlink" href="#reference-files" title="Link to this heading">#</a></h2>
+<p>Reference files contain pre-defined data that can be quickly loaded into Blender, including Gcode Post-Processors that will translate a generic CAM toolpath into instructions specific to your CNC machine, presets for Machines, compatible cutting tools and Operations.</p>
+<p><strong>Reference Files</strong> can be found in the folders:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">post_processors/</span></code> - all currently available Gcode Post-Processors</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">presets/</span></code> - Machine, Cutter, Operation preset files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/</span></code> - an automated suite to ensure consistent calculations and output</p></li>
+</ul>
+<p>And the files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">testing</span></code> - test function definitions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code> - Extension version</p></li>
+</ul>
+</section>
+<section id="blender-files">
+<h2>Blender Files<a class="headerlink" href="#blender-files" title="Link to this heading">#</a></h2>
+<p>All the functionality and data listed above needs to be connecetd to <strong>Blender</strong>.</p>
+<p>This is done by registering <code class="docutils literal notranslate"><span class="pre">PropertyGroups</span></code> that contain all the data for our CNC machine and Operations, passing that to Operators that can calculate that data, and exposing those Operators as buttons and controls in the User Interface.</p>
+<p><strong>Blender Files</strong> can be found in the folders:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">properties/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">operators/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ui/</span></code></p></li>
+</ul>
+<p>And also include the <code class="docutils literal notranslate"><span class="pre">blender_manifest.toml</span></code> file, which defines the Extension name, author(s), website, license, tags, wheels etc, and is read by <strong>Blender</strong> when you install <strong>Fabex</strong>.</p>
+<section id="properties">
+<h3>Properties<a class="headerlink" href="#properties" title="Link to this heading">#</a></h3>
+<p>Properties allow you to store data in your <strong>Blender</strong> Scene or Object.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chain_props</span></code> - CAM Chain-related data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">info_props</span></code> - Info Panel data, like Estimates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interface_props</span></code> - UI Layout data and callback functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">machine_props</span></code> - Machine Panel data - your CNC Machine settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">material_props</span></code> - Stock material-related settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">movement_props</span></code> - Movement Panel data, like Climb vs Conventional cut</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">operation_props</span></code> - all Operation data not covered elsewhere</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optimisation_props</span></code> - Optimisation Panel data, like Path Point reduction</p></li>
+</ul>
+</section>
+<section id="operators">
+<h3>Operators<a class="headerlink" href="#operators" title="Link to this heading">#</a></h3>
+<p>Python functions need to be wrapped in a <strong>Blender</strong> Operator to be stored and called in <strong>Blender</strong>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">async_op</span></code> - asynchronous Operator Mixin class for non-blocking updates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bas_relief_ops</span></code> - create a Bas Relief mesh from a <strong>Blender</strong> Camera</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bridges_op</span></code> - generate and place Bridges / Tabs for Cutout Operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chain_ops</span></code> - add, remove, sort CAM Chains</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">curve_create_ops</span></code> - add Sign Plate, Drawer, Mortise, Interlock, Puzzle Joint, Gear objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">curve_equation_ops</span></code>- add Periodic, Lissajous, Hypotrochoid and Custom Curve objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">curve_tools_ops</span></code> - Boolean, Convex Hull, Intarsion, Overcuts, Remove Doubles, and Pocket Surfaces</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gcode_import_op</span></code> - creates a toolpath object from an imported Gcode file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">orient_op</span></code> - add Orientation object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pack_op</span></code> - pack curves on sheet</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path_ops</span></code> - create, chain, calculate, export toolpaths</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">position_op</span></code> - position Stock material within Machine Work Area</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preset_ops</span></code> - execute Preset files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulation_ops</span></code> - simulate the selected toolpath</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slice_op</span></code> - slice the selected object into a series of curves</p></li>
+</ul>
+</section>
+<section id="user-interface">
+<h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h3>
+<p>Files related to <strong>Blender</strong>’s User Interface (aka UI) are found in the <code class="docutils literal notranslate"><span class="pre">ui</span></code> folder, which has been broken down into sub-folders for easier management:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">icons/</span></code> - custom .png icon images</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">menus/</span></code> - the <strong>Fabex CNC</strong> menu in the 3D viewport, and sub-menus</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panels/</span></code> - the main <strong>Fabex</strong> interface</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pie_menu/</span></code> - the Pie Menu system, called with <code class="docutils literal notranslate"><span class="pre">Alt+C</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<p>Python wheels - executable binaries packed in for all supported systems.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">opencamlib</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shapely</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The wheels are for Python version 3.11, and will not work with other Python versions</p>
+</div>
+</section>
+<section id="complete-addon-layout">
+<h2>Complete Addon Layout<a class="headerlink" href="#complete-addon-layout" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>scripts/addons/
+└── cam/
+    ├── operators/
+    │   ├── __init__.py
+    │   ├── async_op.py
+    │   ├── bas_relief_op.py
+    │   ├── bridges_op.py
+    │   ├── chain_ops.py
+    │   ├── curve_create_ops.py
+    │   ├── curve_equation_ops.py
+    │   ├── curve_tools_ops.py
+    │   ├── gcode_import_op.py
+    │   ├── operation_ops.py
+    │   ├── orient_op.py
+    │   ├── pack_op.py
+    │   ├── path_ops.py
+    │   ├── position_op.py
+    │   ├── preset_ops.py
+    │   ├── simulation_ops.py
+    │   └── slice_op.py
+    ├── post_processors/
+    │   ├── LICENSE
+    │   ├── __init__.py
+    │   ├── anilam_crusader_m.py
+    │   ├── anilam_crusader_m_read.py
+    │   ├── attach.py
+    │   ├── cad_iso_read.py
+    │   ├── cad_nc_read.py
+    │   ├── cad_read.py
+    │   ├── centroid1.py
+    │   ├── centroid1_read.py
+    │   ├── drag_knife.py
+    │   ├── emc2.py
+    │   ├── emc2_read.py
+    │   ├── emc2b.py
+    │   ├── emc2b_crc.py
+    │   ├── emc2b_crc_read.py
+    │   ├── emc2b_read.py
+    │   ├── emc2tap.py
+    │   ├── emc2tap_read.py
+    │   ├── fadal.py
+    │   ├── format.py
+    │   ├── gantry_router.py
+    │   ├── gantry_router_read.py
+    │   ├── gravos.py
+    │   ├── grbl.py
+    │   ├── heiden.py
+    │   ├── heiden530.py
+    │   ├── heiden_read.py
+    │   ├── hm50.py
+    │   ├── hm50_read.py
+    │   ├── hpgl2d.py
+    │   ├── hpgl2d_read.py
+    │   ├── hpgl2dv.py
+    │   ├── hpgl2dv_read.py
+    │   ├── hpgl3d.py
+    │   ├── hpgl3d_read.py
+    │   ├── hxml_writer.py
+    │   ├── iso.py
+    │   ├── iso_codes.py
+    │   ├── iso_crc.py
+    │   ├── iso_crc_read.py
+    │   ├── iso_modal.py
+    │   ├── iso_modal_read.py
+    │   ├── iso_read.py
+    │   ├── lathe1.py
+    │   ├── lathe1_read.py
+    │   ├── lynx_otter_o.py
+    │   ├── mach3.py
+    │   ├── mach3_read.py
+    │   ├── machines.txt
+    │   ├── makerbotHBP.py
+    │   ├── makerbotHBP_read.py
+    │   ├── makerbot_codes.py
+    │   ├── nc.py
+    │   ├── nc_read.py
+    │   ├── nclathe_read.py
+    │   ├── num_reader.py
+    │   ├── printbot3d.py
+    │   ├── printbot3d_read.py
+    │   ├── recreator.py
+    │   ├── rez2.py
+    │   ├── rez2_read.py
+    │   ├── series1.py
+    │   ├── series1_read.py
+    │   ├── shopbot_mtc.py
+    │   ├── siegkx1.py
+    │   ├── siegkx1_read.py
+    │   ├── tnc151.py
+    │   ├── tnc151_read.py
+    │   └── winpc.py
+    ├── presets/
+    │   ├── cam_cutters/
+    │   │   ├── BALLCONE_1.00mm.py
+    │   │   ├── ball_1.00mm.py
+    │   │   ├── ball_1.50mm.py
+    │   │   ├── ball_10.00mm.py
+    │   │   ├── ball_12.00mm.py
+    │   │   ├── ball_16.00mm.py
+    │   │   ├── ball_2.00mm.py
+    │   │   ├── ball_2.50mm.py
+    │   │   ├── ball_20.00mm.py
+    │   │   ├── ball_3.00mm.py
+    │   │   ├── ball_3.50mm.py
+    │   │   ├── ball_4.00mm.py
+    │   │   ├── ball_5.00mm.py
+    │   │   ├── ball_6.00mm.py
+    │   │   ├── ball_7.00mm.py
+    │   │   ├── ball_8.00mm.py
+    │   │   ├── end_cyl_1.00mm.py
+    │   │   ├── end_cyl_1.50mm.py
+    │   │   ├── end_cyl_10.00mm.py
+    │   │   ├── end_cyl_12.00mm.py
+    │   │   ├── end_cyl_16.00mm.py
+    │   │   ├── end_cyl_2.00mm.py
+    │   │   ├── end_cyl_2.50mm.py
+    │   │   ├── end_cyl_20.00mm.py
+    │   │   ├── end_cyl_3.00mm.py
+    │   │   ├── end_cyl_3.50mm.py
+    │   │   ├── end_cyl_4.00mm.py
+    │   │   ├── end_cyl_5.00mm.py
+    │   │   ├── end_cyl_6.00mm.py
+    │   │   ├── end_cyl_7.00mm.py
+    │   │   ├── end_cyl_8.00mm.py
+    │   │   ├── v-carve_3mm_45deg.py
+    │   │   ├── v-carve_3mm_60deg.py
+    │   │   ├── v-carve_6mm_45deg.py
+    │   │   └── v-carve_6mm_60deg.py
+    │   ├── cam_machines/
+    │   │   ├── emc_test_2.py
+    │   │   └── kk1000s.py
+    │   └── cam_operations/
+    │       ├── Fin_Ball_3,0_Block_All.py
+    │       ├── Fin_Ball_3,0_Block_Around.py
+    │       ├── Fin_Ball_3,0_Circles_All_EXPERIMENTAL.py
+    │       ├── Fin_Ball_3,0_Circles_Around_EXPERIMENTAL.py
+    │       ├── Fin_Ball_3,0_Cross_All.py
+    │       ├── Fin_Ball_3,0_Cross_Around.py
+    │       ├── Fin_Ball_3,0_Cutout.py
+    │       ├── Fin_Ball_3,0_Outline_Fill_EXPERIMENTAL.py
+    │       ├── Fin_Ball_3,0_Parallel_All.py
+    │       ├── Fin_Ball_3,0_Parallel_Around.py
+    │       ├── Fin_Ball_3,0_Pencil_EXPERIMENTAL.py
+    │       ├── Fin_Ball_3,0_Pocket_EXPERIMENTAL.py
+    │       ├── Fin_Ball_3,0_Spiral_All.py
+    │       ├── Fin_Ball_3,0_Spiral_Around.py
+    │       ├── Finishing_3mm_ballnose.py
+    │       ├── Rou_Ball_3,0_Block_All.py
+    │       ├── Rou_Ball_3,0_Block_Around.py
+    │       ├── Rou_Ball_3,0_Circles_All_EXPERIMENTAL.py
+    │       ├── Rou_Ball_3,0_Circles_Around_EXPERIMENTAL.py
+    │       ├── Rou_Ball_3,0_Cross_All.py
+    │       ├── Rou_Ball_3,0_Cross_Around.py
+    │       ├── Rou_Ball_3,0_Cutout.py
+    │       ├── Rou_Ball_3,0_Outline_Fill_EXPERIMENTAL.py
+    │       ├── Rou_Ball_3,0_Parallel_All.py
+    │       ├── Rou_Ball_3,0_Parallel_Around.py
+    │       ├── Rou_Ball_3,0_Pencil_EXPERIMENTAL.py
+    │       ├── Rou_Ball_3,0_Pocket_EXPERIMENTAL.py
+    │       ├── Rou_Ball_3,0_Spiral_All.py
+    │       └── Rou_Ball_3,0_Spiral_Around.py
+    ├── properties/
+    │   ├── __init__.py
+    │   ├── chain_props.py
+    │   ├── info_props.py
+    │   ├── interface_props.py
+    │   ├── machine_props.py
+    │   ├── material_props.py
+    │   ├── movement_props.py
+    │   ├── operation_props.py
+    │   └── optimisation_props.py
+    ├── tests/
+    │   ├── test_data
+    │   ├── TESTING_PROCEDURE
+    │   ├── gcode_generator.py
+    │   ├── install_addon.py
+    │   └── test_suite.py
+    ├── ui/
+    │   ├── icons/
+    │   │   ├── __init__.py
+    │   │   ├── BallconeIcon.png
+    │   │   ├── BallnoseIcon.png
+    │   │   ├── BullnoseIcon.png
+    │   │   ├── CylinderConeIcon.png
+    │   │   ├── EnMillIcon.png
+    │   │   ├── FabexCNC_Logo.png
+    │   │   ├── LaserPlasmaIcon.png
+    │   │   └── VCarveIcon.png
+    │   ├── menus/
+    │   │   ├── curve_creators.py
+    │   │   ├── curve_tools.py
+    │   │   ├── import_gcode.py
+    │   │   ├── preset_menus.py
+    │   │   └── viewport.py
+    │   ├── panels/
+    │   │   ├── __init__.py
+    │   │   ├── area_panel.py
+    │   │   ├── basrelief.py
+    │   │   ├── blank_panel.py
+    │   │   ├── chains_panel.py
+    │   │   ├── curve_create_panel.py
+    │   │   ├── curve_tools_panel.py
+    │   │   ├── cutter_panel.py
+    │   │   ├── feedrate_panel.py
+    │   │   ├── gcode_panel.py
+    │   │   ├── info_panel.py
+    │   │   ├── machine_panel.py
+    │   │   ├── material_panel.py
+    │   │   ├── movement_panel.py
+    │   │   ├── op_properties_panel.py
+    │   │   ├── operations_panel.py
+    │   │   ├── optimisation_panel.py
+    │   │   ├── pack_panel.py
+    │   │   ├── parent_panel.py
+    │   │   ├── popup_panel.py
+    │   │   └── slice_panel.py
+    │   ├── pie_menu/
+    │   │   ├── pie_cam.py
+    │   │   ├── pie_chains.py
+    │   │   ├── pie_operation.py
+    │   │   └── pie_pack_slice_relief.py
+    │   └── __init__.py
+    ├── utilities/
+    │   ├── __init__.py
+    │   ├── addon_utils.py
+    │   ├── async_utils.py
+    │   ├── bounds_utils.py
+    │   ├── chunk_utils.py
+    │   ├── compare_utils.py
+    │   ├── dict_utils.py
+    │   ├── geom_utils.py
+    │   ├── image_utils.py
+    │   ├── index_utils.py
+    │   ├── loop_utils.py
+    │   ├── machine_utils.py
+    │   ├── material_utils.py
+    │   ├── numba_utils.py
+    │   ├── ocl_utils.py
+    │   ├── operation_utils.py
+    │   ├── orient_utils.py
+    │   ├── shapely_utils.py
+    │   ├── simple_utils.py
+    │   ├── strategy_utils.py
+    │   ├── thread_utils.py
+    │   └── version_utils.py
+    ├── wheels/
+    │   ├── opencamlib-2023.1.11-cp311-cp311-macosx_10_9_x86_64.whl
+    │   ├── opencamlib-2023.1.11-cp311-cp311-macosx_11_0_arm64.whl
+    │   ├── opencamlib-2023.1.11-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+    │   ├── opencamlib-2023.1.11-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+    │   ├── opencamlib-2023.1.11-cp311-cp311-win32.whl
+    │   ├── opencamlib-2023.1.11-cp311-cp311-win_amd64.whl
+    │   ├── shapely-2.0.5-cp311-cp311-macosx_10_9_x86_64.whl
+    │   ├── shapely-2.0.5-cp311-cp311-macosx_11_0_arm64.whl
+    │   ├── shapely-2.0.5-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+    │   ├── shapely-2.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+    │   ├── shapely-2.0.5-cp311-cp311-win32.whl
+    │   └── shapely-2.0.5-cp311-cp311-win_amd64.whl
+    ├── __init__.py
+    ├── bas_relief.py
+    ├── blender_manifest.toml
+    ├── bridges.py
+    ├── cam_chunk.py
+    ├── collision.py
+    ├── constants.py
+    ├── engine.py
+    ├── exception.py
+    ├── gcode_import_parser.py
+    ├── gcode_path.py
+    ├── involute_gear.py
+    ├── joinery.py
+    ├── pack.py
+    ├── parametric.py
+    ├── pattern.py
+    ├── preferences.py
+    ├── puzzle_joinery.py
+    ├── simulation.py
+    ├── slice.py
+    ├── strategy.py
+    ├── testing.py
+    ├── version.py
+    └── voronoi.py
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="developers.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Developer Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="style.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Style Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-functions">Core Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-functions">Extra Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-files">Reference Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blender-files">Blender Files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties">Properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operators">Operators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#user-interface">User Interface</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-addon-layout">Complete Addon Layout</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

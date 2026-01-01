@@ -1,0 +1,990 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User Interface &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=38568b08"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'interface';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tools" href="tools.html" />
+    <link rel="prev" title="Getting Started" href="starting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="users.html">User Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="starting.html">Getting Started</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/interface.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>User Interface</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enter-cnc-cam-mode">Enter CNC/CAM Mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#panels">Panels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operations">[ Operations ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine">[ Machine ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#info">[ Info ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-setup">[ Operation Setup ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-g-code">[ Operation G-code ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">[ Optimization ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-area">[ Operation Area ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#material">[ Material ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#movement">[ Movement ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedrate">[ Feedrate ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cutter">[ Cutter ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chains">[ Chains ]</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menus">Menus</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pie-menu">Pie Menu</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#search-operator-f3">Search Operator (F3)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="user-interface">
+<h1>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading">#</a></h1>
+<p><strong>Fabex</strong>’s user interface was designed to facilitate multiple different workflows, layouts and experience levels.</p>
+<p><strong>Fabex</strong> has a lot of functionality, and tries to balance not overwhelming new users with settings they may not need, with giving access to the many parameters necessary for advanced users to complete complex jobs.</p>
+<p><strong>Interface</strong> allows users to hide options below a certain level, simplifying the layout for beginners.</p>
+<ul class="simple">
+<li><p><strong>Basic</strong> - displays only necessary panels and options</p></li>
+<li><p><strong>Advanced</strong> - displays more panels and options</p></li>
+<li><p><strong>Complete</strong> - displays all Stable options</p></li>
+<li><p><strong>Experimental</strong> - all previous options, plus those marked EXPERIMENTAL</p></li>
+</ul>
+<p><strong>Layout</strong> will rearrange where the panels are placed onscreen.</p>
+<ul class="simple">
+<li><p><strong>Modern</strong> - splits the panels between the Properties and Sidebar areas</p></li>
+<li><p><strong>Classic</strong> - preserves the original BlenderCAM layout</p></li>
+<li><p><strong>User</strong> - can be edited in Preferences</p></li>
+</ul>
+<p><strong>Shading</strong> offers quick preset viewport settings for users unfamiliar with <strong>Blender</strong>’s interface.</p>
+<ul class="simple">
+<li><p><strong>Default</strong> - standard <strong>Blender</strong> viewport shading</p></li>
+<li><p><strong>Deluxe</strong> - enables extra shading options to help view mesh details or organize comples scenes</p></li>
+<li><p><strong>Clean Default</strong> - same as Default with the Viewport Grid turned off</p></li>
+<li><p><strong>Clean Deluxe</strong> - same as Deluxe with the Viewport Grid turned off</p></li>
+<li><p><strong>Preview</strong> - enables HDRI and material shaders</p></li>
+</ul>
+<section id="enter-cnc-cam-mode">
+<h2>Enter CNC/CAM Mode<a class="headerlink" href="#enter-cnc-cam-mode" title="Link to this heading">#</a></h2>
+<p><strong>Fabex</strong> hides most of its interface when it is not active.</p>
+<p>To display it you need to enter CNC/CAM mode.</p>
+<p>In the <strong>Properties</strong> area, in the <strong>Render</strong> tab, set the <strong>Render Engine</strong> to <strong>Fabex CNC/CAM</strong></p>
+<p><img alt="Renderer selection" src="_images/RenderEngine.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>(Most functionality can also be accessed through menus, pie menus or the Search operator.)</em></p>
+</div>
+</section>
+<section id="panels">
+<h2>Panels<a class="headerlink" href="#panels" title="Link to this heading">#</a></h2>
+<section id="operations">
+<h3>[ Operations ]<a class="headerlink" href="#operations" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Operations ]</strong> panel allows you to add, remove, copy, rename, re-arrange, calculate, export and simulate Operations.</p>
+<p>Click the <strong>+</strong> button to add a new Operation, or choose an Operation Preset.</p>
+<p><img alt="CAM operations" src="_images/OperationsPanelSuzanne.png" /></p>
+<ul class="simple">
+<li><p><strong>Calculate Path &amp; Export Gcode</strong> - This calculates the currently selected operation from the CAM operations list. The Button will stay selected until the calculation is completed.</p></li>
+<li><p><strong>Simulate This Operation</strong> - Works for most 3 axis operations. It creates a new object which shows the simulation - the subdivision of the object can be increased, and the resolution of the simulation also depends on simulation sampling raster detail, which is in the optimization panel</p></li>
+<li><p><strong>Operation Name</strong> - Select this field to change the name of the currently selected operation.</p></li>
+<li><p><strong>File Name</strong> - Name of the Gcode file. <em>Post Processor sets the file extension. See <a class="reference internal" href="#-machine-"><span class="xref myst">Machine</span></a>.</em></p></li>
+<li><p><strong>Data Source</strong> - This can be either 1 object, a group of objects, or an image.</p>
+<ul>
+<li><p><strong>Object</strong> - a <strong>Blender</strong> object.  This could be a mesh, or a curve.</p></li>
+<li><p><strong>Collection</strong> - Objects can be combined into a Collection in the Outliner.</p></li>
+<li><p><strong>Image</strong> - Open an image that will be used as a height/depth map.</p></li>
+</ul>
+</li>
+<li><p><strong>Object</strong> - the <strong>Blender</strong> object that will be used in the CAM operation. Select the object from a drop down list. Write it’s name in the field, it should auto-complete and give a list of objects to select from.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>If you change the object’s name later on then you must also change it here. The field will turn red if the object can not be found.</em></p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="machine">
+<h3>[ Machine ]<a class="headerlink" href="#machine" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Machine ]</strong> panel lets you setup your CNC machine parameters within <strong>Blender</strong>.</p>
+<p>You can set up your machine, then save your default file with <code class="docutils literal notranslate"><span class="pre">Ctrl+U</span></code> command. This way you will always start with the settings you need.</p>
+<p><img alt="Cam machine" src="_images/MachineParameters.png" /></p>
+<ul class="simple">
+<li><p><strong>Post Processor</strong> - this defines the formatting of the output file.</p></li>
+<li><p><strong>Unit System</strong> - Metric or Imperial</p></li>
+<li><p><strong>Length Unit</strong> - Feet, Inches, Millimeters, Meters</p></li>
+<li><p><strong>Collet Size</strong></p></li>
+<li><p><strong>Work Area</strong> - if the Operation has a larger area than this, you will get a warning in the info panel</p></li>
+<li><p><strong>4th Axis</strong> - enable if your machine has a 4th Axis</p></li>
+<li><p><strong>5th Axis</strong> - enable if your machine has a 5th Axis</p></li>
+<li><p><strong>Position Definitions</strong> - set custom positions for job start, end and tool change</p></li>
+<li><p><strong>Feedrate (/min)</strong> - minimum, maximum and default feedrate for the machine</p></li>
+<li><p><strong>Spindle Speed (RPM)</strong> - minimum, maximum and default spindle speed for the machine</p></li>
+<li><p><strong>Machine G-code</strong> - Gcode options to be included in every file produced for this machine</p></li>
+<li><p><strong>Price ($/hour)</strong> - used in the Estimates in the Info Panel</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your machine is not in the list, you can try the ISO code, which is standardized Gcode, or see the <a class="reference internal" href="faq.html"><span class="std std-doc">FAQ</span></a> for details on writing your own Post Processor (EXPERIMENTAL!)</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="info">
+<h3>[ Info ]<a class="headerlink" href="#info" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Info ]</strong> panel shows important information about your Operation.</p>
+<p><img alt="Cam Info &amp; warnings" src="_images/InfoPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Estimates</strong> give rough calculations based on current Operation settings for:</p>
+<ul>
+<li><p><strong>Time</strong> - in hours, minutes and seconds</p></li>
+<li><p><strong>Chipload</strong> - if applicable, <em>does not currently include Stepover</em></p></li>
+<li><p><strong>Cost</strong> - based on the <strong>Price</strong> set in the <strong>[ Machine ]</strong> panel and the <strong>Time</strong> estimate above</p></li>
+</ul>
+</li>
+<li><p><strong>Warnings</strong> will be displayed in <strong>RED</strong> when calculations indicate a problem like:</p>
+<ul>
+<li><p>an Operation that exceeds your Machine’s Work Area</p></li>
+<li><p>a potential Collision</p></li>
+<li><p>high Cutter engagement</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Warnings</strong> should always be heeded, and can usually be fixed by adjusting your Operation parameters.</p>
+<p>Failure to resolve issues with your Operation could result in damage, injury or death. We do our best to ensure that Fabex is safe to use, but we accept no liability for any harm or loss resulting from its use.</p>
+<p><strong>Warnings</strong> are there to keep you, your machine and your material safe, and we urge you to take all necessary precautions when working with CNC Machines.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="operation-setup">
+<h3>[ Operation Setup ]<a class="headerlink" href="#operation-setup" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Operation Setup ]</strong> panel gives you access to milling strategies and settings specific to those strategies.</p>
+<p><img alt="Strategy" src="_images/OperationSetupPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Axis Count</strong> - how many axes will be used <em>(Default is 3, additional axes should be enabled in the Machine panel first)</em></p></li>
+<li><p><strong>Strategy</strong> sets one of the milling strategies.</p></li>
+</ul>
+<p>Depending on which <strong>Strategy</strong> is selected, the options will differ. Below is a sampling of some common settings:</p>
+<ul class="simple">
+<li><p><strong>Inverse Milling</strong> - used if you want to mill a form directly from positive of the object. Does not work in exact mode. Only works for 3 axis strategies.</p></li>
+<li><p><strong>Skin</strong> - useful for roughing, leaves a layer on the surface for finishing</p></li>
+<li><p><strong>Angle of Paths</strong> - this rotates the parallel and cross strategies by the specified amount. Note that e.g. rotating by 90 changes the basic axis from X to Y</p></li>
+<li><p><strong>Toolpath Distance</strong></p>
+<ul>
+<li><p><strong>Between</strong> - also called Stepover</p></li>
+<li><p><strong>Along</strong> - how dense will be the operation path. This can influence accuracy of the machining.</p></li>
+</ul>
+</li>
+<li><p><strong>Direction</strong> - for Block and Spiral strategy, decides if the path progresses from inside or from outside</p></li>
+<li><p><strong>Carve</strong></p>
+<ul>
+<li><p><strong>Depth</strong> - decides how deep below the surface will go the carve operation</p></li>
+</ul>
+</li>
+<li><p><strong>Outlines</strong></p>
+<ul>
+<li><p><strong>Don’t Merge</strong> - for cutout strategy. Does not merge outlines - this results into cutting in the object area! It is usefully when milling PCBs, where you don’t need exact shape but need to separate areas with engraving.</p></li>
+</ul>
+</li>
+<li><p><strong>Bridges (Tabs)</strong> - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>(see the <a class="reference internal" href="strategies.html"><span class="std std-doc">Strategies</span></a> page for a full list of options for each Strategy)</em></p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="operation-g-code">
+<h3>[ Operation G-code ]<a class="headerlink" href="#operation-g-code" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Operation G-code]</strong> panel lets you specify commands or macros to be executed at the beginning and end of Operations.</p>
+<p>The Gcode options in the <strong>[ Machine ]</strong> panel are global across all Operations, while the <strong>[ Operation G-code ]</strong> panel options apply only to the current Operation.</p>
+<p><img alt="" src="_images/OperationGcodePanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Output Header</strong></p></li>
+<li><p><strong>Output Trailer</strong></p></li>
+<li><p><strong>Dust Collector</strong></p></li>
+<li><p><strong>Hold Down</strong></p></li>
+<li><p><strong>Mist</strong></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="optimization">
+<h3>[ Optimization ]<a class="headerlink" href="#optimization" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Optimisation ]</strong> panel is crucial for performance.</p>
+<p>Toolpaths and Simulations can quickly end up with many points to calculate, and if you accidentally try to calculate a giant toolpath with a tiny resolution then you could run out of memory and crash.</p>
+<p>These settings allow you to balance performance and accuracy by limiting how many points will be generated in the toolpaths and simulations.</p>
+<p><img alt="Cam Optimization" src="_images/OptimisationPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Reduce Path Points</strong> - reduces number of commands in the operation, so the resulting gcode is shorter and can run smoother on the machine</p>
+<ul>
+<li><p><strong>Threshold (um)</strong> - points with smaller distance (in micrometers) to the path direction will be reduced</p></li>
+</ul>
+</li>
+<li><p><strong>Exact mode</strong> - exact mode is related to the strategies that are fully 3d - parallel, cross, block, spiral, circles, waterline, outline fill, carve. It’s a very important setting.</p>
+<ul>
+<li><p><strong>Non exact mode:</strong> In non-exact mode, an image is used to estimate the cutter offsets, and the Sampling raster detail is used to estimate the resolution of the image. Non exact mode is good for high poly meshes, several millions of polygons shouldn’t be problem for it, but the sampling raster detail setting is crucial then. Memory overflow can happen if you use e.g. default blender cube that you have by startup, since the cube is 2 meter in size in blender units. For artistic use with high poly meshes, non exact mode is good for most of the cases.</p></li>
+<li><p><strong>Exact mode:</strong> a real collision simulation is used, so the collisions are exact. But the speed goes down with increasing number of polygons. It is recommended in these situations: Your model is too big for the non exact mode, you need high precision, your model doesn’t have too many faces.</p></li>
+</ul>
+</li>
+<li><p><strong>Sampling raster detail</strong> - this parameter is crucial for memory use and mainly speed of blender CAM. In non-exact mode, blenderCAM uses an image to compute the cutter offset positions. If the raster detail is 0.1mm, then a 10x10 cm object will use a 1000x1000 image. If the object size would be 1m, the image would be 10000 x 10000 pixels, which will probably fill the memory of your computer. Check your object size before computing operations.</p></li>
+<li><p><strong>Simulation sampling raster detail</strong> - same as sampling raster detail, but only for simulation</p></li>
+<li><p><strong>Detail of circles used for curve offsets</strong> - exactly what it says</p></li>
+<li><p><strong>Use OpenCAMLib</strong> - use external library for calculating toolpaths, improving toolpath quality (especially with waterlines) and calculation time. Has to be used with exact mode. [[Using-BlenderCAM-with-OpenCAMLib]]</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="operation-area">
+<h3>[ Operation Area ]<a class="headerlink" href="#operation-area" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Operation Area ]</strong> panel controls the area where the Cutter is allowed to move and sets limits on depth and travel height.</p>
+<p><img alt="CAM Operation Area" src="_images/OperationArea.png" /></p>
+<ul class="simple">
+<li><p><strong>Z Clearance</strong></p>
+<ul>
+<li><p><strong>Safe Height</strong> - how high will the cutter travel when moving between toolpaths.  Keep it as low as possible to reduce total cutting time.  The Z axis usually has the slowest rapid rates compared to the other two axis X and Y.</p></li>
+</ul>
+</li>
+<li><p><strong>Operation Depth</strong></p>
+<ul>
+<li><p><strong>Start</strong></p></li>
+<li><p><strong>Max</strong></p>
+<ul>
+<li><p><strong>Object</strong> - takes object depth and sets up the total depth of the operation from it. Otherwise, you can use Operation depth to do the same manually.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Layers</strong> - sets up layers for roughing.</p>
+<ul>
+<li><p><strong>Layer Height</strong> - specifies thickness of the layers for roughing</p></li>
+</ul>
+</li>
+<li><p><strong>Ambient</strong> - how much space surrounding the object will be used for the milling</p>
+<ul>
+<li><p><strong>Surfaces All</strong> - a rectangular area will be used</p></li>
+<li><p><strong>Surfaces Around</strong> - object silhouette will be used, with a radius specified by Ambient radius</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="material">
+<h3>[ Material ]<a class="headerlink" href="#material" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Material ]</strong> panel handles the size and position of your stock material - the raw material that you are planning to mill. You can enter values manually, or allow Fabex to calculate them for you based on the object you have selected.</p>
+<p><img alt="CAM material size and position" src="_images/MaterialPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Size</strong></p>
+<ul>
+<li><p><strong>Size from Model</strong> - will assume the workpiece/material has the same size as the model, with radius around the model.
+If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_Material.</p></li>
+<li><p><strong>Additional Radius</strong></p></li>
+</ul>
+</li>
+<li><p><strong>Position</strong></p>
+<ul>
+<li><p><strong>Center on X Axis</strong></p></li>
+<li><p><strong>Center on Y Axis</strong></p></li>
+<li><p><strong>Z Placement</strong></p></li>
+<li><p><strong>Position Object</strong> - this will move the object to positive X and Y and negative Z so that it is fully in the work area and closest to the origin.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="movement">
+<h3>[ Movement ]<a class="headerlink" href="#movement" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Movement ]</strong> panel handles how the Cutter moves during the Operation, the direction the Cutter spins, and has a little overlap with the <strong>[ Operation Area ]</strong> panel for the most important settings.</p>
+<p><img alt="CAM Movement" src="_images/MovementPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Milling Type</strong> - is supported only for some of the strategies, sets up how the cutter moves into the material</p>
+<ul>
+<li><p><strong>Meander/ZigZag</strong> - sometimes also called ZigZag , this means you don’t care which direction the cutter goes into the material.</p></li>
+<li><p><strong>Climb/Down Milling</strong> - the default movement, and mostly used when doing CNC machining if the machine has no or very little backlash. The cutter rotates with the direction of the feed. It can produce a better finish, less stress on the bit, and less power required. If the machine has backlash then Conventional milling is a better choice.</p></li>
+<li><p><strong>Conventional/Up Milling</strong> - The cutter rotates against the direction of the feed.  If the machine has backlash that can not be compensated for then this is the better choice.  Some woods cut better with this method but grain direction also has to be considered.</p></li>
+</ul>
+</li>
+<li><p><strong>Cutter Spin</strong> - this parameter is not exported, but it is used when setting up the movement type, because with the spindle rotating CCW, all operations go in opposite direction.</p></li>
+<li><p><strong>Z Clearance</strong></p>
+<ul>
+<li><p><strong>Safe Height</strong> - how high will the cutter travel when moving between toolpaths.  Keep it as low as possible to reduce total cutting time.  The Z axis usually has the slowest rapid rates compared to the other two axis X and Y.</p></li>
+</ul>
+</li>
+<li><p><strong>Stay Low if possible</strong> - tries to not lift the cutter when going from 1 path to other, when the paths are closer to each other than the cutter radius, which means no extra material will be cut during this travel move.</p></li>
+<li><p><strong>Parallel Step Back</strong> - this function is only for finishing pass, where you still have to cut some substantial amount of material, and want also to save the cutter. If you set up to climb movement, it goes with climb into material, then goes in the other direction one step back - this uses the back movement of the machine for finishing the surface. Note that this also means the cutting into material will happen with a rate which is 2x of distance between toolpaths If you don’t know what this all means, don’t use this function.</p></li>
+<li><p><strong>G64 Trajectory</strong> This enables the “naive cam detector” and enables blending with a tolerance. If you program G64 P0.05, you tell the planner that you want continuous feed, but at programmed corners you want it to slow down enough so that the tool path can stay within 0.05 user units of the programmed path. The exact amount of slowdown depends on the geometry of the programmed corner and the machine constraints, but the only thing the programmer needs to worry about is the tolerance. This gives the programmer complete control over the path following compromise.</p></li>
+<li><p><strong>Protect vertical</strong> - when the angle of the path is above verticality limit, the move will be made vertical. this way vertical surfaces won’t get a slope because of the distance between the path points.</p></li>
+<li><p><strong>First down</strong> - for cutout strategy. If on, the paths are cut one by one to the full depth(all layers), otherwise first all the silhouettes are cut on layer 1, then 2….</p></li>
+<li><p><strong>Ramp Contour</strong> - for cutout strategy, instead of going layer by layer, it goes down all the way on a ramp.</p></li>
+<li><p><strong>Ramp Out</strong> - also going out is performed on a ramp, to prevent burning of the finished piece by staying on one place in XY axes.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="feedrate">
+<h3>[ Feedrate ]<a class="headerlink" href="#feedrate" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Feedrate ]</strong> panel sets the Operation feedrate, Cutter speed and more.</p>
+<p><img alt="CAM feedrate" src="_images/FeedratePanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Feedrate (/min)</strong> - How much will the machine travel in 1 minute</p></li>
+<li><p><strong>Spindle (RPM)</strong> - spindle revolutions per minute</p></li>
+<li><p><strong>Plunge</strong></p>
+<ul>
+<li><p><strong>Speed</strong> - the feed speed gets reduced when the slope of the path is above the Plunge angle</p></li>
+<li><p><strong>Angle</strong> - any angle greater than the plunge angle will activate plunge speed</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="cutter">
+<h3>[ Cutter ]<a class="headerlink" href="#cutter" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Cutter ]</strong> panel allows you to select a pre-defined cutting tool, or define your own with custom Tool Number and Description.</p>
+<p><img alt="CAM cutter" src="_images/CutterPanel.png" /></p>
+<ul class="simple">
+<li><p><strong>Type</strong> - supported types are listed in the table below</p></li>
+<li><p><strong>Diameter</strong> - The exact diameter of the cutting tool.  <em>Used in toolpath calculation.  For V-bits its the maximum diameter of the bit.</em></p></li>
+<li><p><strong>Flutes</strong> - this parameter is used only for chipload computation.</p></li>
+<li><p><strong>Tool Number</strong> - this parameter is exported with toolchange command</p></li>
+<li><p><strong>Description</strong> - A description of the tool.  Currently this is not used for anything.</p></li>
+<li><p><strong>Cutter object</strong> - a 3D object of your choice available in the drop down list.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>Cutter Types</p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>End</p></td>
+<td><p><img alt="End" src="_images/cut-end.jpg" /></p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>Ballnose</p></td>
+<td><p><img alt="Ballnose" src="_images/cut-ballnose.jpg" /></p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>Bullnose</p></td>
+<td><p><img alt="Bullnose" src="_images/cut-bullnose.jpg" /></p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>V-Carve</p></td>
+<td><p><img alt="v-carve" src="_images/cut-v-carve.jpg" /></p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>Ballcone</p></td>
+<td><p><img alt="Ballcone" src="_images/cut-ballcone.jpg" /></p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>Laser</p></td>
+<td><p><img alt="Laser" src="_images/cut-laser.jpg" /></p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>Custom</p></td>
+<td><p><img alt="Custom" src="_images/cut-custom.jpg" /></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="chains">
+<h3>[ Chains ]<a class="headerlink" href="#chains" title="Link to this heading">#</a></h3>
+<p>The <strong>[ Chains ]</strong> panel allows you to combine multiple operations. It is useful for simulating more operations or exporting a chain of operations if you have automatic toolchanger or use the same tool for several operations.</p>
+<p><img alt="New chain" src="_images/ChainsPanel.png" /></p>
+</section>
+</section>
+<section id="menus">
+<h2>Menus<a class="headerlink" href="#menus" title="Link to this heading">#</a></h2>
+<p>Many of <strong>Fabex</strong>’s Tools can be accessed through the <strong>Fabex CNC</strong> menus located in the 3D viewport.</p>
+<p><img alt="" src="_images/FabexMenus.png" /></p>
+</section>
+<section id="pie-menu">
+<h2>Pie Menu<a class="headerlink" href="#pie-menu" title="Link to this heading">#</a></h2>
+<p><strong>Fabex</strong>’s entire panel, tool and menu layout can also be accessed through a multi-level Pie Menu system.</p>
+<p><img alt="" src="_images/FabexPieMenu.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Pie Menu is bound to the shortcut - <code class="docutils literal notranslate"><span class="pre">Alt</span> <span class="pre">+</span> <span class="pre">C</span></code> by default, but can be changed in Preferences.</p>
+</div>
+</section>
+<section id="search-operator-f3">
+<h2>Search Operator (F3)<a class="headerlink" href="#search-operator-f3" title="Link to this heading">#</a></h2>
+<p>Any of <strong>Fabex</strong>’s Operators can be searched and executed using Blender’s built-in Search Operator, activated with F3.</p>
+<p><img alt="" src="_images/F3Search.png" /></p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="starting.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting Started</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="tools.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tools</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enter-cnc-cam-mode">Enter CNC/CAM Mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#panels">Panels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operations">[ Operations ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine">[ Machine ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#info">[ Info ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-setup">[ Operation Setup ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-g-code">[ Operation G-code ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">[ Optimization ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operation-area">[ Operation Area ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#material">[ Material ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#movement">[ Movement ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedrate">[ Feedrate ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cutter">[ Cutter ]</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chains">[ Chains ]</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menus">Menus</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pie-menu">Pie Menu</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#search-operator-f3">Search Operator (F3)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

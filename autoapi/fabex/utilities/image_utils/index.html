@@ -1,0 +1,1054 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.utilities.image_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/utilities/image_utils/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.utilities.index_utils" href="../index_utils/index.html" />
+    <link rel="prev" title="fabex.utilities.image_shapely_utils" href="../image_shapely_utils/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/utilities/image_utils/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.utilities.image_utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.numpy_save"><code class="docutils literal notranslate"><span class="pre">numpy_save()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.numpy_to_image"><code class="docutils literal notranslate"><span class="pre">numpy_to_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_to_numpy"><code class="docutils literal notranslate"><span class="pre">image_to_numpy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._offset_inner_loop"><code class="docutils literal notranslate"><span class="pre">_offset_inner_loop()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.offset_area"><code class="docutils literal notranslate"><span class="pre">offset_area()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_sample_image"><code class="docutils literal notranslate"><span class="pre">get_sample_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_resolution"><code class="docutils literal notranslate"><span class="pre">get_resolution()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._backup_render_settings"><code class="docutils literal notranslate"><span class="pre">_backup_render_settings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._restore_render_settings"><code class="docutils literal notranslate"><span class="pre">_restore_render_settings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.render_sample_image"><code class="docutils literal notranslate"><span class="pre">render_sample_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.prepare_area"><code class="docutils literal notranslate"><span class="pre">prepare_area()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_edge_search_on_line"><code class="docutils literal notranslate"><span class="pre">image_edge_search_on_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_offset_image_cavities"><code class="docutils literal notranslate"><span class="pre">get_offset_image_cavities()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_to_chunks"><code class="docutils literal notranslate"><span class="pre">image_to_chunks()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.utilities.image_utils">
+<span id="fabex-utilities-image-utils"></span><h1>fabex.utilities.image_utils<a class="headerlink" href="#module-fabex.utilities.image_utils" title="Link to this heading">#</a></h1>
+<p>Fabex ‘image_utils.py’ © 2012 Vilem Novak</p>
+<p>Functions to render, save, convert and analyze image data.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.numpy_save" title="fabex.utilities.image_utils.numpy_save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_save</span></code></a>(a, iname)</p></td>
+<td><p>Save a NumPy array as an image file in OpenEXR format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.numpy_to_image" title="fabex.utilities.image_utils.numpy_to_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_to_image</span></code></a>(→ bpy.types.Image)</p></td>
+<td><p>Convert a NumPy array to a Blender image.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.image_to_numpy" title="fabex.utilities.image_utils.image_to_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">image_to_numpy</span></code></a>(i)</p></td>
+<td><p>Convert a Blender image to a NumPy array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils._offset_inner_loop" title="fabex.utilities.image_utils._offset_inner_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_offset_inner_loop</span></code></a>(y1, y2, cutterArrayNan, cwidth, ...)</p></td>
+<td><p>Offset the inner loop for processing a specified area in a 2D array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.offset_area" title="fabex.utilities.image_utils.offset_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">offset_area</span></code></a>(o, samples)</p></td>
+<td><p>Offsets the whole image with the cutter and skin offsets.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.get_sample_image" title="fabex.utilities.image_utils.get_sample_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sample_image</span></code></a>(s, sarray, minz)</p></td>
+<td><p>Get a sample image value from a 2D array based on given coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.get_resolution" title="fabex.utilities.image_utils.get_resolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_resolution</span></code></a>(o)</p></td>
+<td><p>Calculate the resolution based on the dimensions of an object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils._backup_render_settings" title="fabex.utilities.image_utils._backup_render_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_backup_render_settings</span></code></a>(pairs)</p></td>
+<td><p>Backup the render settings of Blender objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils._restore_render_settings" title="fabex.utilities.image_utils._restore_render_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_restore_render_settings</span></code></a>(pairs, properties)</p></td>
+<td><p>Restore render settings for a given owner and structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.render_sample_image" title="fabex.utilities.image_utils.render_sample_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_sample_image</span></code></a>(o)</p></td>
+<td><p>Render a sample image based on the provided object settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.prepare_area" title="fabex.utilities.image_utils.prepare_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_area</span></code></a>(o)</p></td>
+<td><p>Prepare the area for rendering by processing the offset image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.image_edge_search_on_line" title="fabex.utilities.image_utils.image_edge_search_on_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">image_edge_search_on_line</span></code></a>(o, ar, zimage)</p></td>
+<td><p>Search for edges in an image using a pencil strategy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.get_offset_image_cavities" title="fabex.utilities.image_utils.get_offset_image_cavities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_offset_image_cavities</span></code></a>(o, i)</p></td>
+<td><p>Detects areas in the offset image which are 'cavities' due to curvature</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.image_utils.image_to_chunks" title="fabex.utilities.image_utils.image_to_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">image_to_chunks</span></code></a>(o, image[, with_border])</p></td>
+<td><p>Convert an image into chunks based on detected edges.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.numpy_save">
+<span class="sig-name descname"><span class="pre">numpy_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#numpy_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.numpy_save" title="Link to this definition">#</a></dt>
+<dd><p>Save a NumPy array as an image file in OpenEXR format.</p>
+<p>This function converts a NumPy array into an image and saves it using
+Blender’s rendering capabilities. It sets the image format to OpenEXR
+with black and white color mode and a color depth of 32 bits. The image
+is saved to the specified filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>numpy.ndarray</em>) – The NumPy array to be converted and saved as an image.</p></li>
+<li><p><strong>iname</strong> (<em>str</em>) – The file path where the image will be saved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.numpy_to_image">
+<span class="sig-name descname"><span class="pre">numpy_to_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bpy.types.Image</span></span></span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#numpy_to_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.numpy_to_image" title="Link to this definition">#</a></dt>
+<dd><p>Convert a NumPy array to a Blender image.</p>
+<p>This function takes a NumPy array and converts it into a Blender image.
+It first checks if an image with the specified name and dimensions
+already exists in Blender. If it does not exist, a new image is created
+with the specified name and dimensions. The pixel data from the NumPy
+array is then reshaped and assigned to the image’s pixel buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>numpy.ndarray</em>) – A 2D NumPy array representing the image data.</p></li>
+<li><p><strong>iname</strong> (<em>str</em>) – The name to assign to the created or found image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Blender image object that was created or found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bpy.types.Image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.image_to_numpy">
+<span class="sig-name descname"><span class="pre">image_to_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#image_to_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.image_to_numpy" title="Link to this definition">#</a></dt>
+<dd><p>Convert a Blender image to a NumPy array.</p>
+<p>This function takes a Blender image object and converts its pixel data
+into a NumPy array. It retrieves the pixel data, reshapes it, and swaps
+the axes to match the expected format for further processing. The
+function also measures the time taken for the conversion and prints it
+to the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>Image</em>) – A Blender image object containing pixel data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 2D NumPy array representing the image pixels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils._offset_inner_loop">
+<span class="sig-name descname"><span class="pre">_offset_inner_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutterArrayNan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cwidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceArray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparearea</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#_offset_inner_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils._offset_inner_loop" title="Link to this definition">#</a></dt>
+<dd><p>Offset the inner loop for processing a specified area in a 2D array.</p>
+<p>This function iterates over a specified range of rows and columns in a
+2D array, calculating the maximum value from a source array combined
+with a cutter array for each position in the defined area. The results
+are stored in the comparearea array, which is updated with the maximum
+values found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> (<em>int</em>) – The starting index for the row iteration.</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – The ending index for the row iteration.</p></li>
+<li><p><strong>cutterArrayNan</strong> (<em>numpy.ndarray</em>) – A 2D array used for modifying the source array.</p></li>
+<li><p><strong>cwidth</strong> (<em>int</em>) – The width of the area to consider for the maximum calculation.</p></li>
+<li><p><strong>sourceArray</strong> (<em>numpy.ndarray</em>) – The source 2D array from which maximum values are derived.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – The width of the source array.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the source array.</p></li>
+<li><p><strong>comparearea</strong> (<em>numpy.ndarray</em>) – A 2D array where the calculated maximum values are stored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>This function modifies the comparearea in place and does not return a</dt><dd><p>value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.offset_area">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#offset_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.offset_area" title="Link to this definition">#</a></dt>
+<dd><p>Offsets the whole image with the cutter and skin offsets.</p>
+<p>This function modifies the offset image based on the provided cutter and
+skin offsets. It calculates the dimensions of the source and cutter
+arrays, initializes an offset image, and processes the image in
+segments. The function handles the inversion of the source array if
+specified and updates the offset image accordingly. Progress is reported
+asynchronously during processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – An object containing properties such as <cite>update_offset_image_tag</cite>,
+<cite>min</cite>, <cite>max</cite>, <cite>inverse</cite>, and <cite>offset_image</cite>.</p></li>
+<li><p><strong>samples</strong> (<em>numpy.ndarray</em>) – A 2D array representing the source image data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated offset image after applying the cutter and skin offsets.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.get_sample_image">
+<span class="sig-name descname"><span class="pre">get_sample_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#get_sample_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.get_sample_image" title="Link to this definition">#</a></dt>
+<dd><p>Get a sample image value from a 2D array based on given coordinates.</p>
+<p>This function retrieves a value from a 2D array by performing bilinear
+interpolation based on the provided coordinates. It checks if the
+coordinates are within the bounds of the array and calculates the
+interpolated value accordingly. If the coordinates are out of bounds, it
+returns -10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>tuple</em>) – A tuple containing the x and y coordinates (float).</p></li>
+<li><p><strong>sarray</strong> (<em>numpy.ndarray</em>) – A 2D array from which to sample the image values.</p></li>
+<li><p><strong>minz</strong> (<em>float</em>) – A minimum threshold value (not used in the current implementation).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The interpolated value from the 2D array, or -10 if the coordinates are</dt><dd><p>out of bounds.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.get_resolution">
+<span class="sig-name descname"><span class="pre">get_resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#get_resolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.get_resolution" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the resolution based on the dimensions of an object.</p>
+<p>This function computes the resolution in both x and y directions by
+determining the width and height of the object, adjusting for pixel size
+and border width. The resolution is calculated by dividing the
+dimensions by the pixel size and adding twice the border width to each
+dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>object</em>) – An object with attributes <cite>max</cite>, <cite>min</cite>, <cite>optimisation</cite>,
+and <cite>borderwidth</cite>. The <cite>max</cite> and <cite>min</cite> attributes should
+have <cite>x</cite> and <cite>y</cite> properties representing the coordinates,
+while <cite>optimisation</cite> should have a <cite>pixsize</cite> attribute.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>This function does not return a value; it performs calculations</dt><dd><p>to determine resolution.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils._backup_render_settings">
+<span class="sig-name descname"><span class="pre">_backup_render_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#_backup_render_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils._backup_render_settings" title="Link to this definition">#</a></dt>
+<dd><p>Backup the render settings of Blender objects.</p>
+<p>This function iterates over a list of pairs consisting of owners and
+their corresponding structure names. It retrieves the properties of each
+structure and stores them in a backup list. If the structure is a
+Blender object, it saves all its properties that do not start with an
+underscore. For simple values, it directly appends them to the
+properties list. This is useful for preserving render settings that
+Blender does not allow direct access to during rendering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pairs</strong> (<em>list</em>) – A list of tuples where each tuple contains an owner and a structure
+name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list containing the backed-up properties of the specified Blender</dt><dd><p>objects.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils._restore_render_settings">
+<span class="sig-name descname"><span class="pre">_restore_render_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#_restore_render_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils._restore_render_settings" title="Link to this definition">#</a></dt>
+<dd><p>Restore render settings for a given owner and structure.</p>
+<p>This function takes pairs of owners and structure names along with their
+corresponding properties. It iterates through these pairs, retrieves the
+appropriate object from the owner using the structure name, and sets the
+properties on the object. If the object is an instance of
+<cite>bpy.types.bpy_struct</cite>, it updates its attributes; otherwise, it
+directly sets the value on the owner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pairs</strong> (<em>list</em>) – A list of tuples where each tuple contains an owner and a structure
+name.</p></li>
+<li><p><strong>properties</strong> (<em>list</em>) – A list of dictionaries containing property names and their corresponding
+values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.render_sample_image">
+<span class="sig-name descname"><span class="pre">render_sample_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#render_sample_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.render_sample_image" title="Link to this definition">#</a></dt>
+<dd><p>Render a sample image based on the provided object settings.</p>
+<p>This function generates a Z-buffer image for a given object by either
+rendering it from scratch or loading an existing image from the cache.
+It handles different geometry sources and applies various settings to
+ensure the image is rendered correctly. The function also manages backup
+and restoration of render settings to maintain the scene’s integrity
+during the rendering process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>object</em>) – An object containing various properties and settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The generated or loaded Z-buffer image as a NumPy array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.prepare_area">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#prepare_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.prepare_area" title="Link to this definition">#</a></dt>
+<dd><p>Prepare the area for rendering by processing the offset image.</p>
+<p>This function handles the preparation of the area by rendering a sample
+image and managing the offset image based on the provided options. It
+checks if the offset image needs to be updated and loads it if
+necessary. If the inverse option is set, it adjusts the samples
+accordingly before calling the offsetArea function. Finally, it saves
+the processed offset image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>object</em>) – An object containing various properties and methods
+required for preparing the area, including flags for
+updating the offset image and rendering options.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.image_edge_search_on_line">
+<span class="sig-name descname"><span class="pre">image_edge_search_on_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zimage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#image_edge_search_on_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.image_edge_search_on_line" title="Link to this definition">#</a></dt>
+<dd><p>Search for edges in an image using a pencil strategy.</p>
+<p>This function implements an edge detection algorithm that simulates a
+pencil-like movement across the image represented by a 2D array. It
+identifies white pixels and builds chunks of points based on the
+detected edges. The algorithm iteratively explores possible directions
+to find and track the edges until a specified condition is met, such as
+exhausting the available white pixels or reaching a maximum number of
+tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<em>object</em>) – An object containing parameters such as min, max coordinates, cutter
+diameter,
+border width, and optimisation settings.</p></li>
+<li><p><strong>ar</strong> (<em>np.ndarray</em>) – A 2D array representing the image where edge detection is to be
+performed.</p></li>
+<li><p><strong>zimage</strong> (<em>np.ndarray</em>) – A 2D array representing the z-coordinates corresponding to the image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of chunks representing the detected edges in the image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.get_offset_image_cavities">
+<span class="sig-name descname"><span class="pre">get_offset_image_cavities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#get_offset_image_cavities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.get_offset_image_cavities" title="Link to this definition">#</a></dt>
+<dd><p>Detects areas in the offset image which are ‘cavities’ due to curvature
+changes.</p>
+<p>This function analyzes the input image to identify regions where the
+curvature changes, indicating the presence of cavities. It computes
+vertical and horizontal differences in pixel values to detect edges and
+applies a threshold to filter out insignificant changes. The resulting
+areas are then processed to remove any chunks that do not meet the
+minimum criteria for cavity detection. The function returns a list of
+valid chunks that represent the detected cavities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – An object containing parameters and thresholds for the detection
+process.</p></li>
+<li><p><strong>i</strong> (<em>np.ndarray</em>) – A 2D array representing the image data to be analyzed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of detected chunks representing the cavities in the image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.image_utils.image_to_chunks">
+<span class="sig-name descname"><span class="pre">image_to_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/image_utils.html#image_to_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.image_utils.image_to_chunks" title="Link to this definition">#</a></dt>
+<dd><p>Convert an image into chunks based on detected edges.</p>
+<p>This function processes a given image to identify edges and convert them
+into polychunks, which are essentially collections of connected edge
+segments. It utilizes the properties of the input object <cite>o</cite> to
+determine the boundaries and size of the chunks. The function can
+optionally include borders in the edge detection process. The output is
+a list of chunks that represent the detected polygons in the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<em>object</em>) – An object containing properties such as min, max, borderwidth,
+and optimisation settings.</p></li>
+<li><p><strong>image</strong> (<em>np.ndarray</em>) – A 2D array representing the image to be processed,
+expected to be in a format compatible with uint8.</p></li>
+<li><p><strong>with_border</strong> (<em>bool?</em>) – A flag indicating whether to include borders
+in the edge detection. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list of chunks, where each chunk is represented as a collection of</dt><dd><p>points that outline the detected edges in the image.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../image_shapely_utils/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.utilities.image_shapely_utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../index_utils/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.utilities.index_utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.numpy_save"><code class="docutils literal notranslate"><span class="pre">numpy_save()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.numpy_to_image"><code class="docutils literal notranslate"><span class="pre">numpy_to_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_to_numpy"><code class="docutils literal notranslate"><span class="pre">image_to_numpy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._offset_inner_loop"><code class="docutils literal notranslate"><span class="pre">_offset_inner_loop()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.offset_area"><code class="docutils literal notranslate"><span class="pre">offset_area()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_sample_image"><code class="docutils literal notranslate"><span class="pre">get_sample_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_resolution"><code class="docutils literal notranslate"><span class="pre">get_resolution()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._backup_render_settings"><code class="docutils literal notranslate"><span class="pre">_backup_render_settings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils._restore_render_settings"><code class="docutils literal notranslate"><span class="pre">_restore_render_settings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.render_sample_image"><code class="docutils literal notranslate"><span class="pre">render_sample_image()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.prepare_area"><code class="docutils literal notranslate"><span class="pre">prepare_area()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_edge_search_on_line"><code class="docutils literal notranslate"><span class="pre">image_edge_search_on_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.get_offset_image_cavities"><code class="docutils literal notranslate"><span class="pre">get_offset_image_cavities()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.image_utils.image_to_chunks"><code class="docutils literal notranslate"><span class="pre">image_to_chunks()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

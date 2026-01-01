@@ -1,0 +1,1048 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.preferences &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/preferences';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.preferences</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;preferences.py&#39;</span>
+
+<span class="sd">Class to store all Addon preferences.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.props</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">IntProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddonPreferences</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">__package__</span> <span class="k">as</span> <span class="n">base_package</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utilities.version_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">opencamlib_version</span><span class="p">,</span>
+    <span class="n">shapely_version</span><span class="p">,</span>
+    <span class="n">get_numba_version</span><span class="p">,</span>
+    <span class="n">get_llvmlite_version</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="CamAddonPreferences">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CamAddonPreferences</span><span class="p">(</span><span class="n">AddonPreferences</span><span class="p">):</span>
+    <span class="c1"># this must match the addon name, use &#39;__package__&#39;</span>
+    <span class="c1"># when defining this in a submodule of a python package,</span>
+    <span class="c1"># or &#39;base_package&#39; in this case</span>
+<div class="viewcode-block" id="CamAddonPreferences.bl_idname">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="n">base_package</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.op_preset_update">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.op_preset_update">[docs]</a>
+    <span class="n">op_preset_update</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Have the Operation Presets Been Updated&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.wireframe_color">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.wireframe_color">[docs]</a>
+    <span class="n">wireframe_color</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wire Color Source&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Wireframe color comes from Object, Theme or a Random color&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;OBJECT&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show object color on wireframe&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;THEME&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Theme&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show Scene wireframes with the theme&#39;s wire color&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;RANDOM&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Random&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show random object color on wireframe&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_interface_level">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_interface_level">[docs]</a>
+    <span class="n">default_interface_level</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Interface Level in New File&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Choose visible options&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Basic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Only show Essential Options&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Advanced&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show Advanced Options&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Complete&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show All Options&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Experimental&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Show Experimental Options&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_shading">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_shading">[docs]</a>
+    <span class="n">default_shading</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Viewport Shading in New File&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Choose viewport shading preset&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Standard viewport shading&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;DELUXE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Deluxe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Cavity, Curvature, Depth of Field, Shadows &amp; Object Colors&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;CLEAN_DEFAULT&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Clean Default&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Standard viewport shading with no overlays&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;CLEAN_DELUXE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Clean Deluxe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Deluxe shading with no overlays&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PREVIEW&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Preview&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;HDRI Lighting Preview&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_layout">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_layout">[docs]</a>
+    <span class="n">default_layout</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Panel Layout&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Presets for all panel locations&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;CLASSIC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Classic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties Area holds most panels, Tools holds the rest&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;MODERN&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Modern&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties holds Main panels, Sidebar holds Operation panels, Tools holds Tools&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;User&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Define your own locations for panels&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;MODERN&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_main_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_main_location">[docs]</a>
+    <span class="n">default_main_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Main Panels&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location for Chains, Operations, Material, Machine, Pack, Slice Panels&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_operation_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_operation_location">[docs]</a>
+    <span class="n">default_operation_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Operation Panels&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location for Setup, Area, Cutter, Feedrate, Optimisation, Movement, G-code&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_tools_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_tools_location">[docs]</a>
+    <span class="n">default_tools_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tools Panels&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location for Curve Tools, Curve Creators, Info&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.user_main_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.user_main_location">[docs]</a>
+    <span class="n">user_main_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Main Panels&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.user_operation_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.user_operation_location">[docs]</a>
+    <span class="n">user_operation_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Operation Panels&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.user_tools_location">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.user_tools_location">[docs]</a>
+    <span class="n">user_tools_location</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tools Panels&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PROPERTIES&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Properties&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Default panel location is the Render tab of the Properties Area&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;SIDEBAR&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Sidebar (N-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Common location for addon UI, press N to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tools (T-Panel)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Blender&#39;s Tool area, press T to show/hide&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;TOOLS&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_machine_preset">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_machine_preset">[docs]</a>
+    <span class="n">default_machine_preset</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Machine Preset in New File&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;So that machine preset choice persists between files&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.default_simulation_material">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.default_simulation_material">[docs]</a>
+    <span class="n">default_simulation_material</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Simulation Shader&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;GLASS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Glass&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Glass or Clear Acrylic-type Material&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;METAL&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Metal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Metallic Material&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;PLASTIC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Plastic&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Plastic-type Material&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;WOOD&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Wood&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Wood Grain-type Material&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;WOOD&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.show_popups">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.show_popups">[docs]</a>
+    <span class="n">show_popups</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Show Warning Popups&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Shows a Popup window when there is a warning&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamAddonPreferences.draw">
+<a class="viewcode-back" href="../../autoapi/fabex/preferences/index.html#fabex.CamAddonPreferences.draw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">use_property_split</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">use_property_decorate</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_names</span>
+        <span class="n">machine</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_machine</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_material</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># User Interface Dropdown</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="s2">&quot;UI&quot;</span><span class="p">,</span> <span class="n">default_closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;User Interface&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;DESKTOP&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">panel</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;User Panel Layout&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span> <span class="s2">&quot;main_location&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Main&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span> <span class="s2">&quot;operation_location&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Operation&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span> <span class="s2">&quot;tools_location&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Tools&quot;</span><span class="p">)</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Warning Popups&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;WINDOW&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;show_popups&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Colors Dropdown</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="s2">&quot;Colors&quot;</span><span class="p">,</span> <span class="n">default_closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Colors&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;COLOR&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">panel</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Viewport&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;wireframe_color&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;wire_color&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Machine Color&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">material</span><span class="p">,</span> <span class="s2">&quot;wire_color&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Material Color&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;path_color&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Path Color&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Settings Dropdown</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">default_closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;TOOL_SETTINGS&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">panel</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Naming System&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;FONT_DATA&quot;</span><span class="p">)</span>
+
+            <span class="n">col_box</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+            <span class="n">col_box</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="n">col_box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">label</span><span class="p">(</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Assign custom names to Paths, Operations, Chains, Simulations and Files&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Separator:&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;separator&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="n">col_box</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+            <span class="n">col_box</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="n">col_box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;A separator is placed between each name item below&quot;</span><span class="p">)</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;(none) or blank items will be ignored&quot;</span><span class="p">)</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Placeholder values  added if data cannot be accessed&quot;</span><span class="p">)</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">label</span><span class="p">(</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;File Extensions added automatically based on Machine Post Processor&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">squish</span> <span class="o">=</span> <span class="mf">0.7</span>
+
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Path:&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">scale_x</span> <span class="o">=</span> <span class="n">squish</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;path_prefix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;path_main_1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;path_main_2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;path_main_3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;path_suffix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Operation:&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">scale_x</span> <span class="o">=</span> <span class="n">squish</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;operation_prefix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;operation_main_1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;operation_main_2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;operation_main_3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;operation_suffix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Chain:&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">scale_x</span> <span class="o">=</span> <span class="n">squish</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;chain_prefix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;chain_main_1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;chain_main_2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;chain_main_3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;chain_suffix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Simulation:&quot;</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">scale_x</span> <span class="o">=</span> <span class="n">squish</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;simulation_prefix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;simulation_main_1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;simulation_main_2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;simulation_main_3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;simulation_suffix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="o">.</span><span class="n">link_names</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;File:&quot;</span><span class="p">)</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">scale_x</span> <span class="o">=</span> <span class="n">squish</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;file_prefix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;file_main_1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;file_main_2&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;file_main_3&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;file_suffix&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;link_names&quot;</span><span class="p">)</span>
+
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Export&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;FILE_FOLDER&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="s2">&quot;default_export_location&quot;</span><span class="p">)</span>
+
+            <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Simulation&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;SHADING_TEXTURE&quot;</span><span class="p">)</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;default_simulation_material&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Material Shader&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Logs Dropdown</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="s2">&quot;Log&quot;</span><span class="p">,</span> <span class="n">default_closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Logs&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;DOCUMENTS&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">panel</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;scene.cam_open_log_folder&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;FILEBROWSER&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;scene.cam_purge_logs&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;TRASH&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Library Dropdown</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="s2">&quot;Lib&quot;</span><span class="p">,</span> <span class="n">default_closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">header</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Library&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;ASSET_MANAGER&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">panel</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">row</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;CENTER&quot;</span>
+            <span class="n">l_col</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">l_col</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;RIGHT&quot;</span>
+            <span class="n">r_col</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">r_col</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s2">&quot;LEFT&quot;</span>
+
+            <span class="c1"># OpenCAMLib Version</span>
+            <span class="n">ocl_version</span> <span class="o">=</span> <span class="n">opencamlib_version</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ocl_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;OpenCAMLib is not Installed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;OpenCAMLib&quot;</span><span class="p">)</span>
+                <span class="n">r_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">ocl_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Shapely Version</span>
+            <span class="n">shape_version</span> <span class="o">=</span> <span class="n">shapely_version</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">shape_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Shapely is not Installed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Shapely&quot;</span><span class="p">)</span>
+                <span class="n">r_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">shape_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Numba Version</span>
+            <span class="n">numba_version</span> <span class="o">=</span> <span class="n">get_numba_version</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">numba_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Numba is not Installed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Numba&quot;</span><span class="p">)</span>
+                <span class="n">r_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">numba_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># LLVMLite Version</span>
+            <span class="n">llvmlite_version</span> <span class="o">=</span> <span class="n">get_llvmlite_version</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">llvmlite_version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;LLVMLite is not Installed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;LLVMLite&quot;</span><span class="p">)</span>
+                <span class="n">r_col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">llvmlite_version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

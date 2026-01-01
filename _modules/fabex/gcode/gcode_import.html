@@ -1,0 +1,1828 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.gcode.gcode_import &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/gcode/gcode_import';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.gcode.gcode_import</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;gcodeimportparser.py&#39;</span>
+
+
+<span class="sd">Code modified from YAGV (Yet Another G-code Viewer) - https://github.com/jonathanwin/yagv</span>
+
+<span class="sd">No license terms found in YAGV repo, will assume GNU release</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+
+
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># suppress scientific notation in subdivide functions linspace</span>
+
+
+<div class="viewcode-block" id="import_gcode">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.import_gcode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_gcode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import G-code data into the scene.</span>
+
+
+<span class="sd">    This function reads G-code from a specified file and processes it</span>
+
+<span class="sd">    according to the settings defined in the context. It utilizes the</span>
+
+<span class="sd">    GcodeParser to parse the file and classify segments of the model.</span>
+
+<span class="sd">    Depending on the options set in the scene, it may subdivide the model</span>
+
+<span class="sd">    and draw it with or without layer splitting. The time taken for the</span>
+<span class="sd">    import process is printed to the console.</span>
+
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        context (Context): The context containing the scene and tool settings.</span>
+
+<span class="sd">        filepath (str): The path to the G-code file to be imported.</span>
+
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        dict: A dictionary indicating the import status, typically</span>
+
+<span class="sd">            {&#39;FINISHED&#39;}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running read_some_data...&quot;</span><span class="p">)</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+
+    <span class="n">mytool</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="n">then</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">parse</span> <span class="o">=</span> <span class="n">GcodeParser</span><span class="p">()</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mytool</span><span class="o">.</span><span class="n">subdivide</span><span class="p">:</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">subdivide</span><span class="p">(</span><span class="n">mytool</span><span class="o">.</span><span class="n">max_segment_size</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">classify_segments</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">mytool</span><span class="o">.</span><span class="n">split_layers</span><span class="p">:</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">split_layers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">split_layers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Importing Gcode Took </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">then</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2"> Seconds&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="segments_to_meshdata">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.segments_to_meshdata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">segments_to_meshdata</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a list of segments into mesh data consisting of vertices and</span>
+<span class="sd">    edges.</span>
+
+
+<span class="sd">    This function processes a list of segment objects, extracting the</span>
+
+<span class="sd">    coordinates of vertices and defining edges based on the styles of the</span>
+
+<span class="sd">    segments. It identifies when to add vertices and edges based on whether</span>
+
+<span class="sd">    the segments are in &#39;extrude&#39; or &#39;travel&#39; styles. The resulting mesh</span>
+
+<span class="sd">    data can be used for 3D modeling or rendering applications.</span>
+
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        segments (list): A list of segment objects, each containing &#39;style&#39; and</span>
+
+<span class="sd">            &#39;coords&#39; attributes.</span>
+
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        tuple: A tuple containing two elements:</span>
+
+<span class="sd">            - list: A list of vertices, where each vertex is represented as a</span>
+
+<span class="sd">            list of coordinates [X, Y, Z].</span>
+
+<span class="sd">            - list: A list of edges, where each edge is represented as a list</span>
+
+<span class="sd">            of indices corresponding to the vertices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># edges only on extrusion</span>
+
+    <span class="n">segs</span> <span class="o">=</span> <span class="n">segments</span>
+
+    <span class="n">verts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">del_offset</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mi">0</span>  <span class="c1"># to travel segs in a row, one gets deleted, need to keep track of index for edges</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segs</span><span class="p">)):</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">segs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;extrude&quot;</span><span class="p">:</span>
+
+                <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+                        <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+                        <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="k">break</span>
+
+        <span class="c1"># start of extrusion for first time</span>
+
+        <span class="k">if</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;travel&quot;</span> <span class="ow">and</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;extrude&quot;</span><span class="p">:</span>
+
+            <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span> <span class="o">-</span> <span class="n">del_offset</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">del_offset</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># mitte, current and next are extrusion, only add next, current is already in vert list</span>
+
+        <span class="k">if</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;extrude&quot;</span> <span class="ow">and</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;extrude&quot;</span><span class="p">:</span>
+
+            <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+                    <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span> <span class="o">-</span> <span class="n">del_offset</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">del_offset</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;travel&quot;</span> <span class="ow">and</span> <span class="n">segs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s2">&quot;travel&quot;</span><span class="p">:</span>
+
+            <span class="n">del_offset</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span></div>
+
+
+
+<div class="viewcode-block" id="obj_from_pydata">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.obj_from_pydata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">obj_from_pydata</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collection_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Blender object from provided vertex and edge data.</span>
+
+
+<span class="sd">    This function generates a mesh object in Blender using the specified</span>
+
+<span class="sd">    vertices and edges. If edges are not provided, it automatically creates</span>
+
+<span class="sd">    a chain of edges connecting the vertices. The function also allows for</span>
+
+<span class="sd">    the option to close the mesh by connecting the last vertex back to the</span>
+
+<span class="sd">    first. Additionally, it can place the created object into a specified</span>
+
+<span class="sd">    collection within the Blender scene. The object is scaled down to a</span>
+
+<span class="sd">    smaller size for better visibility in the Blender environment.</span>
+
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        name (str): The name of the object to be created.</span>
+
+<span class="sd">        verts (list): A list of vertex coordinates, where each vertex is represented as a</span>
+
+<span class="sd">            tuple of (x, y, z).</span>
+
+<span class="sd">        edges (list?): A list of edges defined by pairs of vertex indices. Defaults to None.</span>
+
+<span class="sd">        close (bool?): Whether to close the mesh by connecting the last vertex to the first.</span>
+
+<span class="sd">            Defaults to True.</span>
+
+<span class="sd">        collection_name (str?): The name of the collection to which the object should be added. Defaults</span>
+
+<span class="sd">            to None.</span>
+
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        None: The function does not return a value; it creates an object in the</span>
+
+<span class="sd">            Blender scene.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">edges</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="c1"># join vertices into one uninterrupted chain of edges.</span>
+
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
+
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># connect last to first</span>
+
+    <span class="n">me</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">me</span><span class="o">.</span><span class="n">from_pydata</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">me</span><span class="p">)</span>
+
+    <span class="c1"># Move into collection if specified</span>
+
+    <span class="k">if</span> <span class="n">collection_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># make argument optional</span>
+
+        <span class="c1"># collection exists</span>
+
+        <span class="n">collection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">collection</span><span class="p">:</span>
+
+            <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">collection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>  <span class="c1"># link collection to main scene</span>
+
+            <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">obj</span>
+
+    <span class="n">obj</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">gcode_output_type</span> <span class="o">==</span> <span class="s2">&quot;curve&quot;</span><span class="p">:</span>
+
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;CURVE&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="GcodeParser">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GcodeParser</span><span class="p">:</span>
+
+<div class="viewcode-block" id="GcodeParser.comment">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.comment">[docs]</a>
+    <span class="n">comment</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+    <span class="c1"># global, to access in other classes(to access RGB values in comment above when parsing M163).</span>
+
+    <span class="c1"># Theres probably better way</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GcodeParser.model">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">GcodeModel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_file">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a G-code file and update the model.</span>
+
+
+<span class="sd">        This function reads a G-code file line by line, increments a line</span>
+
+<span class="sd">        counter for each line, and processes each line using the `parseLine`</span>
+
+<span class="sd">        method. The function assumes that the file is well-formed and that each</span>
+
+<span class="sd">        line can be parsed without errors. After processing all lines, it</span>
+
+<span class="sd">        returns the updated model.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            path (str): The file path to the G-code file to be parsed.</span>
+
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">            model: The updated model after parsing the G-code file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># read the gcode file</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+            <span class="c1"># init line counter</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># for all lines</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+
+                <span class="c1"># inc line counter</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># remove trailing linefeed</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+                <span class="c1"># parse a line</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">parse_line</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_line">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_line">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a line of G-code and execute the corresponding command.</span>
+
+
+<span class="sd">        This method processes a line of G-code by stripping comments, cleaning</span>
+
+<span class="sd">        the command, and identifying the command code and its arguments. It</span>
+
+<span class="sd">        handles specific G-code commands and invokes the appropriate parsing</span>
+
+<span class="sd">        method if available. If the command is unsupported, it prints an error</span>
+
+<span class="sd">        message. The method also manages tool numbers and coordinates based on</span>
+<span class="sd">        the parsed command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># strip comments:</span>
+
+        <span class="n">bits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="n">GcodeParser</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">bits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># extract &amp; clean command</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="n">bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">a_old</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">command</span><span class="p">)):</span>  <span class="c1"># check each character in the line</span>
+
+            <span class="n">a</span> <span class="o">=</span> <span class="n">command</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">a_old</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="c1"># add a space if upper case letter and no space is found before</span>
+
+                <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span>
+
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">a</span>
+
+            <span class="n">a_old</span> <span class="o">=</span> <span class="n">a</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="n">s</span>
+
+        <span class="c1"># code is fist word, then args</span>
+
+        <span class="n">comm</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">code</span> <span class="o">=</span> <span class="n">comm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="n">comm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">code</span><span class="p">:</span>
+
+            <span class="c1"># convert all G01 and G00 to G1 and G0</span>
+
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="s2">&quot;G01&quot;</span><span class="p">:</span>
+
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;G1&quot;</span>
+
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="s2">&quot;G00&quot;</span><span class="p">:</span>
+
+                <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;G0&quot;</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parse_&quot;</span> <span class="o">+</span> <span class="n">code</span><span class="p">):</span>
+
+                <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parse_&quot;</span> <span class="o">+</span> <span class="n">code</span><span class="p">)(</span><span class="n">args</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_command</span> <span class="o">=</span> <span class="n">code</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">toolnumber</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">toolnumber</span><span class="p">)</span>
+
+                    <span class="c1"># if code doesn&#39;t start with a G but starts with a coordinate add the last command to the line</span>
+
+                <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span> <span class="ow">or</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span> <span class="ow">or</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_command</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parse_line</span><span class="p">()</span>  <span class="c1"># parse this line again with the corrections</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported gcode </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_args">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_args">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse command-line arguments into a dictionary.</span>
+
+
+<span class="sd">        This function takes a string of arguments, splits it into individual</span>
+
+<span class="sd">        components, and maps each component&#39;s first character to its</span>
+
+<span class="sd">        corresponding numeric value. If a numeric value cannot be converted from</span>
+
+<span class="sd">        the string, it defaults to 1. The resulting dictionary contains the</span>
+
+<span class="sd">        first characters as keys and their associated numeric values as values.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            args (str): A string of space-separated arguments, where each argument</span>
+
+<span class="sd">                consists of a letter followed by a numeric value.</span>
+
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">            dict: A dictionary mapping each letter to its corresponding numeric value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+
+            <span class="n">bits</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bits</span><span class="p">:</span>
+
+                <span class="n">letter</span> <span class="o">=</span> <span class="n">bit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">try</span><span class="p">:</span>
+
+                    <span class="n">coord</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bit</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+
+                    <span class="n">coord</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="n">dic</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="n">coord</span>
+
+        <span class="k">return</span> <span class="n">dic</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_G1">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_G1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_G1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;G1&quot;</span><span class="p">):</span>
+
+        <span class="c1"># G1: Controlled move</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">do_G1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="nb">type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_G0">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_G0">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_G0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;G0&quot;</span><span class="p">):</span>
+
+        <span class="c1"># G1: Controlled move</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">do_G1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="nb">type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_G90">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_G90">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_G90</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+        <span class="c1"># G90: Set to Absolute Positioning</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_relative</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_G91">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_G91">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_G91</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+        <span class="c1"># G91: Set to Relative Positioning</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_relative</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.parse_G92">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.parse_G92">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_G92</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+        <span class="c1"># G92: Set Position</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">do_G92</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.warn">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.warn">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">warn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARN] Line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> (Text:&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeParser.error">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeParser.error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log an error message and raise an exception.</span>
+
+
+<span class="sd">        This method prints an error message to the console, including the line</span>
+
+<span class="sd">        number, the provided message, and the text associated with the error.</span>
+
+<span class="sd">        After logging the error, it raises a generic Exception with the same</span>
+<span class="sd">        message format.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            msg (str): The error message to be logged.</span>
+
+
+<span class="sd">        Raises:</span>
+
+<span class="sd">            Exception: Always raises an Exception with the formatted error message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ERROR] Line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> (Text:&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ERROR] Line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> (Text:&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GcodeModel">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GcodeModel</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+
+        <span class="c1"># save parser for messages</span>
+
+<div class="viewcode-block" id="GcodeModel.parser">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.parser">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">parser</span></div>
+
+
+        <span class="c1"># latest coordinates &amp; extrusion relative to offset, feedrate</span>
+
+<div class="viewcode-block" id="GcodeModel.relative">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.relative">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span></div>
+
+
+        <span class="c1"># offsets for relative coordinates and position reset (G92)</span>
+
+<div class="viewcode-block" id="GcodeModel.offset">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.offset">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span></div>
+
+
+        <span class="c1"># if true, args for move (G1) are given relatively (default: absolute)</span>
+
+<div class="viewcode-block" id="GcodeModel.isRelative">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.isRelative">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isRelative</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.color">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.color">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># RGBCMYKW</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.toolnumber">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.toolnumber">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolnumber</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+        <span class="c1"># the segments</span>
+
+<div class="viewcode-block" id="GcodeModel.segments">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.segments">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.layers">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.layers">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.do_G1">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.do_G1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_G1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform a rapid or controlled movement based on the provided arguments.</span>
+
+
+<span class="sd">        This method updates the current coordinates based on the input</span>
+
+<span class="sd">        arguments, either in relative or absolute terms. It constructs a segment</span>
+
+<span class="sd">        representing the movement and adds it to the model if there are changes</span>
+
+<span class="sd">        in the XYZ coordinates. The function handles unknown axes by issuing a</span>
+
+<span class="sd">        warning and ensures that the segment is only added if there are actual</span>
+<span class="sd">        changes in position.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            args (dict): A dictionary containing movement parameters for each axis.</span>
+
+<span class="sd">            type (str): The type of movement (e.g., &#39;G0&#39; for rapid move, &#39;G1&#39; for controlled</span>
+
+<span class="sd">                move).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># G0/G1: Rapid/Controlled move</span>
+
+        <span class="c1"># clone previous coords</span>
+
+        <span class="n">coords</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">)</span>
+
+        <span class="c1"># update changed coords</span>
+
+        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="c1"># print(coords)</span>
+
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isRelative</span><span class="p">:</span>
+
+                    <span class="n">coords</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+=</span> <span class="n">args</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="n">coords</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Unknown axis &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">axis</span><span class="p">)</span>
+
+        <span class="c1"># build segment</span>
+
+        <span class="n">absolute</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">],</span>  <span class="c1"># no feedrate offset</span>
+        <span class="p">}</span>
+
+        <span class="c1"># if gcode line has no E = travel move</span>
+
+        <span class="c1"># but still add E = 0 to segment (so coords dictionaries have same shape for subdividing linspace function)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;E&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>  <span class="c1"># &quot;E&quot; in coords:</span>
+
+            <span class="n">absolute</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">absolute</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span>
+
+        <span class="n">seg</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span>
+            <span class="nb">type</span><span class="p">,</span>
+            <span class="n">absolute</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">toolnumber</span><span class="p">,</span>
+            <span class="c1"># self.layerIdx,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">lineNb</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">line</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># only add seg if XYZ changes (skips &quot;G1 Fxxx&quot; only lines and avoids double vertices inside Blender,</span>
+
+        <span class="c1"># because XYZ stays the same on such a segment.</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+
+        <span class="c1"># update model coords</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="n">coords</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.do_G92">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.do_G92">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_G92</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current position of the axes without moving.</span>
+
+
+<span class="sd">        This method updates the current coordinates for the specified axes based</span>
+
+<span class="sd">        on the provided arguments. If no axes are mentioned, it sets all axes</span>
+
+<span class="sd">        (X, Y, Z) to zero. The method adjusts the offset values by transferring</span>
+
+<span class="sd">        the difference between the relative and specified values for each axis.</span>
+
+<span class="sd">        If an unknown axis is provided, a warning is issued.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            args (dict): A dictionary containing axis names as keys</span>
+
+<span class="sd">                (e.g., &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;) and their corresponding</span>
+
+<span class="sd">                position values as float.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># G92: Set Position</span>
+
+        <span class="c1"># this changes the current coords, without moving, so do not generate a segment</span>
+
+        <span class="c1"># no axes mentioned == all axes to 0</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+
+            <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>  <span class="c1"># , &quot;E&quot;:0.0</span>
+
+        <span class="c1"># update specified axes</span>
+
+        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">:</span>
+
+                <span class="c1"># transfer value from relative to offset</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">-</span> <span class="n">args</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Unknown axis &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.do_M163">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.do_M163">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_M163</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the color settings for a specific segment based on given</span>
+<span class="sd">        parameters.</span>
+
+
+<span class="sd">        This method modifies the color attributes of an object by updating the</span>
+
+<span class="sd">        CMYKW values for a specified segment. It first creates a new list from</span>
+
+<span class="sd">        the existing color attribute to avoid reference issues. The method then</span>
+
+<span class="sd">        extracts the index and weight from the provided arguments and updates</span>
+
+<span class="sd">        the color list accordingly. Additionally, it retrieves RGB values from</span>
+<span class="sd">        the last comment and applies them to the color list.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            args (dict): A dictionary containing the parameters for the operation.</span>
+
+<span class="sd">                - &#39;S&#39; (int): The index of the segment to update.</span>
+
+<span class="sd">                - &#39;P&#39; (float): The weight to set for the CMYKW color component.</span>
+
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">            None: This method does not return a value; it modifies the object&#39;s state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color</span>
+        <span class="p">)</span>  <span class="c1"># list() creates new list, otherwise you just change reference and all segs have same color</span>
+
+        <span class="n">extr_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;S&quot;</span><span class="p">])</span>  <span class="c1"># e.g. M163 S0 P1</span>
+
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span>
+
+        <span class="c1"># change CMYKW</span>
+
+        <span class="n">col</span><span class="p">[</span><span class="n">extr_idx</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">weight</span>  <span class="c1"># +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">col</span>
+
+        <span class="c1"># take RGB values for seg from last comment (above first M163 statement)</span>
+
+        <span class="n">comment</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">GcodeParser</span><span class="o">.</span><span class="n">comment</span><span class="p">)</span>  <span class="c1"># string comment to list</span>
+
+        <span class="c1"># RGB = [GcodeParser.comment[1], GcodeParser.com</span>
+
+        <span class="n">RGB</span> <span class="o">=</span> <span class="n">comment</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">RGB</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.set_relative">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.set_relative">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_relative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isRelative</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">isRelative</span> <span class="o">=</span> <span class="n">isRelative</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.add_segment">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.add_segment">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.warn">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.warn">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">warn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.error">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.classify_segments">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.classify_segments">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">classify_segments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify segments into layers based on their coordinates and extrusion</span>
+
+<span class="sd">        style.</span>
+
+
+<span class="sd">        This method processes a list of segments, determining their extrusion</span>
+
+<span class="sd">        style (travel, retract, restore, or extrude) based on the movement of</span>
+
+<span class="sd">        the coordinates and the state of the extruder. It organizes the segments</span>
+
+<span class="sd">        into layers, which are used for later rendering. The classification is</span>
+
+<span class="sd">        based on changes in the Z-coordinate and the extruder&#39;s position.  The</span>
+
+<span class="sd">        function initializes the coordinates and iterates through each segment,</span>
+
+<span class="sd">        checking for movements in the X, Y, and Z directions. It identifies when</span>
+
+<span class="sd">        a new layer begins based on changes in the Z-coordinate and the</span>
+
+<span class="sd">        extruder&#39;s state. Segments are then grouped into layers for further</span>
+
+<span class="sd">        processing.  Raises:     None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># start model at 0, act as prev_coords</span>
+
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+
+        <span class="c1"># first layer at Z=0</span>
+
+        <span class="n">currentLayerIdx</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">currentLayerZ</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># better to use self.first_layer_height</span>
+
+        <span class="n">layer</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># add layer to model.layers</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">):</span>
+
+            <span class="c1"># default style is travel (move, no extrusion)</span>
+
+            <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;travel&quot;</span>
+
+            <span class="c1"># no horizontal movement, but extruder movement: retraction/refill</span>
+
+            <span class="c1"># if (</span>
+
+            <span class="c1">#     (seg.coords[&quot;X&quot;] == coords[&quot;X&quot;]) and</span>
+
+            <span class="c1">#     (seg.coords[&quot;Y&quot;] == coords[&quot;Y&quot;]) and</span>
+
+            <span class="c1">#     (seg.coords[&quot;Z&quot;] == coords[&quot;Z&quot;]) and</span>
+
+            <span class="c1">#     (seg.coords[&quot;E&quot;] != coords[&quot;E&quot;])</span>
+
+            <span class="c1"># ):</span>
+
+            <span class="c1">#     style = &quot;retract&quot; if (seg.coords[&quot;E&quot;] &lt; coords[&quot;E&quot;]) else &quot;restore&quot;</span>
+
+            <span class="c1"># some horizontal movement, and positive extruder movement: extrusion</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">])</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">])</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">])</span>
+            <span class="p">):</span>  <span class="c1"># != coords[&quot;E&quot;]</span>
+
+                <span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;extrude&quot;</span>
+
+            <span class="c1"># #force extrude if there is some movement</span>
+
+            <span class="c1"># segments to layer lists</span>
+
+            <span class="c1"># look ahead and if next seg has E and differenz Z, add new layer for current segment</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+
+                <span class="n">layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+
+                <span class="n">currentLayerIdx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">seg</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
+
+                <span class="n">seg</span><span class="o">.</span><span class="n">layerIdx</span> <span class="o">=</span> <span class="n">currentLayerIdx</span>
+
+                <span class="c1"># add layer to list of Layers, used to later draw single layer objects</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+                <span class="k">break</span>
+
+            <span class="c1"># positive extruder movement of next point in a different Z signals a layer change for this segment</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">currentLayerZ</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">):</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">layer</span>
+                <span class="p">)</span>  <span class="c1"># layer abschließen, add layer to list of Layers, used to later draw single layer objects</span>
+
+                <span class="n">layer</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># start new layer</span>
+
+                <span class="n">currentLayerZ</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span>
+
+                <span class="n">currentLayerIdx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># lookback, previous point before texrsuion is part of new layer too, both create an edge</span>
+
+            <span class="c1"># set style and layer in segment</span>
+
+            <span class="n">seg</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
+
+            <span class="n">seg</span><span class="o">.</span><span class="n">layerIdx</span> <span class="o">=</span> <span class="n">currentLayerIdx</span>
+
+            <span class="n">layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span></div>
+
+
+<div class="viewcode-block" id="GcodeModel.subdivide">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.subdivide">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subdivide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subd_threshold</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subdivide segments based on a specified threshold.</span>
+
+
+<span class="sd">        This method processes a list of segments and subdivides them into</span>
+
+<span class="sd">        smaller segments if the distance between consecutive segments exceeds</span>
+
+<span class="sd">        the given threshold. The subdivision is performed by interpolating</span>
+
+<span class="sd">        points between the original segment&#39;s coordinates, ensuring that the</span>
+
+<span class="sd">        resulting segments maintain the original order and properties. This is</span>
+
+<span class="sd">        particularly useful for manipulating attributes such as color and</span>
+
+<span class="sd">        continuous deformation in graphical representations.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            subd_threshold (float): The distance threshold for subdividing segments.</span>
+
+<span class="sd">                Segments with a distance greater than this value</span>
+
+<span class="sd">                will be subdivided.</span>
+
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">            None: The method modifies the instance&#39;s segments attribute in place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># smart subdivide</span>
+
+        <span class="c1"># divide edge if &gt; subd_threshold</span>
+
+        <span class="c1"># do it in parser to keep index order of vertex and travel/extrude info</span>
+
+        <span class="c1"># segmentation of path necessary for manipulation of color, continous deforming ect.</span>
+
+        <span class="n">subdivided_segs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># start model at 0</span>
+
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>  <span class="c1"># no interpolation</span>
+
+        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+
+            <span class="c1"># calc XYZ distance</span>
+
+            <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+            <span class="n">d</span> <span class="o">+=</span> <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+            <span class="n">d</span> <span class="o">+=</span> <span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+            <span class="n">seg</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">distance</span> <span class="o">&gt;</span> <span class="n">subd_threshold</span><span class="p">:</span>
+
+                <span class="n">subdivs</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
+                    <span class="n">seg</span><span class="o">.</span><span class="n">distance</span> <span class="o">/</span> <span class="n">subd_threshold</span>
+                <span class="p">)</span>  <span class="c1"># ceil makes sure that linspace interval is at least 2</span>
+
+                <span class="n">P1</span> <span class="o">=</span> <span class="n">coords</span>
+
+                <span class="n">P2</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span>
+
+                <span class="c1"># interpolated points</span>
+
+                <span class="n">interp_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="n">P1</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="nb">list</span><span class="p">(</span><span class="n">P2</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">num</span><span class="o">=</span><span class="n">subdivs</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">interp_coords</span><span class="p">)</span>
+                <span class="p">):</span>  <span class="c1"># inteprolated points array back to segment object</span>
+
+                    <span class="n">new_coords</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="n">interp_coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="n">interp_coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="n">interp_coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+                        <span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">],</span>
+                    <span class="p">}</span>
+
+                    <span class="c1"># E/subdivs is for relative extrusion, absolute extrusion need &quot;E&quot;:interp_coords[i][4]</span>
+
+                    <span class="c1"># print(&quot;interp_coords_new:&quot;, new_coords)</span>
+
+                    <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                        <span class="n">new_coords</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">subdivs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+
+                        <span class="n">new_coords</span><span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                    <span class="c1"># make sure P1 hasn&#39;t been written before, compare with previous line</span>
+
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">new_coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+                        <span class="ow">or</span> <span class="n">new_coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">]</span>
+                        <span class="ow">or</span> <span class="n">new_coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span>
+                    <span class="p">):</span>
+
+                        <span class="c1"># write segment only if movement changes,</span>
+
+                        <span class="c1"># avoid double coordinates due to same start and endpoint of linspace</span>
+
+                        <span class="n">new_seg</span> <span class="o">=</span> <span class="n">Segment</span><span class="p">(</span>
+                            <span class="n">seg</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">new_coords</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">toolnumber</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">lineNb</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">line</span>
+                        <span class="p">)</span>
+
+                        <span class="n">new_seg</span><span class="o">.</span><span class="n">layerIdx</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">layerIdx</span>
+
+                        <span class="n">new_seg</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">style</span>
+
+                        <span class="n">subdivided_segs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_seg</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">subdivided_segs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">coords</span>  <span class="c1"># P1 becomes P2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="n">subdivided_segs</span></div>
+
+
+    <span class="c1"># create blender curve and vertex_info in text file(coords, style, color...)</span>
+
+<div class="viewcode-block" id="GcodeModel.draw">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.GcodeModel.draw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split_layers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draws a mesh from segments and layers.</span>
+
+
+<span class="sd">        This function creates a Blender curve and vertex information in a text</span>
+
+<span class="sd">        file, which includes coordinates, style, and color. If the</span>
+
+<span class="sd">        `split_layers` parameter is set to True, it processes each layer</span>
+
+<span class="sd">        individually, generating vertices and edges for each layer. If False, it</span>
+
+<span class="sd">        processes the segments as a whole.</span>
+
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            split_layers (bool): A flag indicating whether to split the drawing into</span>
+
+<span class="sd">                separate layers or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">split_layers</span><span class="p">:</span>
+
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+
+                <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">segments_to_meshdata</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                    <span class="n">obj_from_pydata</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">collection_name</span><span class="o">=</span><span class="s2">&quot;Layers&quot;</span><span class="p">)</span>
+
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">segments_to_meshdata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
+
+            <span class="n">obj_from_pydata</span><span class="p">(</span><span class="s2">&quot;Gcode&quot;</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">collection_name</span><span class="o">=</span><span class="s2">&quot;Layers&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Segment">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Segment</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">toolnumber</span><span class="p">,</span> <span class="n">lineNb</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Segment.type">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.type">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<div class="viewcode-block" id="Segment.coords">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.coords">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span></div>
+
+
+<div class="viewcode-block" id="Segment.color">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.color">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span></div>
+
+
+<div class="viewcode-block" id="Segment.toolnumber">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.toolnumber">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolnumber</span> <span class="o">=</span> <span class="n">toolnumber</span></div>
+
+
+<div class="viewcode-block" id="Segment.lineNb">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.lineNb">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span> <span class="o">=</span> <span class="n">lineNb</span></div>
+
+
+<div class="viewcode-block" id="Segment.line">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.line">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="n">line</span></div>
+
+
+<div class="viewcode-block" id="Segment.style">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.style">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Segment.layerIdx">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.layerIdx">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layerIdx</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Segment.__str__">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Segment.__str__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a string representation of the object.</span>
+
+
+<span class="sd">        This method constructs a string that includes the coordinates, line</span>
+
+<span class="sd">        number, style, layer index, and color of the object. It formats these</span>
+
+<span class="sd">        attributes into a readable string format for easier debugging and</span>
+<span class="sd">        logging.</span>
+
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">            str: A formatted string representing the object&#39;s attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot; &lt;coords=</span><span class="si">%s</span><span class="s2">, lineNb=</span><span class="si">%d</span><span class="s2">, style=</span><span class="si">%s</span><span class="s2">, layerIdx=</span><span class="si">%d</span><span class="s2">, color=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lineNb</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layerIdx</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">),</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Layer">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Layer</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Z</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Layer.Z">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer.Z">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span></div>
+
+
+<div class="viewcode-block" id="Layer.segments">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer.segments">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segments</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="Layer.distance">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer.distance">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Layer.extrudate">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer.extrudate">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrudate</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Layer.__str__">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.Layer.__str__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&lt;Layer: Z=</span><span class="si">%f</span><span class="s2">, len(segments)=</span><span class="si">%d</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">))</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+<div class="viewcode-block" id="path">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_import/index.html#fabex.gcode.gcode_import.path">[docs]</a>
+    <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;test.gcode&quot;</span></div>
+
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">GcodeParser</span><span class="p">()</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

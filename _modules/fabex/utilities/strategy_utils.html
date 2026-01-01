@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.strategy_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/strategy_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.strategy_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;strategy_utils.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Main functionality of Fabex.</span>
+<span class="sd">The functions here are called with operators defined in &#39;ops.py&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Euler</span><span class="p">,</span>
+    <span class="n">Vector</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..chunk_builder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamPathChunk</span><span class="p">,</span>
+    <span class="n">CamPathChunkBuilder</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..ui.icons</span><span class="w"> </span><span class="kn">import</span> <span class="n">preview_collections</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.operation_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_move_and_spin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.orient_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_orientation_object</span><span class="p">,</span>
+    <span class="n">remove_orientation_object</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.silhouette_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">silhouette_offset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress</span>
+
+
+<div class="viewcode-block" id="update_strategy">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_strategy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_strategy</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the strategy of the given object.</span>
+
+<span class="sd">    This function modifies the state of the object `o` by setting its</span>
+<span class="sd">    `changed` attribute to True and printing a message indicating that the</span>
+<span class="sd">    strategy is being updated. Depending on the value of `machine_axes` and</span>
+<span class="sd">    `strategy_4_axis`, it either adds or removes an orientation object</span>
+<span class="sd">    associated with `o`. Finally, it calls the `updateExact` function to</span>
+<span class="sd">    perform further updates based on the provided context.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): The object whose strategy is to be updated.</span>
+<span class="sd">        context (object): The context in which the update is performed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Update Strategy&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;5&quot;</span> <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy_4_axis</span> <span class="o">==</span> <span class="s2">&quot;INDEXED&quot;</span><span class="p">):</span>
+        <span class="c1"># INDEXED 4 AXIS DOESN&#39;T EXIST NOW...</span>
+        <span class="n">add_orientation_object</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">remove_orientation_object</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">update_exact</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="update_cutout">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_cutout">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_cutout</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="update_exact">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_exact">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_exact</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the state of an object for exact operations.</span>
+
+<span class="sd">    This function modifies the properties of the given object `o` to</span>
+<span class="sd">    indicate that an update is required. It sets various flags related to</span>
+<span class="sd">    the object&#39;s state and checks the optimization settings. If the</span>
+<span class="sd">    optimization is set to use exact mode, it further checks the strategy</span>
+<span class="sd">    and inverse properties to determine if exact mode can be used. If not,</span>
+<span class="sd">    it disables the use of OpenCamLib.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): The object to be updated, which contains properties related</span>
+<span class="sd">        context (object): The context in which the update is being performed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Update Exact &quot;</span><span class="p">)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_exact</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;POCKET&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;MEDIAL_AXIS&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Current Operation Cannot Use Exact Mode&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="update_opencamlib_1">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_opencamlib_1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_opencamlib_1</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the OpenCAMLib settings for a given operation.</span>
+
+<span class="sd">    This function modifies the properties of the provided operation object</span>
+<span class="sd">    based on its current strategy and optimization settings. If the</span>
+<span class="sd">    operation&#39;s strategy is either &#39;POCKET&#39; or &#39;MEDIAL_AXIS&#39;, and if</span>
+<span class="sd">    OpenCAMLib is being used for optimization, it disables the use of both</span>
+<span class="sd">    exact optimization and OpenCAMLib, indicating that the current operation</span>
+<span class="sd">    cannot utilize OpenCAMLib.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): The operation object containing optimization and strategy settings.</span>
+<span class="sd">        context (object): The context in which the operation is being updated.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return any value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Update OpenCAMLib &quot;</span><span class="p">)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span> <span class="ow">and</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;POCKET&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;MEDIAL_AXIS&quot;</span><span class="p">):</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_exact</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Current Operation Cannot Use OpenCAMLib&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_strategy_list">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.get_strategy_list">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_strategy_list</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a list of available strategies for operations.</span>
+
+<span class="sd">    This function retrieves a predefined list of operation strategies that</span>
+<span class="sd">    can be used in the context of a 3D scene. Each strategy is represented</span>
+<span class="sd">    as a tuple containing an identifier, a user-friendly name, and a</span>
+<span class="sd">    description of the operation. The list includes various operations such</span>
+<span class="sd">    as cutouts, pockets, drilling, and more. If experimental features are</span>
+<span class="sd">    enabled in the preferences, additional experimental strategies may be</span>
+<span class="sd">    included in the returned list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scene: The current scene context.</span>
+<span class="sd">        context: The current context in which the operation is being performed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of tuples, each containing the strategy identifier,</span>
+<span class="sd">            name, and description.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fabex_icons</span> <span class="o">=</span> <span class="n">preview_collections</span><span class="p">[</span><span class="s2">&quot;FABEX&quot;</span><span class="p">]</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;CUTOUT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Profile (Cutout)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cut the silhouette with offset&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;ProfileCutoutIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1">#  &quot;MOD_SKIN&quot;,</span>
+            <span class="mi">0</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;POCKET&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Pocket&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Pocket operation&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;PocketIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1">#  &quot;CLIPUV_DEHLT&quot;,</span>
+            <span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;DRILL&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Drill&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Drill operation&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DISCLOSURE_TRI_DOWN&quot;</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;PARALLEL&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Parallel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Parallel lines on any angle&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;ParallelIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1">#  &quot;SNAP_EDGE&quot;,</span>
+            <span class="mi">3</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;CROSS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cross&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cross paths&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;CrossIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1">#  &quot;ADD&quot;,</span>
+            <span class="mi">4</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;BLOCK&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Block&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Block path&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;BlockIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1"># &quot;META_PLANE&quot;,</span>
+            <span class="mi">5</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;SPIRAL&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Spiral&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Spiral path&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;SpiralIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1"># &quot;FORCE_VORTEX&quot;,</span>
+            <span class="mi">6</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;CIRCLES&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Circles&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Circles path&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;CirclesIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1"># &quot;ONIONSKIN_ON&quot;,</span>
+            <span class="mi">7</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;OUTLINEFILL&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Outline Fill&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;FULLSCREEN_EXIT&quot;</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;CARVE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Project Curve to Surface&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Engrave the curve path to surface&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CON_SHRINKWRAP&quot;</span><span class="p">,</span>
+            <span class="mi">9</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;WATERLINE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Waterline - Roughing (Below Z0)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Waterline paths - constant z below zero&quot;</span><span class="p">,</span>
+            <span class="n">fabex_icons</span><span class="p">[</span><span class="s2">&quot;WaterlineIcon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">icon_id</span><span class="p">,</span>  <span class="c1"># &quot;MOD_OCEAN&quot;,</span>
+            <span class="mi">10</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;CURVE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Curve to Path&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Curve object gets converted directly to path&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CURVE_DATA&quot;</span><span class="p">,</span>
+            <span class="mi">11</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;MEDIAL_AXIS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Medial Axis (V-Carve)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;SHARPCURVE&quot;</span><span class="p">,</span>
+            <span class="mi">12</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">items</span></div>
+
+
+
+<div class="viewcode-block" id="update_exact_mode">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_exact_mode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_exact_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the exact mode of the active CAM operation.</span>
+
+<span class="sd">    This function retrieves the currently active CAM operation from the</span>
+<span class="sd">    Blender context and updates its exact mode using the `updateExact`</span>
+<span class="sd">    function. It accesses the active operation through the `cam_operations`</span>
+<span class="sd">    list in the current scene and passes the active operation along with the</span>
+<span class="sd">    current context to the `updateExact` function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: The context in which the update is performed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># from . import updateExact</span>
+    <span class="n">active_op</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+    <span class="n">update_exact</span><span class="p">(</span><span class="n">active_op</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="update_opencamlib">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.update_opencamlib">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_opencamlib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the OpenCamLib with the current active operation.</span>
+
+<span class="sd">    This function retrieves the currently active CAM operation from the</span>
+<span class="sd">    Blender context and updates the OpenCamLib accordingly. It accesses the</span>
+<span class="sd">    active operation from the scene&#39;s CAM operations and passes it along</span>
+<span class="sd">    with the current context to the update function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: The context in which the operation is being performed, typically</span>
+<span class="sd">            provided by</span>
+<span class="sd">            Blender&#39;s internal API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># from . import updateOpencamlib</span>
+    <span class="n">active_op</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+    <span class="n">update_opencamlib_1</span><span class="p">(</span><span class="n">active_op</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># add pocket op for medial axis and profile cut inside to clean unremoved material</span>
+<div class="viewcode-block" id="add_pocket">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.add_pocket">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_pocket</span><span class="p">(</span><span class="n">max_depth</span><span class="p">,</span> <span class="n">sname</span><span class="p">,</span> <span class="n">new_cutter_diameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a pocket operation for the medial axis and profile cut.</span>
+
+<span class="sd">    This function first deselects all objects in the scene and then checks</span>
+<span class="sd">    for any existing medial pocket objects, deleting them if found. It</span>
+<span class="sd">    verifies whether a medial pocket operation already exists in the CAM</span>
+<span class="sd">    operations. If it does not exist, it creates a new pocket operation with</span>
+<span class="sd">    the specified parameters. The function also modifies the selected</span>
+<span class="sd">    object&#39;s silhouette offset based on the new cutter diameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        max_depth (float): The maximum depth of the pocket to be created.</span>
+<span class="sd">        sname (str): The name of the object to which the pocket will be added.</span>
+<span class="sd">        new_cutter_diameter (float): The diameter of the new cutter to be used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">mpocket_exists</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># OBJECT name</span>
+    <span class="n">mp_ob_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sname</span><span class="si">}</span><span class="s2">_medial_pocket&quot;</span>
+
+    <span class="c1"># Delete old Medial Pocket object, if one exists</span>
+    <span class="c1"># [ob.select_set(True) for ob in scene.objects if ob.name.startswith(mp_ob_name)]</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">mp_ob_name</span><span class="p">):</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+    <span class="c1"># OPERATION name</span>
+    <span class="n">mp_op_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sname</span><span class="si">}</span><span class="s2">_MedialPocket&quot;</span>
+
+    <span class="c1"># Verify Medial Pocket Operation exists</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">mp_op_name</span><span class="p">:</span>
+            <span class="n">mpocket_exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Modify Silhouette with Cutter Radius</span>
+    <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">sname</span><span class="p">]</span>
+    <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+    <span class="n">silhouette_offset</span><span class="p">(</span>
+        <span class="n">ob</span><span class="p">,</span>
+        <span class="o">-</span><span class="n">new_cutter_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">mp_ob_name</span>
+    <span class="n">m_ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">origin_set</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;ORIGIN_GEOMETRY&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="s2">&quot;BOUNDS&quot;</span><span class="p">)</span>
+    <span class="n">m_ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">max_depth</span>
+
+    <span class="c1"># Create a Pocket Operation if it does not exist already</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mpocket_exists</span><span class="p">:</span>
+        <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">object_name</span> <span class="o">=</span> <span class="n">mp_ob_name</span>
+        <span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">mp_op_name</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">&quot;POCKET&quot;</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">use_layers</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">estimate_from_model</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">max_depth</span></div>
+
+
+
+<div class="viewcode-block" id="parallel_pattern">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/strategy_utils/index.html#fabex.utilities.strategy_utils.parallel_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parallel_pattern</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate path chunks for parallel movement based on object dimensions</span>
+<span class="sd">    and angle.</span>
+
+<span class="sd">    This function calculates a series of path chunks for a given object,</span>
+<span class="sd">    taking into account its dimensions and the specified angle. It utilizes</span>
+<span class="sd">    both a traditional method and an alternative algorithm (currently</span>
+<span class="sd">    disabled) to generate these paths. The paths are constructed by</span>
+<span class="sd">    iterating over calculated vectors and applying transformations based on</span>
+<span class="sd">    the object&#39;s properties. The resulting path chunks can be used for</span>
+<span class="sd">    various movement types, including conventional and climb movements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties such as dimensions and movement type.</span>
+<span class="sd">        angle (float): The angle to rotate the path generation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of path chunks generated based on the object&#39;s dimensions and</span>
+<span class="sd">            angle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">zlevel</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">pathd</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+    <span class="n">pathstep</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+    <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">xm</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">ym</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">vm</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">xdim</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">ydim</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="p">(</span><span class="n">xdim</span> <span class="o">+</span> <span class="n">ydim</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="p">))</span>
+    <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">climb_CW</span><span class="p">,</span> <span class="n">climb_CCW</span><span class="p">,</span> <span class="n">conventional_CW</span><span class="p">,</span> <span class="n">conventional_CCW</span> <span class="o">=</span> <span class="n">get_move_and_spin</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">meander_reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MEANDER&quot;</span>
+    <span class="n">step_back_reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">parallel_step_back</span>
+
+    <span class="c1"># Original pattern method, slower, but well tested</span>
+    <span class="c1"># bpy.app.debug_value has a default value of 0 (False), so</span>
+    <span class="c1"># this check will always pass unless Blender is launched</span>
+    <span class="c1"># with the correct command line options: -d, --debug</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">debug_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dirvect</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">dirvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">dirvect</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+        <span class="n">dirvect</span> <span class="o">*=</span> <span class="n">pathstep</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">)):</span>
+            <span class="c1"># this is highly ineffective, computes path2x the area needed...</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">a</span> <span class="o">*</span> <span class="n">pathd</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">)</span> <span class="o">*</span> <span class="n">pathstep</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="c1"># shifting for the rotation, so pattern rotates around middle...</span>
+            <span class="n">v</span> <span class="o">+=</span> <span class="n">vm</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">)):</span>
+                <span class="n">v</span> <span class="o">+=</span> <span class="n">dirvect</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">meander_reverse</span> <span class="ow">or</span> <span class="n">conventional_CW</span> <span class="ow">or</span> <span class="n">climb_CCW</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+
+            <span class="c1"># parallel step back - for finishing, best with climb movement, saves cutter life by going into</span>
+            <span class="c1"># material with climb, while using move back on the surface to improve finish</span>
+            <span class="c1"># (which would otherwise be a conventional move in the material)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pathchunks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">step_back_reverse</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">use_layers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span><span class="p">:</span>
+                    <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+                <span class="n">changechunk</span> <span class="o">=</span> <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">changechunk</span>
+
+            <span class="n">reverse</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">reverse</span>
+
+    <span class="c1"># Alternative pattern algorithm using numpy, didn&#39;t work as should so blocked now...</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">e1</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">v1</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>
+        <span class="n">axis_across_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathd</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">xm</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathd</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ym</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">axis_along_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathstep</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathstep</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="n">zlevel</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># rotate this first</span>
+        <span class="n">progress</span><span class="p">(</span><span class="n">axis_along_paths</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">axis_along_paths</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">xfitmin</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">xfitmax</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">xfit</span> <span class="o">=</span> <span class="n">xfitmin</span> <span class="o">&amp;</span> <span class="n">xfitmax</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">xfit</span><span class="p">],</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">xfit</span><span class="p">],</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">xfit</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">yfitmin</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">yfitmax</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">yfit</span> <span class="o">=</span> <span class="n">yfitmin</span> <span class="o">&amp;</span> <span class="n">yfitmax</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">yfit</span><span class="p">],</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">yfit</span><span class="p">],</span>
+                    <span class="n">nax</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">yfit</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nax</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">CamPathChunk</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">pathchunks</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

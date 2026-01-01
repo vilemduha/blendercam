@@ -1,0 +1,1199 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.utilities.relief_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/utilities/relief_utils/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.utilities.shapely_utils" href="../shapely_utils/index.html" />
+    <link rel="prev" title="fabex.utilities.polygon_utils" href="../polygon_utils/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/utilities/relief_utils/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.utilities.relief_utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exceptions">Exceptions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.ReliefError"><code class="docutils literal notranslate"><span class="pre">ReliefError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.copy_compbuf_data"><code class="docutils literal notranslate"><span class="pre">copy_compbuf_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.restrict_buffer"><code class="docutils literal notranslate"><span class="pre">restrict_buffer()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.prolongate"><code class="docutils literal notranslate"><span class="pre">prolongate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.idx"><code class="docutils literal notranslate"><span class="pre">idx()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.smooth"><code class="docutils literal notranslate"><span class="pre">smooth()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.calculate_defect"><code class="docutils literal notranslate"><span class="pre">calculate_defect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.add_correction"><code class="docutils literal notranslate"><span class="pre">add_correction()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.solve_pde_multigrid"><code class="docutils literal notranslate"><span class="pre">solve_pde_multigrid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.asolve"><code class="docutils literal notranslate"><span class="pre">asolve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.atimes"><code class="docutils literal notranslate"><span class="pre">atimes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.snrm"><code class="docutils literal notranslate"><span class="pre">snrm()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.linear_bcg"><code class="docutils literal notranslate"><span class="pre">linear_bcg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.tonemap"><code class="docutils literal notranslate"><span class="pre">tonemap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.vert"><code class="docutils literal notranslate"><span class="pre">vert()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.build_mesh"><code class="docutils literal notranslate"><span class="pre">build_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.render_scene"><code class="docutils literal notranslate"><span class="pre">render_scene()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.problem_areas"><code class="docutils literal notranslate"><span class="pre">problem_areas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.relief"><code class="docutils literal notranslate"><span class="pre">relief()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.utilities.relief_utils">
+<span id="fabex-utilities-relief-utils"></span><h1>fabex.utilities.relief_utils<a class="headerlink" href="#module-fabex.utilities.relief_utils" title="Link to this heading">#</a></h1>
+<p>Fabex ‘bas_relief.py’</p>
+<p>Module to allow the creation of reliefs from Images or View Layers.
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief">https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief</a>)</p>
+<section id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.ReliefError" title="fabex.utilities.relief_utils.ReliefError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReliefError</span></code></a></p></td>
+<td><p>Common base class for all non-exit exceptions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.copy_compbuf_data" title="fabex.utilities.relief_utils.copy_compbuf_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_compbuf_data</span></code></a>(inbuf, outbuf)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.restrict_buffer" title="fabex.utilities.relief_utils.restrict_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restrict_buffer</span></code></a>(inbuf, outbuf)</p></td>
+<td><p>Restrict the resolution of an input buffer to match an output buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.prolongate" title="fabex.utilities.relief_utils.prolongate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prolongate</span></code></a>(inbuf, outbuf)</p></td>
+<td><p>Prolongate an input buffer to a larger output buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.idx" title="fabex.utilities.relief_utils.idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idx</span></code></a>(r, c, cols)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.smooth" title="fabex.utilities.relief_utils.smooth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smooth</span></code></a>(U, F, linbcgiterations, planar)</p></td>
+<td><p>Smooth a matrix U using a filter F at a specified level.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.calculate_defect" title="fabex.utilities.relief_utils.calculate_defect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_defect</span></code></a>(D, U, F)</p></td>
+<td><p>Calculate the defect of a grid based on the input fields.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.add_correction" title="fabex.utilities.relief_utils.add_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_correction</span></code></a>(U, C)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.solve_pde_multigrid" title="fabex.utilities.relief_utils.solve_pde_multigrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_pde_multigrid</span></code></a>(F, U, vcycleiterations, ...)</p></td>
+<td><p>Solve a partial differential equation using a multigrid method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.asolve" title="fabex.utilities.relief_utils.asolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asolve</span></code></a>(b, x)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.atimes" title="fabex.utilities.relief_utils.atimes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atimes</span></code></a>(x, res)</p></td>
+<td><p>Apply a discrete Laplacian operator to a 2D array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.snrm" title="fabex.utilities.relief_utils.snrm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">snrm</span></code></a>(n, sx, itol)</p></td>
+<td><p>Calculate the square root of the sum of squares or the maximum absolute</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.linear_bcg" title="fabex.utilities.relief_utils.linear_bcg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linear_bcg</span></code></a>(n, b, x, itol, tol, itmax, iter, err, rows, ...)</p></td>
+<td><p>Solve a linear system using the Biconjugate Gradient Method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.tonemap" title="fabex.utilities.relief_utils.tonemap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tonemap</span></code></a>(i, exponent)</p></td>
+<td><p>Apply tone mapping to an image array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.vert" title="fabex.utilities.relief_utils.vert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vert</span></code></a>(column, row, z, XYscaling, Zscaling)</p></td>
+<td><p>Create a single vertex in 3D space.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.build_mesh" title="fabex.utilities.relief_utils.build_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_mesh</span></code></a>(mesh_z, br)</p></td>
+<td><p>Build a 3D mesh from a height map and apply transformations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.render_scene" title="fabex.utilities.relief_utils.render_scene"><code class="xref py py-obj docutils literal notranslate"><span class="pre">render_scene</span></code></a>(width, height, bit_diameter, ...)</p></td>
+<td><p>Render a scene using Blender's Cycles engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.problem_areas" title="fabex.utilities.relief_utils.problem_areas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_areas</span></code></a>(br)</p></td>
+<td><p>Process image data to identify problem areas based on silhouette</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.relief_utils.relief" title="fabex.utilities.relief_utils.relief"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relief</span></code></a>(br)</p></td>
+<td><p>Process an image to enhance relief features.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.ReliefError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReliefError</span></span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#ReliefError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.ReliefError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Common base class for all non-exit exceptions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.copy_compbuf_data">
+<span class="sig-name descname"><span class="pre">copy_compbuf_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inbuf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outbuf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#copy_compbuf_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.copy_compbuf_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.restrict_buffer">
+<span class="sig-name descname"><span class="pre">restrict_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inbuf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outbuf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#restrict_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.restrict_buffer" title="Link to this definition">#</a></dt>
+<dd><p>Restrict the resolution of an input buffer to match an output buffer.</p>
+<p>This function scales down the input buffer <cite>inbuf</cite> to fit the dimensions
+of the output buffer <cite>outbuf</cite>. It computes the average of the
+neighboring pixels in the input buffer to create a downsampled version
+in the output buffer. The method used for downsampling can vary based on
+the dimensions of the input and output buffers, utilizing either a
+simple averaging method or a more complex numpy-based approach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inbuf</strong> (<em>numpy.ndarray</em>) – The input buffer to be downsampled, expected to be
+a 2D array.</p></li>
+<li><p><strong>outbuf</strong> (<em>numpy.ndarray</em>) – The output buffer where the downsampled result will
+be stored, also expected to be a 2D array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function modifies <cite>outbuf</cite> in place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.prolongate">
+<span class="sig-name descname"><span class="pre">prolongate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inbuf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outbuf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#prolongate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.prolongate" title="Link to this definition">#</a></dt>
+<dd><p>Prolongate an input buffer to a larger output buffer.</p>
+<p>This function takes an input buffer and enlarges it to fit the
+dimensions of the output buffer. It uses different methods to achieve
+this based on the scaling factors derived from the input and output
+dimensions. The function can handle specific cases where the scaling
+factors are exactly 0.5, as well as a general case that applies a
+bilinear interpolation technique for resizing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inbuf</strong> (<em>numpy.ndarray</em>) – The input buffer to be enlarged, expected to be a 2D array.</p></li>
+<li><p><strong>outbuf</strong> (<em>numpy.ndarray</em>) – The output buffer where the enlarged data will be stored,
+expected to be a 2D array of larger dimensions than inbuf.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.idx" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.smooth">
+<span class="sig-name descname"><span class="pre">smooth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linbcgiterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#smooth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.smooth" title="Link to this definition">#</a></dt>
+<dd><p>Smooth a matrix U using a filter F at a specified level.</p>
+<p>This function applies a smoothing operation on the input matrix U using
+the filter F. It utilizes the linear Biconjugate Gradient method for the
+smoothing process. The number of iterations for the linear BCG method is
+specified by linbcgiterations, and the planar parameter indicates
+whether the operation is to be performed in a planar manner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<em>numpy.ndarray</em>) – The input matrix to be smoothed.</p></li>
+<li><p><strong>F</strong> (<em>numpy.ndarray</em>) – The filter used for smoothing.</p></li>
+<li><p><strong>linbcgiterations</strong> (<em>int</em>) – The number of iterations for the linear BCG method.</p></li>
+<li><p><strong>planar</strong> (<em>bool</em>) – A flag indicating whether to perform the operation in a planar manner.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function modifies the input matrix U in place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.calculate_defect">
+<span class="sig-name descname"><span class="pre">calculate_defect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#calculate_defect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.calculate_defect" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the defect of a grid based on the input fields.</p>
+<p>This function computes the defect values for a grid by comparing the
+input field <cite>F</cite> with the values in the grid <cite>U</cite>. The defect is
+calculated using finite difference approximations, taking into account
+the neighboring values in the grid. The results are stored in the output
+array <cite>D</cite>, which is modified in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<em>ndarray</em>) – A 2D array where the defect values will be stored.</p></li>
+<li><p><strong>U</strong> (<em>ndarray</em>) – A 2D array representing the current state of the grid.</p></li>
+<li><p><strong>F</strong> (<em>ndarray</em>) – A 2D array representing the target field to compare against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function modifies the array <cite>D</cite> in place and does not return a</dt><dd><p>value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.add_correction">
+<span class="sig-name descname"><span class="pre">add_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#add_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.add_correction" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.solve_pde_multigrid">
+<span class="sig-name descname"><span class="pre">solve_pde_multigrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vcycleiterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linbcgiterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothiterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useplanar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#solve_pde_multigrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.solve_pde_multigrid" title="Link to this definition">#</a></dt>
+<dd><p>Solve a partial differential equation using a multigrid method.</p>
+<p>This function implements a multigrid algorithm to solve a given partial
+differential equation (PDE). It operates on a grid of varying
+resolutions, applying smoothing and correction steps iteratively to
+converge towards the solution. The algorithm consists of several key
+phases: restriction of the right-hand side to coarser grids, solving on
+the coarsest grid, and then interpolating corrections back to finer
+grids. The process is repeated for a specified number of V-cycle
+iterations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>F</strong> (<em>numpy.ndarray</em>) – The right-hand side of the PDE represented as a 2D array.</p></li>
+<li><p><strong>U</strong> (<em>numpy.ndarray</em>) – The initial guess for the solution, which will be updated in place.</p></li>
+<li><p><strong>vcycleiterations</strong> (<em>int</em>) – The number of V-cycle iterations to perform.</p></li>
+<li><p><strong>linbcgiterations</strong> (<em>int</em>) – The number of iterations for the linear solver used in smoothing.</p></li>
+<li><p><strong>smoothiterations</strong> (<em>int</em>) – The number of smoothing iterations to apply at each level.</p></li>
+<li><p><strong>mins</strong> (<em>int</em>) – Minimum grid size (not used in the current implementation).</p></li>
+<li><p><strong>levels</strong> (<em>int</em>) – The number of levels in the multigrid hierarchy.</p></li>
+<li><p><strong>useplanar</strong> (<em>bool</em>) – A flag indicating whether to use planar information during the solution
+process.</p></li>
+<li><p><strong>planar</strong> (<em>numpy.ndarray</em>) – A 2D array indicating planar information for the grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function modifies the input array U in place to contain the final</dt><dd><p>solution.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function assumes that the input arrays F and U have compatible
+shapes
+and that the planar array is appropriately defined for the problem
+context.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.asolve">
+<span class="sig-name descname"><span class="pre">asolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#asolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.asolve" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.atimes">
+<span class="sig-name descname"><span class="pre">atimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#atimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.atimes" title="Link to this definition">#</a></dt>
+<dd><p>Apply a discrete Laplacian operator to a 2D array.</p>
+<p>This function computes the discrete Laplacian of a given 2D array <cite>x</cite>
+and stores the result in the <cite>res</cite> array. The Laplacian is calculated
+using finite difference methods, which involve summing the values of
+neighboring elements and applying specific boundary conditions for the
+edges and corners of the array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>numpy.ndarray</em>) – A 2D array representing the input values.</p></li>
+<li><p><strong>res</strong> (<em>numpy.ndarray</em>) – A 2D array where the result will be stored. It must have the same shape
+as <cite>x</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result is stored directly in the <cite>res</cite> array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.snrm">
+<span class="sig-name descname"><span class="pre">snrm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#snrm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.snrm" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the square root of the sum of squares or the maximum absolute
+value.</p>
+<p>This function computes a value based on the input parameters. If the
+tolerance level (itol) is less than or equal to 3, it calculates the
+square root of the sum of squares of the input array (sx). If the
+tolerance level is greater than 3, it returns the maximum absolute value
+from the input array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – An integer parameter, though it is not used in the current
+implementation.</p></li>
+<li><p><strong>sx</strong> (<em>numpy.ndarray</em>) – A numpy array of numeric values.</p></li>
+<li><p><strong>itol</strong> (<em>int</em>) – An integer that determines which calculation to perform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The square root of the sum of squares if itol &lt;= 3, otherwise the</dt><dd><p>maximum absolute value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.linear_bcg">
+<span class="sig-name descname"><span class="pre">linear_bcg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#linear_bcg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.linear_bcg" title="Link to this definition">#</a></dt>
+<dd><p>Solve a linear system using the Biconjugate Gradient Method.</p>
+<p>This function implements the Biconjugate Gradient Method as described in
+Numerical Recipes in C. It iteratively refines the solution to a linear
+system of equations defined by the matrix-vector product. The method is
+particularly useful for large, sparse systems where direct methods are
+inefficient. The function takes various parameters to control the
+iteration process and convergence criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – The size of the linear system.</p></li>
+<li><p><strong>b</strong> (<em>numpy.ndarray</em>) – The right-hand side vector of the linear system.</p></li>
+<li><p><strong>x</strong> (<em>numpy.ndarray</em>) – The initial guess for the solution vector.</p></li>
+<li><p><strong>itol</strong> (<em>int</em>) – The type of norm to use for convergence checks.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – The tolerance for convergence.</p></li>
+<li><p><strong>itmax</strong> (<em>int</em>) – The maximum number of iterations allowed.</p></li>
+<li><p><strong>iter</strong> (<em>int</em>) – The current iteration count (should be initialized to 0).</p></li>
+<li><p><strong>err</strong> (<em>float</em>) – The error estimate (should be initialized).</p></li>
+<li><p><strong>rows</strong> (<em>int</em>) – The number of rows in the matrix.</p></li>
+<li><p><strong>cols</strong> (<em>int</em>) – The number of columns in the matrix.</p></li>
+<li><p><strong>planar</strong> (<em>bool</em>) – A flag indicating if the problem is planar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The solution is stored in the input array <cite>x</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.tonemap">
+<span class="sig-name descname"><span class="pre">tonemap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#tonemap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.tonemap" title="Link to this definition">#</a></dt>
+<dd><p>Apply tone mapping to an image array.</p>
+<p>This function performs tone mapping on the input image array by first
+filtering out values that are excessively high, which may indicate that
+the depth buffer was not written correctly. It then normalizes the
+values between the minimum and maximum heights, and finally applies an
+exponentiation to adjust the brightness of the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>numpy.ndarray</em>) – A numpy array representing the image data.</p></li>
+<li><p><strong>exponent</strong> (<em>float</em>) – The exponent used for adjusting the brightness
+of the normalized image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function modifies the input array in place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.vert">
+<span class="sig-name descname"><span class="pre">vert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">XYscaling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Zscaling</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.vert" title="Link to this definition">#</a></dt>
+<dd><p>Create a single vertex in 3D space.</p>
+<p>This function calculates the 3D coordinates of a vertex based on the
+provided column and row values, as well as scaling factors for the X-Y
+and Z dimensions. The resulting coordinates are scaled accordingly to
+fit within a specified 3D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>float</em>) – The column value representing the X coordinate.</p></li>
+<li><p><strong>row</strong> (<em>float</em>) – The row value representing the Y coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – The Z coordinate value.</p></li>
+<li><p><strong>XYscaling</strong> (<em>float</em>) – The scaling factor for the X and Y coordinates.</p></li>
+<li><p><strong>Zscaling</strong> (<em>float</em>) – The scaling factor for the Z coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the scaled X, Y, and Z coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.build_mesh">
+<span class="sig-name descname"><span class="pre">build_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">br</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#build_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.build_mesh" title="Link to this definition">#</a></dt>
+<dd><p>Build a 3D mesh from a height map and apply transformations.</p>
+<p>This function constructs a 3D mesh based on the provided height map
+(mesh_z) and applies various transformations such as scaling and
+positioning based on the parameters defined in the br object. It first
+removes any existing BasReliefMesh objects from the scene, then creates
+a new mesh from the height data, and finally applies decimation if the
+specified ratio is within acceptable limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh_z</strong> (<em>numpy.ndarray</em>) – A 2D array representing the height values
+for the mesh vertices.</p></li>
+<li><p><strong>br</strong> (<em>object</em>) – An object containing properties for width, height,
+thickness, justification, and decimation ratio.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.render_scene">
+<span class="sig-name descname"><span class="pre">render_scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bit_diameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passes_per_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_layer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#render_scene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.render_scene" title="Link to this definition">#</a></dt>
+<dd><p>Render a scene using Blender’s Cycles engine.</p>
+<p>This function switches the rendering engine to Cycles, sets up the
+necessary nodes for depth rendering if specified, and configures the
+render resolution based on the provided parameters. It ensures that the
+scene is in object mode before rendering and restores the original
+rendering engine after the process is complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the render in pixels.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the render in pixels.</p></li>
+<li><p><strong>bit_diameter</strong> (<em>float</em>) – The diameter used to calculate the number of passes.</p></li>
+<li><p><strong>passes_per_radius</strong> (<em>int</em>) – The number of passes per radius for rendering.</p></li>
+<li><p><strong>make_nodes</strong> (<em>bool</em>) – A flag indicating whether to create render nodes.</p></li>
+<li><p><strong>view_layer</strong> (<em>str</em>) – The name of the view layer to be rendered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function does not return any value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.problem_areas">
+<span class="sig-name descname"><span class="pre">problem_areas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">br</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#problem_areas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.problem_areas" title="Link to this definition">#</a></dt>
+<dd><p>Process image data to identify problem areas based on silhouette
+thresholds.</p>
+<p>This function analyzes an image and computes gradients to detect and
+recover silhouettes based on specified parameters. It utilizes various
+settings from the provided <cite>br</cite> object to adjust the processing,
+including silhouette thresholds, scaling factors, and iterations for
+smoothing and recovery. The function also handles image scaling and
+applies a gradient mask if specified. The resulting data is then
+converted back into an image format for further use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>br</strong> (<em>object</em>) – An object containing various parameters for processing, including:
+- use_image_source (bool): Flag to determine if a specific image source
+should be used.
+- source_image_name (str): Name of the source image if
+<cite>use_image_source</cite> is True.
+- silhouette_threshold (float): Threshold for silhouette detection.
+- recover_silhouettes (bool): Flag to indicate if silhouettes should be
+recovered.
+- silhouette_scale (float): Scaling factor for silhouette recovery.
+- min_gridsize (int): Minimum grid size for processing.
+- smooth_iterations (int): Number of iterations for smoothing.
+- vcycle_iterations (int): Number of iterations for V-cycle processing.
+- linbcg_iterations (int): Number of iterations for linear BCG
+processing.
+- use_planar (bool): Flag to indicate if planar processing should be
+used.
+- gradient_scaling_mask_use (bool): Flag to indicate if a gradient
+scaling mask should be used.
+- gradient_scaling_mask_name (str): Name of the gradient scaling mask
+image.
+- depth_exponent (float): Exponent for depth adjustment.
+- silhouette_exponent (int): Exponent for silhouette recovery.
+- attenuation (float): Attenuation factor for processing.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function does not return a value but processes the image data and</dt><dd><p>saves the result.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.relief_utils.relief">
+<span class="sig-name descname"><span class="pre">relief</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">br</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/relief_utils.html#relief"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.relief_utils.relief" title="Link to this definition">#</a></dt>
+<dd><p>Process an image to enhance relief features.</p>
+<p>This function takes an input image and applies various processing
+techniques to enhance the relief features based on the provided
+parameters. It utilizes gradient calculations, silhouette recovery, and
+optional detail enhancement through Fourier transforms. The processed
+image is then used to build a mesh representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>br</strong> (<em>object</em>) – An object containing various parameters for the relief processing,
+including:
+- use_image_source (bool): Whether to use a specified image source.
+- source_image_name (str): The name of the source image.
+- silhouette_threshold (float): Threshold for silhouette detection.
+- recover_silhouettes (bool): Flag to indicate if silhouettes should be
+recovered.
+- silhouette_scale (float): Scale factor for silhouette recovery.
+- min_gridsize (int): Minimum grid size for processing.
+- smooth_iterations (int): Number of iterations for smoothing.
+- vcycle_iterations (int): Number of iterations for V-cycle processing.
+- linbcg_iterations (int): Number of iterations for linear BCG
+processing.
+- use_planar (bool): Flag to indicate if planar processing should be
+used.
+- gradient_scaling_mask_use (bool): Flag to indicate if a gradient
+scaling mask should be used.
+- gradient_scaling_mask_name (str): Name of the gradient scaling mask
+image.
+- depth_exponent (float): Exponent for depth adjustment.
+- attenuation (float): Attenuation factor for the processing.
+- detail_enhancement_use (bool): Flag to indicate if detail enhancement
+should be applied.
+- detail_enhancement_freq (float): Frequency for detail enhancement.
+- detail_enhancement_amount (float): Amount of detail enhancement to
+apply.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function processes the image and builds a mesh but does not return a</dt><dd><p>value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#fabex.utilities.relief_utils.ReliefError" title="fabex.utilities.relief_utils.ReliefError"><strong>ReliefError</strong></a> – If the input image is blank or invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../polygon_utils/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.utilities.polygon_utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../shapely_utils/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.utilities.shapely_utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exceptions">Exceptions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.ReliefError"><code class="docutils literal notranslate"><span class="pre">ReliefError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.copy_compbuf_data"><code class="docutils literal notranslate"><span class="pre">copy_compbuf_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.restrict_buffer"><code class="docutils literal notranslate"><span class="pre">restrict_buffer()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.prolongate"><code class="docutils literal notranslate"><span class="pre">prolongate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.idx"><code class="docutils literal notranslate"><span class="pre">idx()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.smooth"><code class="docutils literal notranslate"><span class="pre">smooth()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.calculate_defect"><code class="docutils literal notranslate"><span class="pre">calculate_defect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.add_correction"><code class="docutils literal notranslate"><span class="pre">add_correction()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.solve_pde_multigrid"><code class="docutils literal notranslate"><span class="pre">solve_pde_multigrid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.asolve"><code class="docutils literal notranslate"><span class="pre">asolve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.atimes"><code class="docutils literal notranslate"><span class="pre">atimes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.snrm"><code class="docutils literal notranslate"><span class="pre">snrm()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.linear_bcg"><code class="docutils literal notranslate"><span class="pre">linear_bcg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.tonemap"><code class="docutils literal notranslate"><span class="pre">tonemap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.vert"><code class="docutils literal notranslate"><span class="pre">vert()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.build_mesh"><code class="docutils literal notranslate"><span class="pre">build_mesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.render_scene"><code class="docutils literal notranslate"><span class="pre">render_scene()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.problem_areas"><code class="docutils literal notranslate"><span class="pre">problem_areas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.relief_utils.relief"><code class="docutils literal notranslate"><span class="pre">relief()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

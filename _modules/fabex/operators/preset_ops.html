@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.operators.preset_ops &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/operators/preset_ops';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.operators.preset_ops</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;preset_managers.py&#39;</span>
+
+<span class="sd">Operators and Menus for CAM Machine, Cutter and Operation Presets.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bl_operators.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddPresetBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.addon_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">edit_user_post_processor</span>
+
+
+<div class="viewcode-block" id="AddPresetCamCutter">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddPresetCamCutter</span><span class="p">(</span><span class="n">AddPresetBase</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Cutter Preset&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AddPresetCamCutter.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;render.cam_preset_cutter_add&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamCutter.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Add Cutter Preset&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamCutter.preset_menu">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.preset_menu">[docs]</a>
+    <span class="n">preset_menu</span> <span class="o">=</span> <span class="s2">&quot;CAM_CUTTER_MT_presets&quot;</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamCutter.preset_defines">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.preset_defines">[docs]</a>
+    <span class="n">preset_defines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]&quot;</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamCutter.preset_values">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.preset_values">[docs]</a>
+    <span class="n">preset_values</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;d.cutter_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_diameter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_length&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_flutes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_tip_angle&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.cutter_description&quot;</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamCutter.preset_subdir">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamCutter.preset_subdir">[docs]</a>
+    <span class="n">preset_subdir</span> <span class="o">=</span> <span class="s2">&quot;cam_cutters&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AddPresetCamOperation">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddPresetCamOperation</span><span class="p">(</span><span class="n">AddPresetBase</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an Operation Preset&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AddPresetCamOperation.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;render.cam_preset_operation_add&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamOperation.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Add Operation Preset&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamOperation.preset_menu">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.preset_menu">[docs]</a>
+    <span class="n">preset_menu</span> <span class="o">=</span> <span class="s2">&quot;CAM_OPERATION_MT_presets&quot;</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamOperation.preset_defines">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.preset_defines">[docs]</a>
+    <span class="n">preset_defines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;from pathlib import Path&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;if &#39;__file__&#39; in globals(): bpy.ops.scene.cam_operation_add()&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;scene = bpy.context.scene&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o = scene.cam_operations[scene.cam_active_operation]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;if &#39;__file__&#39; in globals(): o.name = f&#39;OP_</span><span class="si">{o.object_name}</span><span class="s2">_{scene.cam_active_operation + 1}_{Path(__file__).stem}&#39;&quot;</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamOperation.preset_values">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.preset_values">[docs]</a>
+    <span class="n">preset_values</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;o.info.duration&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.info.chipload&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.info.warnings&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.material.estimate_from_model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.material.size&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.material.radius_around_model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.material.origin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.stay_low&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.free_height&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.insideout&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.spindle_rotation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.useG64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.G64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.parallel_step_back&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.movement.protect_vertical&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_offset&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_size_x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_crop&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_crop_start_x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_crop_start_y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_crop_end_x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_crop_end_y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.source_image_scale_z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.optimize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.optimize_threshold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.use_exact&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.exact_subdivide_edges&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.simulation_detail&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.pixsize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.optimisation.circle_detail&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cut_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_tip_angle&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_diameter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_flutes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.cutter_length&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.ambient_behaviour&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.ambient_radius&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.curve_source&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.curve_target&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.limit_curve&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.use_limit_curve&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.feedrate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.plunge_feedrate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.distance_along_paths&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.distance_between_paths&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.max&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.min&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.min_z_from&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.min_z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.skin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.spindle_rpm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.use_layers&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.carve_depth&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.update_offset_image_tag&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.slice_detail&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.drill_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.dont_merge&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.update_silhouette_tag&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.inverse&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.waterline_fill&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.strategy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.update_z_buffer_image_tag&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.stepdown&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;o.path_object_name&quot;,</span>
+        <span class="s2">&quot;o.pencil_threshold&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;o.geometry_source&quot;,</span>
+        <span class="c1"># &quot;o.object_name&quot;,</span>
+        <span class="s2">&quot;o.parallel_angle&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.output_header&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.gcode_header&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.output_trailer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.gcode_trailer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.use_modifiers&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.enable_a_axis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.enable_b_axis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.a_along_x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.rotation_a&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.rotation_b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o.straight&quot;</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamOperation.preset_subdir">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamOperation.preset_subdir">[docs]</a>
+    <span class="n">preset_subdir</span> <span class="o">=</span> <span class="s2">&quot;cam_operations&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AddPresetCamMachine">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddPresetCamMachine</span><span class="p">(</span><span class="n">AddPresetBase</span><span class="p">,</span> <span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Cam Machine Preset&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AddPresetCamMachine.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;render.cam_preset_machine_add&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamMachine.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Add Machine Preset&quot;</span></div>
+
+<div class="viewcode-block" id="AddPresetCamMachine.preset_menu">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.preset_menu">[docs]</a>
+    <span class="n">preset_menu</span> <span class="o">=</span> <span class="s2">&quot;CAM_MACHINE_MT_presets&quot;</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamMachine.preset_defines">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.preset_defines">[docs]</a>
+    <span class="n">preset_defines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;d = bpy.context.scene.cam_machine&quot;</span><span class="p">,</span> <span class="s2">&quot;s = bpy.context.scene.unit_settings&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AddPresetCamMachine.preset_values">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.preset_values">[docs]</a>
+    <span class="n">preset_values</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;d.post_processor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.unit_system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.use_position_definitions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.starting_position&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.mtc_position&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.ending_position&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.working_area&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.feedrate_min&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.feedrate_max&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.feedrate_default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.spindle_min&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.spindle_max&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.spindle_default&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.axis_4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.axis_5&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.collet_size&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.output_tool_change&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.output_block_numbers&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.output_tool_definitions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d.output_G43_on_tool_change&quot;</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AddPresetCamMachine.preset_subdir">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.AddPresetCamMachine.preset_subdir">[docs]</a>
+    <span class="n">preset_subdir</span> <span class="o">=</span> <span class="s2">&quot;cam_machines&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EditUserPostProcessor">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.EditUserPostProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EditUserPostProcessor</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Edit the User Post Processor File in Blender&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EditUserPostProcessor.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.EditUserPostProcessor.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;fabex.edit_user_post_processor&quot;</span></div>
+
+<div class="viewcode-block" id="EditUserPostProcessor.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.EditUserPostProcessor.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Edit User Post Processor&quot;</span></div>
+
+
+<div class="viewcode-block" id="EditUserPostProcessor.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/preset_ops/index.html#fabex.operators.EditUserPostProcessor.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">edit_user_post_processor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

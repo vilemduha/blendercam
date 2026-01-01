@@ -1,0 +1,988 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.gcode.gcode_export &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/gcode/gcode_export';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.gcode.gcode_export</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;gcodepath.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Generate and Export G-Code based on scene, machine, chain, operation and path settings.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># G-code Generaton</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Euler</span><span class="p">,</span> <span class="n">Vector</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">__package__</span> <span class="k">as</span> <span class="n">base_package</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IMPERIAL_CORRECTION</span><span class="p">,</span>
+    <span class="n">METRIC_CORRECTION</span><span class="p">,</span>
+    <span class="n">ROTATION_CORRECTION</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..post_processors</span><span class="w"> </span><span class="kn">import</span> <span class="n">iso</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.compare_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">point_on_line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">progress</span><span class="p">,</span>
+    <span class="n">safe_filename</span><span class="p">,</span>
+    <span class="n">unit_value_to_string</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="export_gcode_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/gcode/gcode_export/index.html#fabex.gcode.gcode_export.export_gcode_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_gcode_path</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">vertslist</span><span class="p">,</span> <span class="n">operations</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exports G-code using the Heeks NC Adopted Library.</span>
+
+<span class="sd">    This function generates G-code from a list of vertices and operations</span>
+<span class="sd">    specified by the user. It handles various post-processor settings based</span>
+<span class="sd">    on the machine configuration and can split the output into multiple</span>
+<span class="sd">    files if the total number of operations exceeds a specified limit. The</span>
+<span class="sd">    G-code is tailored for different machine types and includes options for</span>
+<span class="sd">    tool changes, spindle control, and various movement commands.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): The name of the file to which the G-code will be exported.</span>
+<span class="sd">        vertslist (list): A list of mesh objects containing vertex data.</span>
+<span class="sd">        operations (list): A list of operations to be performed, each containing</span>
+<span class="sd">            specific parameters for G-code generation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value; it writes the G-code to a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;EXPORT&quot;</span><span class="p">)</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;~ Exporting G-code File ~&quot;</span><span class="p">)</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_machine</span>
+
+    <span class="n">enable_dust</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">enable_hold</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">enable_mist</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># find out how many files will be done:</span>
+    <span class="n">split</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">totops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">findex</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">eval_splitting</span><span class="p">:</span>  <span class="c1"># detect whether splitting will happen</span>
+        <span class="k">for</span> <span class="n">mesh</span> <span class="ow">in</span> <span class="n">vertslist</span><span class="p">:</span>
+            <span class="n">totops</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Operations: </span><span class="si">{</span><span class="n">totops</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">totops</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">:</span>
+            <span class="n">split</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">filesnum</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">totops</span> <span class="o">/</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output Files: </span><span class="si">{</span><span class="n">filesnum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Output Files: 1&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_names</span><span class="o">.</span><span class="n">default_export_location</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span>
+        <span class="n">basename</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span>
+        <span class="n">basefilename</span> <span class="o">=</span> <span class="n">filepath</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">))]</span> <span class="o">+</span> <span class="n">safe_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">basefilename</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_names</span><span class="o">.</span><span class="n">default_export_location</span> <span class="o">+</span> <span class="n">safe_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">processor_extension</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ANILAM&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;anilam_crusader_m&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;CENTROID&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;centroid1&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;EMC&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;emc2b&quot;</span><span class="p">,</span> <span class="s2">&quot;.ngc&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;FADAL&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;fadal&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;GRAVOS&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;gravos&quot;</span><span class="p">,</span> <span class="s2">&quot;.nc&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;GRBL&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;grbl&quot;</span><span class="p">,</span> <span class="s2">&quot;.gcode&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;HM50&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;hm50&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;HEIDENHAIN&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;heiden&quot;</span><span class="p">,</span> <span class="s2">&quot;.H&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;HEIDENHAIN530&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;heiden530&quot;</span><span class="p">,</span> <span class="s2">&quot;.H&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;ISO&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;iso&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;LYNX_OTTER_O&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;lynx_otter_o&quot;</span><span class="p">,</span> <span class="s2">&quot;.nc&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;MACH3&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;mach3&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;SHOPBOT MTC&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;shopbot_mtc&quot;</span><span class="p">,</span> <span class="s2">&quot;.sbp&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;SIEGKX1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;siegkx1&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;TNC151&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;tnc151&quot;</span><span class="p">,</span> <span class="s2">&quot;.tap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;USER&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;.gcode&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;WIN-PC&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;winpc&quot;</span><span class="p">,</span> <span class="s2">&quot;.din&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="n">module</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.post_processors.</span><span class="si">{</span><span class="n">processor_extension</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">post_processor</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">postprocessor</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">base_package</span><span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">processor_extension</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">post_processor</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">unit_system</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span>
+    <span class="n">unitcorr</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">METRIC_CORRECTION</span>
+        <span class="k">if</span> <span class="n">unit_system</span> <span class="o">==</span> <span class="s2">&quot;METRIC&quot;</span>
+        <span class="k">else</span> <span class="n">IMPERIAL_CORRECTION</span> <span class="k">if</span> <span class="n">unit_system</span> <span class="o">==</span> <span class="s2">&quot;IMPERIAL&quot;</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">rotcorr</span> <span class="o">=</span> <span class="n">ROTATION_CORRECTION</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_new_file</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a new file for G-code generation.</span>
+
+<span class="sd">        This function initializes a new file for G-code output based on the</span>
+<span class="sd">        specified parameters. It constructs the filename using a base name, an</span>
+<span class="sd">        optional index, and a file extension. The function also configures the</span>
+<span class="sd">        post-processor settings based on user overrides and the selected unit</span>
+<span class="sd">        system (metric or imperial). Finally, it begins the G-code program and</span>
+<span class="sd">        sets the necessary configurations for the output.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Creator: An instance of the post-processor Creator class configured for</span>
+<span class="sd">            G-code generation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fileindex</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">findex</span><span class="p">)</span> <span class="k">if</span> <span class="n">split</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">basefilename</span> <span class="o">+</span> <span class="n">fileindex</span> <span class="o">+</span> <span class="n">extension</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">postprocessor</span><span class="o">.</span><span class="n">Creator</span><span class="p">()</span>
+
+        <span class="c1"># process user overrides for post processor settings</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">iso</span><span class="o">.</span><span class="n">Creator</span><span class="p">):</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">output_block_numbers</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_block_numbers</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">start_block_number</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start_block_number</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">block_number_increment</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">block_number_increment</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">output_tool_definitions</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_definitions</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">output_tool_change</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">output_G43_on_tool_change_line</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_G43_on_tool_change</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">file_open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># unit system correction</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;METRIC&quot;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">metric</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;IMPERIAL&quot;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">imperial</span><span class="p">()</span>
+
+        <span class="c1"># start program</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">program_begin</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s2">&quot;G-code Generated with Fabex and NC library&quot;</span><span class="p">)</span>
+        <span class="c1"># absolute coordinates</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+        <span class="c1"># work-plane, by now always xy,</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">set_plane</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">start_new_file</span><span class="p">()</span>
+    <span class="n">last_cutter</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">processedops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">cut_distance</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">operations</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">output_header</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">free_height</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">free_height</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">useG64</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">set_path_control_mode</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">G64</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">vertslist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">verts</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:]</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+            <span class="n">rots</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="p">[</span><span class="s2">&quot;rotations&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="c1"># spindle rpm and direction</span>
+        <span class="n">spdir_clockwise</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># write tool, not working yet probably</span>
+        <span class="c1"># print (last_cutter)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span> <span class="ow">and</span> <span class="n">last_cutter</span> <span class="o">!=</span> <span class="p">[</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">,</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">tool_change</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_definitions</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span>
+                <span class="s2">&quot;Tool: D = </span><span class="si">%s</span><span class="s2"> type </span><span class="si">%s</span><span class="s2"> flutes </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+        <span class="n">last_cutter</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LASER&quot;</span><span class="p">,</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_hold</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(Hold Down)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_hold_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">enable_hold</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_hold</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_hold_cmd</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_mist</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(Mist)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_mist_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">enable_mist</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_mist</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_mist_cmd</span>
+
+            <span class="n">c</span><span class="o">.</span><span class="n">spindle</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">spindle_rpm</span><span class="p">,</span> <span class="n">spdir_clockwise</span><span class="p">)</span>  <span class="c1"># start spindle</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write_spindle</span><span class="p">()</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_dust</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(Dust Collector)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_dust_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">enable_dust</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_dust</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_dust_cmd</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">dwell</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span><span class="p">)</span>
+
+        <span class="c1"># raise the spindle to safe height</span>
+        <span class="n">fmh</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LASER&quot;</span><span class="p">,</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">]:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G00 Z&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fmh</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_a_axis</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotation_a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">rotation_a</span> <span class="o">=</span> <span class="mf">0.0001</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">rotation_a</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_b_axis</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotation_b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">rotation_b</span> <span class="o">=</span> <span class="mf">0.0001</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">rotation_b</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_machine</span>
+
+        <span class="n">millfeedrate</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_max</span><span class="p">)</span>
+
+        <span class="n">millfeedrate</span> <span class="o">=</span> <span class="n">unitcorr</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">millfeedrate</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_min</span><span class="p">)</span>
+        <span class="n">plungefeedrate</span> <span class="o">=</span> <span class="n">millfeedrate</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">plunge_feedrate</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">freefeedrate</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_max</span> <span class="o">*</span> <span class="n">unitcorr</span>
+        <span class="n">fadjust</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">do_simulation_feedrate</span>
+            <span class="ow">and</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;feedrates&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">):</span>
+            <span class="n">shapek</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="p">[</span><span class="s2">&quot;feedrates&quot;</span><span class="p">]</span>
+            <span class="n">fadjust</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">use_position_definitions</span><span class="p">:</span>  <span class="c1"># dhull</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+        <span class="n">lastrot</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="mf">0.1123456</span>  <span class="c1"># nonsense value, so first feedrate always gets written</span>
+        <span class="n">fadjustval</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># if simulation load data is Not present</span>
+        <span class="n">downvector</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">plungelimit</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">plunge_angle</span>
+        <span class="n">scale_graph</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># warning this has to be same as in export in utils!!!!</span>
+        <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">offline</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">online</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cut</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># active cut variable for laser or plasma</span>
+        <span class="n">shapes</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">vi</span><span class="p">,</span> <span class="n">vert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
+            <span class="c1"># skip the first vertex if this is a chained operation</span>
+            <span class="c1"># ie: outputting more than one operation</span>
+            <span class="c1"># otherwise the machine gets sent back to 0,0 for each operation which is unecessary</span>
+            <span class="n">shapes</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># Count amount of shapes</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vert</span><span class="o">.</span><span class="n">co</span>
+            <span class="c1"># redundant point on line detection</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">remove_redundant_points</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;DRILL&quot;</span><span class="p">:</span>
+                <span class="n">nextv</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">firstv</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># only happens once</span>
+                <span class="k">elif</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">middlev</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">point_on_line</span><span class="p">(</span><span class="n">firstv</span><span class="p">,</span> <span class="n">middlev</span><span class="p">,</span> <span class="n">nextv</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">simplify_tolerance</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">):</span>
+                        <span class="n">middlev</span> <span class="o">=</span> <span class="n">nextv</span>
+                        <span class="n">online</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># create new start point with the last tested point</span>
+                        <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">offline</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">firstv</span> <span class="o">=</span> <span class="n">nextv</span>
+                <span class="n">ii</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># end of redundant point on line detection</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># we rotate it so we need to copy the vector</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">(</span><span class="n">rots</span><span class="p">[</span><span class="n">vi</span><span class="p">]</span><span class="o">.</span><span class="n">co</span><span class="p">)</span>
+                <span class="c1"># conversion to N-axis coordinates</span>
+                <span class="c1"># this seems to work correctly for 4 axis.</span>
+                <span class="n">rcompensate</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">y</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">z</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">rcompensate</span><span class="p">)</span>
+
+                <span class="n">ra</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">lastrot</span><span class="o">.</span><span class="n">x</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">rotcorr</span>
+                <span class="n">rb</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">lastrot</span><span class="o">.</span><span class="n">y</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">rotcorr</span>
+
+            <span class="n">vx</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="n">vy</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="n">vz</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">z</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">unitcorr</span>
+
+            <span class="k">if</span> <span class="n">fadjust</span><span class="p">:</span>
+                <span class="n">fadjustval</span> <span class="o">=</span> <span class="n">shapek</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">vi</span><span class="p">]</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">z</span> <span class="o">/</span> <span class="n">scale_graph</span>
+
+            <span class="n">vect</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">last</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span>
+            <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">downvector</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">vect</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">plungelimit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">plungefeedrate</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fadjust</span> <span class="ow">and</span> <span class="n">fadjustval</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">plungefeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LASER&quot;</span><span class="p">,</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">cut</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s2">&quot;LASER&quot;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(*************dwell-&gt;laser on)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">laser_delay</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">laser_on</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(*************dwell-&gt;PLASMA on)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">plasma_delay</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">plasma_delay</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">plasma_delay</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plasma_delay</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">plasma_on</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">plasma_dwell</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">plasma_dwell</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">plasma_dwell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plasma_dwell</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">cut</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="n">free_height</span> <span class="ow">or</span> <span class="n">vi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">freefeedrate</span><span class="p">:</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">freefeedrate</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LASER&quot;</span><span class="p">,</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">cut</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s2">&quot;LASER&quot;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(**************laser off)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">laser_off</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s2">&quot;PLASMA&quot;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(**************Plasma off)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">plasma_off</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                            <span class="n">cut</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                        <span class="c1">#  this is to evaluate operation time and adds a feedrate for fast moves</span>
+                        <span class="k">if</span> <span class="n">vz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># compensate for multiple fast move accelerations</span>
+                            <span class="n">f</span> <span class="o">=</span> <span class="n">plungefeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span> <span class="o">*</span> <span class="mf">0.35</span>
+                        <span class="k">if</span> <span class="n">vx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">vy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">f</span> <span class="o">=</span> <span class="n">freefeedrate</span> <span class="o">*</span> <span class="mf">0.8</span>  <span class="c1"># compensate for free feedrate acceleration</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">millfeedrate</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fadjust</span> <span class="ow">and</span> <span class="n">fadjustval</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">millfeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+
+            <span class="n">cut_distance</span> <span class="o">+=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="n">vector_duration</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">f</span>
+            <span class="n">duration</span> <span class="o">+=</span> <span class="n">vector_duration</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">v</span>
+
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
+                <span class="n">lastrot</span> <span class="o">=</span> <span class="n">r</span>
+
+            <span class="n">processedops</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">split</span> <span class="ow">and</span> <span class="n">processedops</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">program_end</span><span class="p">()</span>
+                <span class="n">findex</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">file_close</span><span class="p">()</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">start_new_file</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Tool change - D = </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> type </span><span class="si">{</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="si">}</span><span class="s2"> flutes </span><span class="si">{</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">tool_change</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">spindle</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">spindle_rpm</span><span class="p">,</span> <span class="n">spdir_clockwise</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write_spindle</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">dwell</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span><span class="p">)</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+                <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">unitcorr</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="n">processedops</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">remove_redundant_points</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;DRILL&quot;</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Online: </span><span class="si">{</span><span class="n">online</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Offline: </span><span class="si">{</span><span class="n">offline</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removal: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">online</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">offline</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">online</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">unitcorr</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">output_trailer</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_trailer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">*</span> <span class="n">unitcorr</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Time: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">duration</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;METRIC&quot;</span><span class="p">:</span>
+        <span class="n">unit_distance</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+        <span class="n">cut_distance</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unit_distance</span> <span class="o">=</span> <span class="s2">&quot;feet&quot;</span>
+        <span class="n">cut_distance</span> <span class="o">/=</span> <span class="mi">12</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cut Distance: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">cut_distance</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">unit_distance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_dust</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_dust</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_hold</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_hold</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_mist</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_mist</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">program_end</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">file_close</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

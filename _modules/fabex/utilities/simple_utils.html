@@ -1,0 +1,1665 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.simple_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/simple_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.simple_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;simple_utils.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Various helper functions, less complex than those found in the &#39;utils&#39; files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">hypot</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logging_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BULLET_SCALE</span>
+
+
+<div class="viewcode-block" id="tuple_add">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.tuple_add">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tuple_add</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>  <span class="c1"># add two tuples as Vectors</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add two tuples as vectors.</span>
+
+<span class="sd">    This function takes two tuples, each representing a vector in three-</span>
+<span class="sd">    dimensional space, and returns a new tuple that is the element-wise sum</span>
+<span class="sd">    of the two input tuples. It assumes that both tuples contain exactly</span>
+<span class="sd">    three numeric elements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        t (tuple): A tuple containing three numeric values representing the first vector.</span>
+<span class="sd">        t1 (tuple): A tuple containing three numeric values representing the second vector.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing three numeric values that represent the sum of the</span>
+<span class="sd">            input vectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">t1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">t1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">t1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="tuple_subtract">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.tuple_subtract">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tuple_subtract</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>  <span class="c1"># sub two tuples as Vectors</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtract two tuples element-wise.</span>
+
+<span class="sd">    This function takes two tuples of three elements each and performs an</span>
+<span class="sd">    element-wise subtraction, treating the tuples as vectors. The result is</span>
+<span class="sd">    a new tuple containing the differences of the corresponding elements</span>
+<span class="sd">    from the input tuples.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        t (tuple): A tuple containing three numeric values.</span>
+<span class="sd">        t1 (tuple): A tuple containing three numeric values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the results of the element-wise subtraction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">t1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">t1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="tuple_multiply">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.tuple_multiply">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tuple_multiply</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>  <span class="c1"># multiply two tuples with a number</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply each element of a tuple by a given number.</span>
+
+<span class="sd">    This function takes a tuple containing three elements and a numeric</span>
+<span class="sd">    value, then multiplies each element of the tuple by the provided number.</span>
+<span class="sd">    The result is returned as a new tuple containing the multiplied values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        t (tuple): A tuple containing three numeric values.</span>
+<span class="sd">        c (numeric): A number by which to multiply each element of the tuple.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A new tuple containing the results of the multiplication.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span></div>
+
+
+
+<div class="viewcode-block" id="tuple_length">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.tuple_length">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tuple_length</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>  <span class="c1"># get length of vector, but passed in as tuple.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the length of a vector represented as a tuple.</span>
+
+<span class="sd">    This function takes a tuple as input, which represents the coordinates</span>
+<span class="sd">    of a vector, and returns its length by creating a Vector object from the</span>
+<span class="sd">    tuple. The length is calculated using the appropriate mathematical</span>
+<span class="sd">    formula for vector length.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        t (tuple): A tuple representing the coordinates of the vector.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The length of the vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Vector</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">length</span></div>
+
+
+
+<span class="c1"># timing functions for optimisation purposes...</span>
+<div class="viewcode-block" id="timing_init">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.timing_init">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">timing_init</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize timing metrics.</span>
+
+<span class="sd">    This function sets up the initial state for timing functions by</span>
+<span class="sd">    returning a list containing two zero values. These values can be used to</span>
+<span class="sd">    track elapsed time or other timing-related metrics in subsequent</span>
+<span class="sd">    operations.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list containing two zero values, representing the</span>
+<span class="sd">        initial timing metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="timing_start">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.timing_start">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">timing_start</span><span class="p">(</span><span class="n">tinf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start timing by recording the current time.</span>
+
+<span class="sd">    This function updates the second element of the provided list with the</span>
+<span class="sd">    current time in seconds since the epoch. It is useful for tracking the</span>
+<span class="sd">    start time of an operation or process.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tinf (list): A list where the second element will be updated</span>
+<span class="sd">            with the current time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">tinf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span></div>
+
+
+
+<div class="viewcode-block" id="timing_add">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.timing_add">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">timing_add</span><span class="p">(</span><span class="n">tinf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the timing information.</span>
+
+<span class="sd">    This function updates the first element of the `tinf` list by adding the</span>
+<span class="sd">    difference between the current time and the second element of the list.</span>
+<span class="sd">    It is typically used to track elapsed time in a timing context.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tinf (list): A list where the first element is updated with the</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">tinf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">tinf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="timing_print">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.timing_print">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">timing_print</span><span class="p">(</span><span class="n">tinf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the timing information.</span>
+
+<span class="sd">    This function takes a tuple containing timing information and prints it</span>
+<span class="sd">    in a formatted string. It specifically extracts the first element of the</span>
+<span class="sd">    tuple, which is expected to represent time, and appends the string</span>
+<span class="sd">    &#39;seconds&#39; to it before printing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tinf (tuple): A tuple where the first element is expected to be a numeric value</span>
+<span class="sd">            representing time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return any value; it only prints output to the</span>
+<span class="sd">            console.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time </span><span class="si">{</span><span class="n">tinf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="progress">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.progress">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">progress</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Report progress during script execution.</span>
+
+<span class="sd">    This function outputs a progress message to the standard output. It is</span>
+<span class="sd">    designed to work for background operations and provides a formatted</span>
+<span class="sd">    string that includes the specified text and an optional numeric progress</span>
+<span class="sd">    value. If the numeric value is provided, it is formatted as a</span>
+<span class="sd">    percentage.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): The message to display as progress.</span>
+<span class="sd">        n (float?): A float representing the progress as a</span>
+<span class="sd">            fraction (0.0 to 1.0). If not provided, no percentage will</span>
+<span class="sd">            be displayed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value; it only prints</span>
+<span class="sd">            to the standard output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;%&quot;</span>
+    <span class="n">progress_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">progress_string</span><span class="p">)</span></div>
+
+    <span class="c1"># sys.stdout.write(f&quot;Progress: {progress_string}\n&quot;)</span>
+    <span class="c1"># sys.stdout.flush()</span>
+
+
+<div class="viewcode-block" id="activate">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.activate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">activate</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes an object active in Blender.</span>
+
+<span class="sd">    This function sets the specified object as the active object in the</span>
+<span class="sd">    current Blender scene. It first deselects all objects, then selects the</span>
+<span class="sd">    given object and makes it the active object in the view layer. This is</span>
+<span class="sd">    useful for operations that require a specific object to be active, such</span>
+<span class="sd">    as transformations or modifications.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (bpy.types.Object): The Blender object to be activated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">o</span></div>
+
+
+
+<div class="viewcode-block" id="distance_2d">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.distance_2d">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance_2d</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the distance between two points in 2D space.</span>
+
+<span class="sd">    This function computes the Euclidean distance between two points</span>
+<span class="sd">    represented by their coordinates in a 2D plane. It uses the Pythagorean</span>
+<span class="sd">    theorem to calculate the distance based on the differences in the x and</span>
+<span class="sd">    y coordinates of the points.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v1 (tuple): A tuple representing the coordinates of the first point (x1, y1).</span>
+<span class="sd">        v2 (tuple): A tuple representing the coordinates of the second point (x2, y2).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The Euclidean distance between the two points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">hypot</span><span class="p">((</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span></div>
+
+
+
+<div class="viewcode-block" id="delete_object">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.delete_object">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">delete_object</span><span class="p">(</span><span class="n">ob</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete an object in Blender for multiple uses.</span>
+
+<span class="sd">    This function activates the specified object and then deletes it using</span>
+<span class="sd">    Blender&#39;s built-in operations. It is designed to facilitate the deletion</span>
+<span class="sd">    of objects within the Blender environment, ensuring that the object is</span>
+<span class="sd">    active before performing the deletion operation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (Object): The Blender object to be deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">activate</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">use_global</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="duplicate_object">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.duplicate_object">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">duplicate_object</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function for visualizing cutter positions in bullet simulation.</span>
+
+<span class="sd">    This function duplicates the specified object and resizes it according</span>
+<span class="sd">    to a predefined scale factor. It also removes any existing rigidbody</span>
+<span class="sd">    properties from the duplicated object and sets its location to the</span>
+<span class="sd">    specified position. This is useful for managing multiple cutter</span>
+<span class="sd">    positions in a bullet simulation environment.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (Object): The object to be duplicated.</span>
+<span class="sd">        pos (Vector): The new position to place the duplicated object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">activate</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">BULLET_SCALE</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">),</span>
+        <span class="n">constraint_axis</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">orient_type</span><span class="o">=</span><span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+        <span class="n">mirror</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_proportional_edit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">proportional_edit_falloff</span><span class="o">=</span><span class="s2">&quot;SMOOTH&quot;</span><span class="p">,</span>
+        <span class="n">proportional_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">rigidbody</span><span class="o">.</span><span class="n">object_remove</span><span class="p">()</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">pos</span></div>
+
+
+
+<div class="viewcode-block" id="add_to_group">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.add_to_group">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_to_group</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">groupname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an object to a specified group in Blender.</span>
+
+<span class="sd">    This function activates the given object and checks if the specified</span>
+<span class="sd">    group exists in Blender&#39;s data. If the group does not exist, it creates</span>
+<span class="sd">    a new group with the provided name. If the group already exists, it</span>
+<span class="sd">    links the object to that group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (Object): The object to be added to the group.</span>
+<span class="sd">        groupname (str): The name of the group to which the object will be added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">activate</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">groupname</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">groupname</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">group_link</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">groupname</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="compare">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.compare">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">vmiddle</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comparison for optimization of paths.</span>
+
+<span class="sd">    This function compares two vectors and checks if the distance between a</span>
+<span class="sd">    calculated vector and a reference vector is less than a specified</span>
+<span class="sd">    threshold. It normalizes the vector difference and scales it by the</span>
+<span class="sd">    length of another vector to determine if the resulting vector is within</span>
+<span class="sd">    the specified epsilon value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v1 (Vector): The first vector for comparison.</span>
+<span class="sd">        v2 (Vector): The second vector for comparison.</span>
+<span class="sd">        vmiddle (Vector): The middle vector used for calculating the</span>
+<span class="sd">            reference vector.</span>
+<span class="sd">        e (float): The threshold value for comparison.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the distance is less than the threshold,</span>
+<span class="sd">            otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># e=0.0001</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+    <span class="n">vmiddle</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">vmiddle</span><span class="p">)</span>
+    <span class="n">vect1</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">-</span> <span class="n">v1</span>
+    <span class="n">vect2</span> <span class="o">=</span> <span class="n">vmiddle</span> <span class="o">-</span> <span class="n">v1</span>
+    <span class="n">vect1</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+    <span class="n">vect1</span> <span class="o">*=</span> <span class="n">vect2</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">vect2</span> <span class="o">-</span> <span class="n">vect1</span>
+    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="is_vertical_limit">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.is_vertical_limit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_vertical_limit</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Path Segment on Verticality Threshold for protect_vertical option.</span>
+
+<span class="sd">    This function evaluates the verticality of a path segment defined by two</span>
+<span class="sd">    points, v1 and v2, based on a specified limit. It calculates the angle</span>
+<span class="sd">    between the vertical vector and the vector formed by the two points. If</span>
+<span class="sd">    the angle is within the defined limit, it adjusts the vertical position</span>
+<span class="sd">    of either v1 or v2 to ensure that the segment adheres to the verticality</span>
+<span class="sd">    threshold.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v1 (tuple): A 3D point represented as a tuple (x, y, z).</span>
+<span class="sd">        v2 (tuple): A 3D point represented as a tuple (x, y, z).</span>
+<span class="sd">        limit (float): The angle threshold for determining verticality.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: The adjusted 3D points v1 and v2 after evaluating the verticality.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">v2d</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">v3d</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">v3d</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">v2d</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">pi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="n">v1</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">v2</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span>
+
+    <span class="k">return</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span></div>
+
+
+
+<div class="viewcode-block" id="get_cache_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.get_cache_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cache_path</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the cache path for a given object.</span>
+
+<span class="sd">    This function constructs a cache path based on the current Blender</span>
+<span class="sd">    file&#39;s filepath and the name of the provided object. It retrieves the</span>
+<span class="sd">    base name of the file, removes the last six characters, and appends a</span>
+<span class="sd">    specified directory and the object&#39;s name to create a complete cache</span>
+<span class="sd">    path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (Object): The Blender object for which the cache path is being generated.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The constructed cache path as a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fn</span><span class="p">)[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder: </span><span class="si">{</span><span class="n">fn</span><span class="p">[:</span><span class="o">-</span><span class="n">l</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File: </span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">iname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="p">[:</span><span class="o">-</span><span class="n">l</span><span class="p">]</span><span class="si">}</span><span class="s2">temp_cam</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="si">}{</span><span class="n">bn</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">iname</span></div>
+
+
+
+<div class="viewcode-block" id="get_simulation_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.get_simulation_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_simulation_path</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the simulation path for temporary CAM files.</span>
+
+<span class="sd">    This function retrieves the file path of the current Blender project and</span>
+<span class="sd">    constructs a new path for temporary CAM files by appending &#39;temp_cam&#39;</span>
+<span class="sd">    to the directory of the current file. The constructed path is returned</span>
+<span class="sd">    as a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The path to the temporary CAM directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+    <span class="n">iname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="p">[:</span><span class="o">-</span><span class="n">l</span><span class="p">]</span><span class="si">}</span><span class="s2">temp_cam</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">iname</span></div>
+
+
+
+<div class="viewcode-block" id="safe_filename">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.safe_filename">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_filename</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>  <span class="c1"># for export gcode</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a safe file name from the given string.</span>
+
+<span class="sd">    This function takes a string input and removes any characters that are</span>
+<span class="sd">    not considered valid for file names. The valid characters include</span>
+<span class="sd">    letters, digits, and a few special characters. The resulting string can</span>
+<span class="sd">    be used safely as a file name for exporting purposes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The input string to be sanitized into a safe file name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A sanitized version of the input string that contains only valid</span>
+<span class="sd">        characters for a file name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">valid_chars</span> <span class="o">=</span> <span class="s2">&quot;-_.()</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">valid_chars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
+
+
+
+<div class="viewcode-block" id="unit_value_to_string">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.unit_value_to_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">unit_value_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a value to a string representation in the current unit system.</span>
+
+<span class="sd">    This function takes a numeric value and converts it to a string</span>
+<span class="sd">    formatted according to the unit system set in the Blender context. If</span>
+<span class="sd">    the unit system is metric, the value is converted to millimeters. If the</span>
+<span class="sd">    unit system is imperial, the value is converted to inches. The precision</span>
+<span class="sd">    of the output can be specified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float): The numeric value to be converted.</span>
+<span class="sd">        precision (int?): The number of decimal places to round to.</span>
+<span class="sd">            Defaults to 5.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The string representation of the value in the appropriate units.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;METRIC&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">precision</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; mm &quot;</span>
+    <span class="k">elif</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;IMPERIAL&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mf">25.4</span><span class="p">,</span> <span class="n">precision</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;&#39;&#39; &quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># select multiple object starting with name</span>
+<div class="viewcode-block" id="select_multiple">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.select_multiple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">select_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select multiple objects in the scene based on their names.</span>
+
+<span class="sd">    This function deselects all objects in the current Blender scene and</span>
+<span class="sd">    then selects all objects whose names start with the specified prefix. It</span>
+<span class="sd">    iterates through all objects in the scene and checks if their names</span>
+<span class="sd">    begin with the given string. If they do, those objects are selected;</span>
+<span class="sd">    otherwise, they are deselected.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The prefix used to select objects in the scene.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>  <span class="c1"># join pocket curve calculations</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># join multiple objects starting with &#39;name&#39; renaming final object as &#39;name&#39;</span>
+<div class="viewcode-block" id="join_multiple">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.join_multiple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">join_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join multiple objects and rename the final object.</span>
+
+<span class="sd">    This function selects multiple objects in the Blender context, joins</span>
+<span class="sd">    them into a single object, and renames the resulting object to the</span>
+<span class="sd">    specified name. It is assumed that the objects to be joined are already</span>
+<span class="sd">    selected in the Blender interface.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The new name for the joined object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">select_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># rename object</span></div>
+
+
+
+<span class="c1"># remove multiple objects starting with &#39;name&#39;.... useful for fixed name operation</span>
+<div class="viewcode-block" id="remove_multiple">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.remove_multiple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove multiple objects from the scene based on their name prefix.</span>
+
+<span class="sd">    This function deselects all objects in the current Blender scene and</span>
+<span class="sd">    then iterates through all objects. If an object&#39;s name starts with the</span>
+<span class="sd">    specified prefix, it selects that object and deletes it from the scene.</span>
+<span class="sd">    This is useful for operations that require removing multiple objects</span>
+<span class="sd">    with a common naming convention.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The prefix of the object names to be removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="deselect">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.deselect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">deselect</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deselect all objects in the current Blender context.</span>
+
+<span class="sd">    This function utilizes the Blender Python API to deselect all objects in</span>
+<span class="sd">    the current scene. It is useful for clearing selections before</span>
+<span class="sd">    performing other operations on objects.  Raises:     None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># makes the object with the name active</span>
+<div class="viewcode-block" id="make_active">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.make_active">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_active</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an object active in the Blender scene.</span>
+
+<span class="sd">    This function takes the name of an object and sets it as the active</span>
+<span class="sd">    object in the current Blender scene. It first deselects all objects,</span>
+<span class="sd">    then selects the specified object and makes it active, allowing for</span>
+<span class="sd">    further operations to be performed on it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the object to be made active.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+    <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># change the name of the active object</span>
+<div class="viewcode-block" id="active_name">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.active_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">active_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Change the name of the active object in Blender.</span>
+
+<span class="sd">    This function sets the name of the currently active object in the</span>
+<span class="sd">    Blender context to the specified name. It directly modifies the `name`</span>
+<span class="sd">    attribute of the active object, allowing users to rename objects</span>
+<span class="sd">    programmatically.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The new name to assign to the active object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+
+
+
+<span class="c1"># renames and makes active name and makes it active</span>
+<div class="viewcode-block" id="rename">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.rename">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename an object and make it active.</span>
+
+<span class="sd">    This function renames an object in the Blender context and sets it as</span>
+<span class="sd">    the active object. It first calls the `make_active` function to ensure</span>
+<span class="sd">    the object is active, then updates the name of the active object to the</span>
+<span class="sd">    new name provided.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The current name of the object to be renamed.</span>
+<span class="sd">        name2 (str): The new name to assign to the active object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">make_active</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name2</span></div>
+
+
+
+<span class="c1"># boolean union of objects starting with name result is object name.</span>
+<span class="c1"># all objects starting with name will be deleted and the result will be name</span>
+<div class="viewcode-block" id="union">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.union">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a boolean union operation on objects.</span>
+
+<span class="sd">    This function selects multiple objects that start with the given name,</span>
+<span class="sd">    performs a boolean union operation on them using Blender&#39;s operators,</span>
+<span class="sd">    and then renames the resulting object to the specified name. After the</span>
+<span class="sd">    operation, it removes the original objects that were used in the union</span>
+<span class="sd">    process.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The base name of the objects to be unioned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">select_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_boolean</span><span class="p">(</span><span class="n">boolean_type</span><span class="o">=</span><span class="s2">&quot;UNION&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;unionboolean&quot;</span><span class="p">)</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;unionboolean&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="intersect">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.intersect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">intersect</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform an intersection operation on a curve object.</span>
+
+<span class="sd">    This function selects multiple objects based on the provided name and</span>
+<span class="sd">    then executes a boolean operation to create an intersection of the</span>
+<span class="sd">    selected objects. The resulting intersection is then named accordingly.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the object(s) to be selected for the intersection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">select_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_boolean</span><span class="p">(</span><span class="n">boolean_type</span><span class="o">=</span><span class="s2">&quot;INTERSECT&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;intersection&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># boolean difference of objects starting with name result is object from basename.</span>
+<span class="c1"># all objects starting with name will be deleted and the result will be basename</span>
+
+
+<div class="viewcode-block" id="difference">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.difference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a boolean difference operation on objects.</span>
+
+<span class="sd">    This function selects a series of objects specified by `name` and</span>
+<span class="sd">    performs a boolean difference operation with the object specified by</span>
+<span class="sd">    `basename`. After the operation, the resulting object is renamed to</span>
+<span class="sd">    &#39;booleandifference&#39;. The original objects specified by `name` are</span>
+<span class="sd">    deleted after the operation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the series of objects to select for the operation.</span>
+<span class="sd">        basename (str): The name of the base object to perform the boolean difference with.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#   name is the series to select</span>
+    <span class="c1">#   basename is what the base you want to cut including name</span>
+    <span class="n">select_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">basename</span><span class="p">]</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_boolean</span><span class="p">(</span><span class="n">boolean_type</span><span class="o">=</span><span class="s2">&quot;DIFFERENCE&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;booleandifference&quot;</span><span class="p">)</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">rename</span><span class="p">(</span><span class="s2">&quot;booleandifference&quot;</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># duplicate active object or duplicate move</span>
+<span class="c1"># if x or y not the default, duplicate move will be executed</span>
+<div class="viewcode-block" id="duplicate">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.duplicate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">duplicate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Duplicate an active object or move it based on the provided coordinates.</span>
+
+<span class="sd">    This function duplicates the currently active object in Blender. If both</span>
+<span class="sd">    x and y are set to their default values (0), the object is duplicated in</span>
+<span class="sd">    place. If either x or y is non-zero, the object is duplicated and moved</span>
+<span class="sd">    by the specified x and y offsets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float): The x-coordinate offset for the duplication.</span>
+<span class="sd">            Defaults to 0.</span>
+<span class="sd">        y (float): The y-coordinate offset for the duplication.</span>
+<span class="sd">            Defaults to 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate_move</span><span class="p">(</span>
+            <span class="n">OBJECT_OT_duplicate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linked&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;TRANSLATION&quot;</span><span class="p">},</span>
+            <span class="n">TRANSFORM_OT_translate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)},</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="c1"># Mirror active object along the x axis</span>
+<div class="viewcode-block" id="mirror_x">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.mirror_x">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mirror_x</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mirror the active object along the x-axis.</span>
+
+<span class="sd">    This function utilizes Blender&#39;s operator to mirror the currently active</span>
+<span class="sd">    object in the 3D view along the x-axis. It sets the orientation to</span>
+<span class="sd">    global and applies the transformation based on the specified orientation</span>
+<span class="sd">    matrix and constraint axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">mirror</span><span class="p">(</span>
+        <span class="n">orient_type</span><span class="o">=</span><span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+        <span class="n">orient_matrix</span><span class="o">=</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="n">orient_matrix_type</span><span class="o">=</span><span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+        <span class="n">constraint_axis</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># mirror active object along y axis</span>
+<div class="viewcode-block" id="mirror_y">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.mirror_y">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mirror_y</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mirror the active object along the Y axis.</span>
+
+<span class="sd">    This function uses Blender&#39;s operator to perform a mirror transformation</span>
+<span class="sd">    on the currently active object in the scene. The mirroring is done with</span>
+<span class="sd">    respect to the global coordinate system, specifically along the Y axis.</span>
+<span class="sd">    This can be useful for creating symmetrical objects or for correcting</span>
+<span class="sd">    the orientation of an object in a 3D environment.  Raises:     None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">mirror</span><span class="p">(</span>
+        <span class="n">orient_type</span><span class="o">=</span><span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+        <span class="n">orient_matrix</span><span class="o">=</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="n">orient_matrix_type</span><span class="o">=</span><span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+        <span class="n">constraint_axis</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># move active object and apply translation</span>
+<div class="viewcode-block" id="move">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.move">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Move the active object in the 3D space by applying a translation.</span>
+
+<span class="sd">    This function translates the active object in Blender&#39;s 3D view by the</span>
+<span class="sd">    specified x and y values. It uses Blender&#39;s built-in operations to</span>
+<span class="sd">    perform the translation and then applies the transformation to the</span>
+<span class="sd">    object&#39;s location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (float): The distance to move the object along the x-axis. Defaults to 0.0.</span>
+<span class="sd">        y (float): The distance to move the object along the y-axis. Defaults to 0.0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Rotate active object and apply rotation</span>
+<div class="viewcode-block" id="rotate">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.rotate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotate the active object by a specified angle.</span>
+
+<span class="sd">    This function modifies the rotation of the currently active object in</span>
+<span class="sd">    the Blender context by setting its Z-axis rotation to the given angle.</span>
+<span class="sd">    After updating the rotation, it applies the transformation to ensure</span>
+<span class="sd">    that the changes are saved to the object&#39;s data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        angle (float): The angle in radians to rotate the active object</span>
+<span class="sd">            around the Z-axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># remove doubles</span>
+<div class="viewcode-block" id="remove_doubles">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.remove_doubles">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_doubles</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove duplicate vertices from the selected curve object.</span>
+
+<span class="sd">    This function utilizes the Blender Python API to remove duplicate</span>
+<span class="sd">    vertices from the currently selected curve object in the Blender</span>
+<span class="sd">    environment. It is essential for cleaning up geometry and ensuring that</span>
+<span class="sd">    the curve behaves as expected without unnecessary complexity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># Add overcut to active object</span>
+<div class="viewcode-block" id="add_overcut">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.add_overcut">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_overcut</span><span class="p">(</span><span class="n">diametre</span><span class="p">,</span> <span class="n">overcut</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add overcut to the active object.</span>
+
+<span class="sd">    This function adds an overcut to the currently active object in the</span>
+<span class="sd">    Blender context. If the `overcut` parameter is set to True, it performs</span>
+<span class="sd">    a series of operations including creating a curve overcut with the</span>
+<span class="sd">    specified diameter, deleting the original object, and renaming the new</span>
+<span class="sd">    object to match the original. The function also ensures that any</span>
+<span class="sd">    duplicate vertices are removed from the resulting object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        diametre (float): The diameter to be used for the overcut.</span>
+<span class="sd">        overcut (bool): A flag indicating whether to apply the overcut. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">overcut</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_overcuts</span><span class="p">(</span><span class="n">diameter</span><span class="o">=</span><span class="n">diametre</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.05</span><span class="p">)</span>
+        <span class="n">overcut_name</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">make_active</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">rename</span><span class="p">(</span><span class="n">overcut_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">remove_doubles</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># add bounding rectangtle to curve</span>
+<div class="viewcode-block" id="add_bound_rectangle">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.add_bound_rectangle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_bound_rectangle</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;bounds_rectangle&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a bounding rectangle to a curve.</span>
+
+<span class="sd">    This function creates a rectangle defined by the minimum and maximum x</span>
+<span class="sd">    and y coordinates provided as arguments. The rectangle is added to the</span>
+<span class="sd">    scene at the center of the defined bounds. The resulting rectangle is</span>
+<span class="sd">    named according to the &#39;name&#39; parameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xmin (float): The minimum x-coordinate of the rectangle.</span>
+<span class="sd">        ymin (float): The minimum y-coordinate of the rectangle.</span>
+<span class="sd">        xmax (float): The maximum x-coordinate of the rectangle.</span>
+<span class="sd">        ymax (float): The maximum y-coordinate of the rectangle.</span>
+<span class="sd">        name (str): The name of the resulting rectangle object. Defaults to</span>
+<span class="sd">            &#39;bounds_rectangle&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">xsize</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span>
+    <span class="n">ysize</span> <span class="o">=</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">xmin</span> <span class="o">+</span> <span class="n">xsize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="n">ysize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="n">xsize</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">ysize</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="add_rectangle">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.add_rectangle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_rectangle</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">center_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">center_y</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a rectangle to the scene.</span>
+
+<span class="sd">    This function creates a rectangle in the 3D space using the specified</span>
+<span class="sd">    width and height. The rectangle can be centered at the origin or offset</span>
+<span class="sd">    based on the provided parameters. If `center_x` or `center_y` is set to</span>
+<span class="sd">    True, the rectangle will be positioned at the center of the specified</span>
+<span class="sd">    dimensions; otherwise, it will be positioned based on the offsets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        width (float): The width of the rectangle.</span>
+<span class="sd">        height (float): The height of the rectangle.</span>
+<span class="sd">        center_x (bool?): If True, centers the rectangle along the x-axis. Defaults to True.</span>
+<span class="sd">        center_y (bool?): If True, centers the rectangle along the y-axis. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x_offset</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">y_offset</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">center_x</span><span class="p">:</span>
+        <span class="n">x_offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">center_y</span><span class="p">:</span>
+        <span class="n">y_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">simple</span><span class="p">(</span>
+        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">x_offset</span><span class="p">,</span> <span class="n">y_offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">Simple_Type</span><span class="o">=</span><span class="s2">&quot;Rectangle&quot;</span><span class="p">,</span>
+        <span class="n">Simple_width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">Simple_length</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+        <span class="n">use_cyclic_u</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;simple_rectangle&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1">#  Returns coords from active object</span>
+<div class="viewcode-block" id="active_to_coords">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.active_to_coords">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">active_to_coords</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the active object to a list of its vertex coordinates.</span>
+
+<span class="sd">    This function duplicates the currently active object in the Blender</span>
+<span class="sd">    context, converts it to a mesh, and extracts the X and Y coordinates of</span>
+<span class="sd">    its vertices. After extracting the coordinates, it removes the temporary</span>
+<span class="sd">    mesh object created during the process. The resulting list contains</span>
+<span class="sd">    tuples of (x, y) coordinates for each vertex in the active object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of tuples, each containing the X and Y coordinates of the</span>
+<span class="sd">        vertices from the active object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;MESH&quot;</span><span class="p">)</span>
+    <span class="n">active_name</span><span class="p">(</span><span class="s2">&quot;_tmp_mesh&quot;</span><span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>  <span class="c1"># extract X,Y coordinates from the vertices data</span>
+        <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">remove_multiple</span><span class="p">(</span><span class="s2">&quot;_tmp_mesh&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">coords</span></div>
+
+
+
+<span class="c1"># returns shapely polygon from active object</span>
+<div class="viewcode-block" id="active_to_shapely_poly">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.active_to_shapely_poly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">active_to_shapely_poly</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the active object to a Shapely polygon.</span>
+
+<span class="sd">    This function retrieves the coordinates of the currently active object</span>
+<span class="sd">    and converts them into a Shapely Polygon data structure. It is useful</span>
+<span class="sd">    for geometric operations and spatial analysis using the Shapely library.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Polygon: A Shapely Polygon object created from the active object&#39;s coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># convert coordinates to shapely Polygon datastructure</span>
+    <span class="k">return</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">active_to_coords</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="make_visible">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.make_visible">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_visible</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+    <span class="n">storage</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="p">[]]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">visible_get</span><span class="p">():</span>
+        <span class="n">storage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">cam_collection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;cam&quot;</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">cam_collection</span><span class="p">)</span>
+    <span class="n">cam_collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">storage</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">storage</span></div>
+
+
+
+<div class="viewcode-block" id="restore_visibility">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.restore_visibility">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">restore_visibility</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">hide_viewport</span> <span class="o">=</span> <span class="n">storage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># print(storage)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">storage</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># checks for curve splines shorter than three points and subdivides if necessary</span>
+<div class="viewcode-block" id="subdivide_short_lines">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.subdivide_short_lines">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subdivide_short_lines</span><span class="p">(</span><span class="n">co</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subdivide all polylines to have at least three points.</span>
+
+<span class="sd">    This function iterates through the splines of a curve, checks if they are not bezier</span>
+<span class="sd">    and if they have less or equal to two points. If so, each spline is subdivided to get</span>
+<span class="sd">    at least three points.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        co (Object): A curve object to be analyzed and modified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;EDIT&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">co</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">sp</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;BEZIER&quot;</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">sp</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                <span class="n">pt</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">subdivide</span><span class="p">()</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;SELECT&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="subdivide_long_edges">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.subdivide_long_edges">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subdivide_long_edges</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subdivide edges of a mesh object that exceed a specified length.</span>
+
+<span class="sd">    This function iteratively checks the edges of a given mesh object and</span>
+<span class="sd">    subdivides those that are longer than a specified threshold. The process</span>
+<span class="sd">    involves toggling the edit mode of the object, selecting the long edges,</span>
+<span class="sd">    and applying a subdivision operation. The function continues to</span>
+<span class="sd">    subdivide until no edges exceed the threshold.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (bpy.types.Object): The Blender object containing the mesh to be</span>
+<span class="sd">            subdivided.</span>
+<span class="sd">        threshold (float): The length threshold above which edges will be</span>
+<span class="sd">            subdivided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Subdividing Long Edges&quot;</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">ob</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ob</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="n">subdivides</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="nb">iter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">edges</span><span class="p">):</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">co</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">co</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">-</span> <span class="n">v1</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">length</span>
+            <span class="k">if</span> <span class="n">l</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">subdivides</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subdivides</span><span class="p">))</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+
+            <span class="c1"># bpy.ops.mesh.quads_convert_to_tris(quad_method=&#39;BEAUTY&#39;, ngon_method=&#39;BEAUTY&#39;)</span>
+            <span class="c1"># bpy.ops.mesh.tris_convert_to_quads()</span>
+
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_mode</span><span class="p">(</span><span class="n">use_extend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_expand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;EDGE&quot;</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">subdivides</span><span class="p">:</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">subdivide</span><span class="p">(</span><span class="n">smoothness</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;SELECT&quot;</span><span class="p">)</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">quads_convert_to_tris</span><span class="p">(</span>
+                    <span class="n">quad_method</span><span class="o">=</span><span class="s2">&quot;SHORTEST_DIAGONAL&quot;</span><span class="p">,</span> <span class="n">ngon_method</span><span class="o">=</span><span class="s2">&quot;BEAUTY&quot;</span>
+                <span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;DESELECT&quot;</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">update_from_editmode</span><span class="p">()</span>
+        <span class="nb">iter</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="dilate_array">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.dilate_array">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dilate_array</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">cycles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dilate a binary array using a specified number of cycles.</span>
+
+<span class="sd">    This function performs a dilation operation on a 2D binary array. For</span>
+<span class="sd">    each cycle, it updates the array by applying a logical OR operation</span>
+<span class="sd">    between the current array and its neighboring elements. The dilation</span>
+<span class="sd">    effect expands the boundaries of the foreground (True) pixels in the</span>
+<span class="sd">    binary array.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ar (numpy.ndarray): A 2D binary array (numpy array) where</span>
+<span class="sd">            dilation will be applied.</span>
+<span class="sd">        cycles (int): The number of dilation cycles to perform.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: The function modifies the input array in place and does not</span>
+<span class="sd">            return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cycles</span><span class="p">):</span>
+        <span class="n">ar</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span>
+            <span class="n">ar</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span>
+            <span class="n">ar</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span>
+        <span class="p">)</span>
+        <span class="n">ar</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span>
+            <span class="n">ar</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">ar</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rotate_point_by_point">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/simple_utils/index.html#fabex.utilities.simple_utils.rotate_point_by_point">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate_point_by_point</span><span class="p">(</span><span class="n">originp</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">ang</span><span class="p">):</span>  <span class="c1"># rotate point around another point with angle</span>
+    <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span> <span class="o">=</span> <span class="n">originp</span>
+    <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">oz</span> <span class="o">=</span> <span class="n">p</span>
+
+    <span class="k">if</span> <span class="n">ang</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">ang</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span>
+        <span class="n">qx</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">oy</span> <span class="o">-</span> <span class="n">py</span><span class="p">)</span>
+        <span class="n">qy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qx</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">py</span> <span class="o">-</span> <span class="n">oy</span><span class="p">)</span>
+        <span class="n">qy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">py</span> <span class="o">-</span> <span class="n">oy</span><span class="p">)</span>
+    <span class="n">rot_p</span> <span class="o">=</span> <span class="p">[</span><span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">oz</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">rot_p</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

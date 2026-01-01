@@ -1,0 +1,1704 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.utilities.simple_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/utilities/simple_utils/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.utilities.slice_utils" href="../slice_utils/index.html" />
+    <link rel="prev" title="fabex.utilities.silhouette_utils" href="../silhouette_utils/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/utilities/simple_utils/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.utilities.simple_utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_add"><code class="docutils literal notranslate"><span class="pre">tuple_add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_subtract"><code class="docutils literal notranslate"><span class="pre">tuple_subtract()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_multiply"><code class="docutils literal notranslate"><span class="pre">tuple_multiply()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_length"><code class="docutils literal notranslate"><span class="pre">tuple_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_init"><code class="docutils literal notranslate"><span class="pre">timing_init()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_start"><code class="docutils literal notranslate"><span class="pre">timing_start()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_add"><code class="docutils literal notranslate"><span class="pre">timing_add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_print"><code class="docutils literal notranslate"><span class="pre">timing_print()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.progress"><code class="docutils literal notranslate"><span class="pre">progress()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.activate"><code class="docutils literal notranslate"><span class="pre">activate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.distance_2d"><code class="docutils literal notranslate"><span class="pre">distance_2d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.delete_object"><code class="docutils literal notranslate"><span class="pre">delete_object()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.duplicate_object"><code class="docutils literal notranslate"><span class="pre">duplicate_object()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_to_group"><code class="docutils literal notranslate"><span class="pre">add_to_group()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.is_vertical_limit"><code class="docutils literal notranslate"><span class="pre">is_vertical_limit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.get_cache_path"><code class="docutils literal notranslate"><span class="pre">get_cache_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.get_simulation_path"><code class="docutils literal notranslate"><span class="pre">get_simulation_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.safe_filename"><code class="docutils literal notranslate"><span class="pre">safe_filename()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.unit_value_to_string"><code class="docutils literal notranslate"><span class="pre">unit_value_to_string()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.select_multiple"><code class="docutils literal notranslate"><span class="pre">select_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.join_multiple"><code class="docutils literal notranslate"><span class="pre">join_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.remove_multiple"><code class="docutils literal notranslate"><span class="pre">remove_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.deselect"><code class="docutils literal notranslate"><span class="pre">deselect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.make_active"><code class="docutils literal notranslate"><span class="pre">make_active()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_name"><code class="docutils literal notranslate"><span class="pre">active_name()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.union"><code class="docutils literal notranslate"><span class="pre">union()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.intersect"><code class="docutils literal notranslate"><span class="pre">intersect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.difference"><code class="docutils literal notranslate"><span class="pre">difference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.duplicate"><code class="docutils literal notranslate"><span class="pre">duplicate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.mirror_x"><code class="docutils literal notranslate"><span class="pre">mirror_x()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.mirror_y"><code class="docutils literal notranslate"><span class="pre">mirror_y()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.move"><code class="docutils literal notranslate"><span class="pre">move()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rotate"><code class="docutils literal notranslate"><span class="pre">rotate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.remove_doubles"><code class="docutils literal notranslate"><span class="pre">remove_doubles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_overcut"><code class="docutils literal notranslate"><span class="pre">add_overcut()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_bound_rectangle"><code class="docutils literal notranslate"><span class="pre">add_bound_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_rectangle"><code class="docutils literal notranslate"><span class="pre">add_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_to_coords"><code class="docutils literal notranslate"><span class="pre">active_to_coords()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_to_shapely_poly"><code class="docutils literal notranslate"><span class="pre">active_to_shapely_poly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.make_visible"><code class="docutils literal notranslate"><span class="pre">make_visible()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.restore_visibility"><code class="docutils literal notranslate"><span class="pre">restore_visibility()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.subdivide_short_lines"><code class="docutils literal notranslate"><span class="pre">subdivide_short_lines()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.subdivide_long_edges"><code class="docutils literal notranslate"><span class="pre">subdivide_long_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.dilate_array"><code class="docutils literal notranslate"><span class="pre">dilate_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rotate_point_by_point"><code class="docutils literal notranslate"><span class="pre">rotate_point_by_point()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.utilities.simple_utils">
+<span id="fabex-utilities-simple-utils"></span><h1>fabex.utilities.simple_utils<a class="headerlink" href="#module-fabex.utilities.simple_utils" title="Link to this heading">#</a></h1>
+<p>Fabex ‘simple_utils.py’ © 2012 Vilem Novak</p>
+<p>Various helper functions, less complex than those found in the ‘utils’ files.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.tuple_add" title="fabex.utilities.simple_utils.tuple_add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple_add</span></code></a>(t, t1)</p></td>
+<td><p>Add two tuples as vectors.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.tuple_subtract" title="fabex.utilities.simple_utils.tuple_subtract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple_subtract</span></code></a>(t, t1)</p></td>
+<td><p>Subtract two tuples element-wise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.tuple_multiply" title="fabex.utilities.simple_utils.tuple_multiply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple_multiply</span></code></a>(t, c)</p></td>
+<td><p>Multiply each element of a tuple by a given number.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.tuple_length" title="fabex.utilities.simple_utils.tuple_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple_length</span></code></a>(t)</p></td>
+<td><p>Get the length of a vector represented as a tuple.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.timing_init" title="fabex.utilities.simple_utils.timing_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timing_init</span></code></a>()</p></td>
+<td><p>Initialize timing metrics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.timing_start" title="fabex.utilities.simple_utils.timing_start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timing_start</span></code></a>(tinf)</p></td>
+<td><p>Start timing by recording the current time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.timing_add" title="fabex.utilities.simple_utils.timing_add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timing_add</span></code></a>(tinf)</p></td>
+<td><p>Update the timing information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.timing_print" title="fabex.utilities.simple_utils.timing_print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timing_print</span></code></a>(tinf)</p></td>
+<td><p>Print the timing information.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.progress" title="fabex.utilities.simple_utils.progress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progress</span></code></a>(text[, n])</p></td>
+<td><p>Report progress during script execution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.activate" title="fabex.utilities.simple_utils.activate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate</span></code></a>(o)</p></td>
+<td><p>Makes an object active in Blender.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.distance_2d" title="fabex.utilities.simple_utils.distance_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distance_2d</span></code></a>(v1, v2)</p></td>
+<td><p>Calculate the distance between two points in 2D space.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.delete_object" title="fabex.utilities.simple_utils.delete_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_object</span></code></a>(ob)</p></td>
+<td><p>Delete an object in Blender for multiple uses.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.duplicate_object" title="fabex.utilities.simple_utils.duplicate_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_object</span></code></a>(o, pos)</p></td>
+<td><p>Helper function for visualizing cutter positions in bullet simulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.add_to_group" title="fabex.utilities.simple_utils.add_to_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_group</span></code></a>(ob, groupname)</p></td>
+<td><p>Add an object to a specified group in Blender.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.compare" title="fabex.utilities.simple_utils.compare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compare</span></code></a>(v1, v2, vmiddle, e)</p></td>
+<td><p>Comparison for optimization of paths.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.is_vertical_limit" title="fabex.utilities.simple_utils.is_vertical_limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertical_limit</span></code></a>(v1, v2, limit)</p></td>
+<td><p>Test Path Segment on Verticality Threshold for protect_vertical option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.get_cache_path" title="fabex.utilities.simple_utils.get_cache_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cache_path</span></code></a>(o)</p></td>
+<td><p>Get the cache path for a given object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.get_simulation_path" title="fabex.utilities.simple_utils.get_simulation_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_simulation_path</span></code></a>()</p></td>
+<td><p>Get the simulation path for temporary CAM files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.safe_filename" title="fabex.utilities.simple_utils.safe_filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">safe_filename</span></code></a>(name)</p></td>
+<td><p>Generate a safe file name from the given string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.unit_value_to_string" title="fabex.utilities.simple_utils.unit_value_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unit_value_to_string</span></code></a>(x[, precision])</p></td>
+<td><p>Convert a value to a string representation in the current unit system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.select_multiple" title="fabex.utilities.simple_utils.select_multiple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_multiple</span></code></a>(name)</p></td>
+<td><p>Select multiple objects in the scene based on their names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.join_multiple" title="fabex.utilities.simple_utils.join_multiple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">join_multiple</span></code></a>(name)</p></td>
+<td><p>Join multiple objects and rename the final object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.remove_multiple" title="fabex.utilities.simple_utils.remove_multiple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_multiple</span></code></a>(name)</p></td>
+<td><p>Remove multiple objects from the scene based on their name prefix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.deselect" title="fabex.utilities.simple_utils.deselect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deselect</span></code></a>()</p></td>
+<td><p>Deselect all objects in the current Blender context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.make_active" title="fabex.utilities.simple_utils.make_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_active</span></code></a>(name)</p></td>
+<td><p>Make an object active in the Blender scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.active_name" title="fabex.utilities.simple_utils.active_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">active_name</span></code></a>(name)</p></td>
+<td><p>Change the name of the active object in Blender.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.rename" title="fabex.utilities.simple_utils.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename</span></code></a>(name, name2)</p></td>
+<td><p>Rename an object and make it active.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.union" title="fabex.utilities.simple_utils.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">union</span></code></a>(name)</p></td>
+<td><p>Perform a boolean union operation on objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.intersect" title="fabex.utilities.simple_utils.intersect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersect</span></code></a>(name)</p></td>
+<td><p>Perform an intersection operation on a curve object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.difference" title="fabex.utilities.simple_utils.difference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">difference</span></code></a>(name, basename)</p></td>
+<td><p>Perform a boolean difference operation on objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.duplicate" title="fabex.utilities.simple_utils.duplicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate</span></code></a>([x, y])</p></td>
+<td><p>Duplicate an active object or move it based on the provided coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.mirror_x" title="fabex.utilities.simple_utils.mirror_x"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mirror_x</span></code></a>()</p></td>
+<td><p>Mirror the active object along the x-axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.mirror_y" title="fabex.utilities.simple_utils.mirror_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mirror_y</span></code></a>()</p></td>
+<td><p>Mirror the active object along the Y axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.move" title="fabex.utilities.simple_utils.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a>([x, y])</p></td>
+<td><p>Move the active object in the 3D space by applying a translation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.rotate" title="fabex.utilities.simple_utils.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(angle)</p></td>
+<td><p>Rotate the active object by a specified angle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.remove_doubles" title="fabex.utilities.simple_utils.remove_doubles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_doubles</span></code></a>()</p></td>
+<td><p>Remove duplicate vertices from the selected curve object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.add_overcut" title="fabex.utilities.simple_utils.add_overcut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_overcut</span></code></a>(diametre[, overcut])</p></td>
+<td><p>Add overcut to the active object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.add_bound_rectangle" title="fabex.utilities.simple_utils.add_bound_rectangle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_bound_rectangle</span></code></a>(xmin, ymin, xmax, ymax[, name])</p></td>
+<td><p>Add a bounding rectangle to a curve.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.add_rectangle" title="fabex.utilities.simple_utils.add_rectangle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_rectangle</span></code></a>(width, height[, center_x, center_y])</p></td>
+<td><p>Add a rectangle to the scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.active_to_coords" title="fabex.utilities.simple_utils.active_to_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">active_to_coords</span></code></a>()</p></td>
+<td><p>Convert the active object to a list of its vertex coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.active_to_shapely_poly" title="fabex.utilities.simple_utils.active_to_shapely_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">active_to_shapely_poly</span></code></a>()</p></td>
+<td><p>Convert the active object to a Shapely polygon.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.make_visible" title="fabex.utilities.simple_utils.make_visible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_visible</span></code></a>(o)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.restore_visibility" title="fabex.utilities.simple_utils.restore_visibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restore_visibility</span></code></a>(o, storage)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.subdivide_short_lines" title="fabex.utilities.simple_utils.subdivide_short_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdivide_short_lines</span></code></a>(co)</p></td>
+<td><p>Subdivide all polylines to have at least three points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.subdivide_long_edges" title="fabex.utilities.simple_utils.subdivide_long_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdivide_long_edges</span></code></a>(ob, threshold)</p></td>
+<td><p>Subdivide edges of a mesh object that exceed a specified length.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.dilate_array" title="fabex.utilities.simple_utils.dilate_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dilate_array</span></code></a>(ar, cycles)</p></td>
+<td><p>Dilate a binary array using a specified number of cycles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.utilities.simple_utils.rotate_point_by_point" title="fabex.utilities.simple_utils.rotate_point_by_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_point_by_point</span></code></a>(originp, p, ang)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.tuple_add">
+<span class="sig-name descname"><span class="pre">tuple_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#tuple_add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.tuple_add" title="Link to this definition">#</a></dt>
+<dd><p>Add two tuples as vectors.</p>
+<p>This function takes two tuples, each representing a vector in three-
+dimensional space, and returns a new tuple that is the element-wise sum
+of the two input tuples. It assumes that both tuples contain exactly
+three numeric elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>tuple</em>) – A tuple containing three numeric values representing the first vector.</p></li>
+<li><p><strong>t1</strong> (<em>tuple</em>) – A tuple containing three numeric values representing the second vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing three numeric values that represent the sum of the</dt><dd><p>input vectors.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.tuple_subtract">
+<span class="sig-name descname"><span class="pre">tuple_subtract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#tuple_subtract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.tuple_subtract" title="Link to this definition">#</a></dt>
+<dd><p>Subtract two tuples element-wise.</p>
+<p>This function takes two tuples of three elements each and performs an
+element-wise subtraction, treating the tuples as vectors. The result is
+a new tuple containing the differences of the corresponding elements
+from the input tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>tuple</em>) – A tuple containing three numeric values.</p></li>
+<li><p><strong>t1</strong> (<em>tuple</em>) – A tuple containing three numeric values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the results of the element-wise subtraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.tuple_multiply">
+<span class="sig-name descname"><span class="pre">tuple_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#tuple_multiply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.tuple_multiply" title="Link to this definition">#</a></dt>
+<dd><p>Multiply each element of a tuple by a given number.</p>
+<p>This function takes a tuple containing three elements and a numeric
+value, then multiplies each element of the tuple by the provided number.
+The result is returned as a new tuple containing the multiplied values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>tuple</em>) – A tuple containing three numeric values.</p></li>
+<li><p><strong>c</strong> (<em>numeric</em>) – A number by which to multiply each element of the tuple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new tuple containing the results of the multiplication.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.tuple_length">
+<span class="sig-name descname"><span class="pre">tuple_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#tuple_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.tuple_length" title="Link to this definition">#</a></dt>
+<dd><p>Get the length of a vector represented as a tuple.</p>
+<p>This function takes a tuple as input, which represents the coordinates
+of a vector, and returns its length by creating a Vector object from the
+tuple. The length is calculated using the appropriate mathematical
+formula for vector length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>tuple</em>) – A tuple representing the coordinates of the vector.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The length of the vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.timing_init">
+<span class="sig-name descname"><span class="pre">timing_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#timing_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.timing_init" title="Link to this definition">#</a></dt>
+<dd><p>Initialize timing metrics.</p>
+<p>This function sets up the initial state for timing functions by
+returning a list containing two zero values. These values can be used to
+track elapsed time or other timing-related metrics in subsequent
+operations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list containing two zero values, representing the
+initial timing metrics.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.timing_start">
+<span class="sig-name descname"><span class="pre">timing_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tinf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#timing_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.timing_start" title="Link to this definition">#</a></dt>
+<dd><p>Start timing by recording the current time.</p>
+<p>This function updates the second element of the provided list with the
+current time in seconds since the epoch. It is useful for tracking the
+start time of an operation or process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tinf</strong> (<em>list</em>) – A list where the second element will be updated
+with the current time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.timing_add">
+<span class="sig-name descname"><span class="pre">timing_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tinf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#timing_add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.timing_add" title="Link to this definition">#</a></dt>
+<dd><p>Update the timing information.</p>
+<p>This function updates the first element of the <cite>tinf</cite> list by adding the
+difference between the current time and the second element of the list.
+It is typically used to track elapsed time in a timing context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tinf</strong> (<em>list</em>) – A list where the first element is updated with the</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.timing_print">
+<span class="sig-name descname"><span class="pre">timing_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tinf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#timing_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.timing_print" title="Link to this definition">#</a></dt>
+<dd><p>Print the timing information.</p>
+<p>This function takes a tuple containing timing information and prints it
+in a formatted string. It specifically extracts the first element of the
+tuple, which is expected to represent time, and appends the string
+‘seconds’ to it before printing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tinf</strong> (<em>tuple</em>) – A tuple where the first element is expected to be a numeric value
+representing time.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>This function does not return any value; it only prints output to the</dt><dd><p>console.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.progress">
+<span class="sig-name descname"><span class="pre">progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.progress" title="Link to this definition">#</a></dt>
+<dd><p>Report progress during script execution.</p>
+<p>This function outputs a progress message to the standard output. It is
+designed to work for background operations and provides a formatted
+string that includes the specified text and an optional numeric progress
+value. If the numeric value is provided, it is formatted as a
+percentage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The message to display as progress.</p></li>
+<li><p><strong>n</strong> (<em>float?</em>) – A float representing the progress as a
+fraction (0.0 to 1.0). If not provided, no percentage will
+be displayed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>This function does not return a value; it only prints</dt><dd><p>to the standard output.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.activate">
+<span class="sig-name descname"><span class="pre">activate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#activate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.activate" title="Link to this definition">#</a></dt>
+<dd><p>Makes an object active in Blender.</p>
+<p>This function sets the specified object as the active object in the
+current Blender scene. It first deselects all objects, then selects the
+given object and makes it the active object in the view layer. This is
+useful for operations that require a specific object to be active, such
+as transformations or modifications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>bpy.types.Object</em>) – The Blender object to be activated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.distance_2d">
+<span class="sig-name descname"><span class="pre">distance_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#distance_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.distance_2d" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the distance between two points in 2D space.</p>
+<p>This function computes the Euclidean distance between two points
+represented by their coordinates in a 2D plane. It uses the Pythagorean
+theorem to calculate the distance based on the differences in the x and
+y coordinates of the points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> (<em>tuple</em>) – A tuple representing the coordinates of the first point (x1, y1).</p></li>
+<li><p><strong>v2</strong> (<em>tuple</em>) – A tuple representing the coordinates of the second point (x2, y2).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Euclidean distance between the two points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.delete_object">
+<span class="sig-name descname"><span class="pre">delete_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ob</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#delete_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.delete_object" title="Link to this definition">#</a></dt>
+<dd><p>Delete an object in Blender for multiple uses.</p>
+<p>This function activates the specified object and then deletes it using
+Blender’s built-in operations. It is designed to facilitate the deletion
+of objects within the Blender environment, ensuring that the object is
+active before performing the deletion operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ob</strong> (<em>Object</em>) – The Blender object to be deleted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.duplicate_object">
+<span class="sig-name descname"><span class="pre">duplicate_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#duplicate_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.duplicate_object" title="Link to this definition">#</a></dt>
+<dd><p>Helper function for visualizing cutter positions in bullet simulation.</p>
+<p>This function duplicates the specified object and resizes it according
+to a predefined scale factor. It also removes any existing rigidbody
+properties from the duplicated object and sets its location to the
+specified position. This is useful for managing multiple cutter
+positions in a bullet simulation environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> (<em>Object</em>) – The object to be duplicated.</p></li>
+<li><p><strong>pos</strong> (<em>Vector</em>) – The new position to place the duplicated object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.add_to_group">
+<span class="sig-name descname"><span class="pre">add_to_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#add_to_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.add_to_group" title="Link to this definition">#</a></dt>
+<dd><p>Add an object to a specified group in Blender.</p>
+<p>This function activates the given object and checks if the specified
+group exists in Blender’s data. If the group does not exist, it creates
+a new group with the provided name. If the group already exists, it
+links the object to that group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ob</strong> (<em>Object</em>) – The object to be added to the group.</p></li>
+<li><p><strong>groupname</strong> (<em>str</em>) – The name of the group to which the object will be added.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.compare">
+<span class="sig-name descname"><span class="pre">compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmiddle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.compare" title="Link to this definition">#</a></dt>
+<dd><p>Comparison for optimization of paths.</p>
+<p>This function compares two vectors and checks if the distance between a
+calculated vector and a reference vector is less than a specified
+threshold. It normalizes the vector difference and scales it by the
+length of another vector to determine if the resulting vector is within
+the specified epsilon value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> (<em>Vector</em>) – The first vector for comparison.</p></li>
+<li><p><strong>v2</strong> (<em>Vector</em>) – The second vector for comparison.</p></li>
+<li><p><strong>vmiddle</strong> (<em>Vector</em>) – The middle vector used for calculating the
+reference vector.</p></li>
+<li><p><strong>e</strong> (<em>float</em>) – The threshold value for comparison.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>True if the distance is less than the threshold,</dt><dd><p>otherwise False.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.is_vertical_limit">
+<span class="sig-name descname"><span class="pre">is_vertical_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#is_vertical_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.is_vertical_limit" title="Link to this definition">#</a></dt>
+<dd><p>Test Path Segment on Verticality Threshold for protect_vertical option.</p>
+<p>This function evaluates the verticality of a path segment defined by two
+points, v1 and v2, based on a specified limit. It calculates the angle
+between the vertical vector and the vector formed by the two points. If
+the angle is within the defined limit, it adjusts the vertical position
+of either v1 or v2 to ensure that the segment adheres to the verticality
+threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> (<em>tuple</em>) – A 3D point represented as a tuple (x, y, z).</p></li>
+<li><p><strong>v2</strong> (<em>tuple</em>) – A 3D point represented as a tuple (x, y, z).</p></li>
+<li><p><strong>limit</strong> (<em>float</em>) – The angle threshold for determining verticality.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The adjusted 3D points v1 and v2 after evaluating the verticality.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.get_cache_path">
+<span class="sig-name descname"><span class="pre">get_cache_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#get_cache_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.get_cache_path" title="Link to this definition">#</a></dt>
+<dd><p>Get the cache path for a given object.</p>
+<p>This function constructs a cache path based on the current Blender
+file’s filepath and the name of the provided object. It retrieves the
+base name of the file, removes the last six characters, and appends a
+specified directory and the object’s name to create a complete cache
+path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>Object</em>) – The Blender object for which the cache path is being generated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The constructed cache path as a string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.get_simulation_path">
+<span class="sig-name descname"><span class="pre">get_simulation_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#get_simulation_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.get_simulation_path" title="Link to this definition">#</a></dt>
+<dd><p>Get the simulation path for temporary CAM files.</p>
+<p>This function retrieves the file path of the current Blender project and
+constructs a new path for temporary CAM files by appending ‘temp_cam’
+to the directory of the current file. The constructed path is returned
+as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The path to the temporary CAM directory.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.safe_filename">
+<span class="sig-name descname"><span class="pre">safe_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#safe_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.safe_filename" title="Link to this definition">#</a></dt>
+<dd><p>Generate a safe file name from the given string.</p>
+<p>This function takes a string input and removes any characters that are
+not considered valid for file names. The valid characters include
+letters, digits, and a few special characters. The resulting string can
+be used safely as a file name for exporting purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The input string to be sanitized into a safe file name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A sanitized version of the input string that contains only valid
+characters for a file name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.unit_value_to_string">
+<span class="sig-name descname"><span class="pre">unit_value_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#unit_value_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.unit_value_to_string" title="Link to this definition">#</a></dt>
+<dd><p>Convert a value to a string representation in the current unit system.</p>
+<p>This function takes a numeric value and converts it to a string
+formatted according to the unit system set in the Blender context. If
+the unit system is metric, the value is converted to millimeters. If the
+unit system is imperial, the value is converted to inches. The precision
+of the output can be specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The numeric value to be converted.</p></li>
+<li><p><strong>precision</strong> (<em>int?</em>) – The number of decimal places to round to.
+Defaults to 5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string representation of the value in the appropriate units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.select_multiple">
+<span class="sig-name descname"><span class="pre">select_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#select_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.select_multiple" title="Link to this definition">#</a></dt>
+<dd><p>Select multiple objects in the scene based on their names.</p>
+<p>This function deselects all objects in the current Blender scene and
+then selects all objects whose names start with the specified prefix. It
+iterates through all objects in the scene and checks if their names
+begin with the given string. If they do, those objects are selected;
+otherwise, they are deselected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The prefix used to select objects in the scene.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.join_multiple">
+<span class="sig-name descname"><span class="pre">join_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#join_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.join_multiple" title="Link to this definition">#</a></dt>
+<dd><p>Join multiple objects and rename the final object.</p>
+<p>This function selects multiple objects in the Blender context, joins
+them into a single object, and renames the resulting object to the
+specified name. It is assumed that the objects to be joined are already
+selected in the Blender interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The new name for the joined object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.remove_multiple">
+<span class="sig-name descname"><span class="pre">remove_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#remove_multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.remove_multiple" title="Link to this definition">#</a></dt>
+<dd><p>Remove multiple objects from the scene based on their name prefix.</p>
+<p>This function deselects all objects in the current Blender scene and
+then iterates through all objects. If an object’s name starts with the
+specified prefix, it selects that object and deletes it from the scene.
+This is useful for operations that require removing multiple objects
+with a common naming convention.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The prefix of the object names to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.deselect">
+<span class="sig-name descname"><span class="pre">deselect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#deselect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.deselect" title="Link to this definition">#</a></dt>
+<dd><p>Deselect all objects in the current Blender context.</p>
+<p>This function utilizes the Blender Python API to deselect all objects in
+the current scene. It is useful for clearing selections before
+performing other operations on objects.  Raises:     None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.make_active">
+<span class="sig-name descname"><span class="pre">make_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#make_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.make_active" title="Link to this definition">#</a></dt>
+<dd><p>Make an object active in the Blender scene.</p>
+<p>This function takes the name of an object and sets it as the active
+object in the current Blender scene. It first deselects all objects,
+then selects the specified object and makes it active, allowing for
+further operations to be performed on it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the object to be made active.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.active_name">
+<span class="sig-name descname"><span class="pre">active_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#active_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.active_name" title="Link to this definition">#</a></dt>
+<dd><p>Change the name of the active object in Blender.</p>
+<p>This function sets the name of the currently active object in the
+Blender context to the specified name. It directly modifies the <cite>name</cite>
+attribute of the active object, allowing users to rename objects
+programmatically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The new name to assign to the active object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.rename" title="Link to this definition">#</a></dt>
+<dd><p>Rename an object and make it active.</p>
+<p>This function renames an object in the Blender context and sets it as
+the active object. It first calls the <cite>make_active</cite> function to ensure
+the object is active, then updates the name of the active object to the
+new name provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The current name of the object to be renamed.</p></li>
+<li><p><strong>name2</strong> (<em>str</em>) – The new name to assign to the active object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.union" title="Link to this definition">#</a></dt>
+<dd><p>Perform a boolean union operation on objects.</p>
+<p>This function selects multiple objects that start with the given name,
+performs a boolean union operation on them using Blender’s operators,
+and then renames the resulting object to the specified name. After the
+operation, it removes the original objects that were used in the union
+process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The base name of the objects to be unioned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.intersect">
+<span class="sig-name descname"><span class="pre">intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#intersect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.intersect" title="Link to this definition">#</a></dt>
+<dd><p>Perform an intersection operation on a curve object.</p>
+<p>This function selects multiple objects based on the provided name and
+then executes a boolean operation to create an intersection of the
+selected objects. The resulting intersection is then named accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the object(s) to be selected for the intersection.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.difference">
+<span class="sig-name descname"><span class="pre">difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#difference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.difference" title="Link to this definition">#</a></dt>
+<dd><p>Perform a boolean difference operation on objects.</p>
+<p>This function selects a series of objects specified by <cite>name</cite> and
+performs a boolean difference operation with the object specified by
+<cite>basename</cite>. After the operation, the resulting object is renamed to
+‘booleandifference’. The original objects specified by <cite>name</cite> are
+deleted after the operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the series of objects to select for the operation.</p></li>
+<li><p><strong>basename</strong> (<em>str</em>) – The name of the base object to perform the boolean difference with.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.duplicate">
+<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#duplicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.duplicate" title="Link to this definition">#</a></dt>
+<dd><p>Duplicate an active object or move it based on the provided coordinates.</p>
+<p>This function duplicates the currently active object in Blender. If both
+x and y are set to their default values (0), the object is duplicated in
+place. If either x or y is non-zero, the object is duplicated and moved
+by the specified x and y offsets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The x-coordinate offset for the duplication.
+Defaults to 0.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The y-coordinate offset for the duplication.
+Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.mirror_x">
+<span class="sig-name descname"><span class="pre">mirror_x</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#mirror_x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.mirror_x" title="Link to this definition">#</a></dt>
+<dd><p>Mirror the active object along the x-axis.</p>
+<p>This function utilizes Blender’s operator to mirror the currently active
+object in the 3D view along the x-axis. It sets the orientation to
+global and applies the transformation based on the specified orientation
+matrix and constraint axis.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.mirror_y">
+<span class="sig-name descname"><span class="pre">mirror_y</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#mirror_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.mirror_y" title="Link to this definition">#</a></dt>
+<dd><p>Mirror the active object along the Y axis.</p>
+<p>This function uses Blender’s operator to perform a mirror transformation
+on the currently active object in the scene. The mirroring is done with
+respect to the global coordinate system, specifically along the Y axis.
+This can be useful for creating symmetrical objects or for correcting
+the orientation of an object in a 3D environment.  Raises:     None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.move">
+<span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.move" title="Link to this definition">#</a></dt>
+<dd><p>Move the active object in the 3D space by applying a translation.</p>
+<p>This function translates the active object in Blender’s 3D view by the
+specified x and y values. It uses Blender’s built-in operations to
+perform the translation and then applies the transformation to the
+object’s location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The distance to move the object along the x-axis. Defaults to 0.0.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The distance to move the object along the y-axis. Defaults to 0.0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.rotate" title="Link to this definition">#</a></dt>
+<dd><p>Rotate the active object by a specified angle.</p>
+<p>This function modifies the rotation of the currently active object in
+the Blender context by setting its Z-axis rotation to the given angle.
+After updating the rotation, it applies the transformation to ensure
+that the changes are saved to the object’s data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em>) – The angle in radians to rotate the active object
+around the Z-axis.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.remove_doubles">
+<span class="sig-name descname"><span class="pre">remove_doubles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#remove_doubles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.remove_doubles" title="Link to this definition">#</a></dt>
+<dd><p>Remove duplicate vertices from the selected curve object.</p>
+<p>This function utilizes the Blender Python API to remove duplicate
+vertices from the currently selected curve object in the Blender
+environment. It is essential for cleaning up geometry and ensuring that
+the curve behaves as expected without unnecessary complexity.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.add_overcut">
+<span class="sig-name descname"><span class="pre">add_overcut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diametre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overcut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#add_overcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.add_overcut" title="Link to this definition">#</a></dt>
+<dd><p>Add overcut to the active object.</p>
+<p>This function adds an overcut to the currently active object in the
+Blender context. If the <cite>overcut</cite> parameter is set to True, it performs
+a series of operations including creating a curve overcut with the
+specified diameter, deleting the original object, and renaming the new
+object to match the original. The function also ensures that any
+duplicate vertices are removed from the resulting object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diametre</strong> (<em>float</em>) – The diameter to be used for the overcut.</p></li>
+<li><p><strong>overcut</strong> (<em>bool</em>) – A flag indicating whether to apply the overcut. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.add_bound_rectangle">
+<span class="sig-name descname"><span class="pre">add_bound_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bounds_rectangle'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#add_bound_rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.add_bound_rectangle" title="Link to this definition">#</a></dt>
+<dd><p>Add a bounding rectangle to a curve.</p>
+<p>This function creates a rectangle defined by the minimum and maximum x
+and y coordinates provided as arguments. The rectangle is added to the
+scene at the center of the defined bounds. The resulting rectangle is
+named according to the ‘name’ parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xmin</strong> (<em>float</em>) – The minimum x-coordinate of the rectangle.</p></li>
+<li><p><strong>ymin</strong> (<em>float</em>) – The minimum y-coordinate of the rectangle.</p></li>
+<li><p><strong>xmax</strong> (<em>float</em>) – The maximum x-coordinate of the rectangle.</p></li>
+<li><p><strong>ymax</strong> (<em>float</em>) – The maximum y-coordinate of the rectangle.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the resulting rectangle object. Defaults to
+‘bounds_rectangle’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.add_rectangle">
+<span class="sig-name descname"><span class="pre">add_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#add_rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.add_rectangle" title="Link to this definition">#</a></dt>
+<dd><p>Add a rectangle to the scene.</p>
+<p>This function creates a rectangle in the 3D space using the specified
+width and height. The rectangle can be centered at the origin or offset
+based on the provided parameters. If <cite>center_x</cite> or <cite>center_y</cite> is set to
+True, the rectangle will be positioned at the center of the specified
+dimensions; otherwise, it will be positioned based on the offsets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – The width of the rectangle.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – The height of the rectangle.</p></li>
+<li><p><strong>center_x</strong> (<em>bool?</em>) – If True, centers the rectangle along the x-axis. Defaults to True.</p></li>
+<li><p><strong>center_y</strong> (<em>bool?</em>) – If True, centers the rectangle along the y-axis. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.active_to_coords">
+<span class="sig-name descname"><span class="pre">active_to_coords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#active_to_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.active_to_coords" title="Link to this definition">#</a></dt>
+<dd><p>Convert the active object to a list of its vertex coordinates.</p>
+<p>This function duplicates the currently active object in the Blender
+context, converts it to a mesh, and extracts the X and Y coordinates of
+its vertices. After extracting the coordinates, it removes the temporary
+mesh object created during the process. The resulting list contains
+tuples of (x, y) coordinates for each vertex in the active object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of tuples, each containing the X and Y coordinates of the
+vertices from the active object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.active_to_shapely_poly">
+<span class="sig-name descname"><span class="pre">active_to_shapely_poly</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#active_to_shapely_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.active_to_shapely_poly" title="Link to this definition">#</a></dt>
+<dd><p>Convert the active object to a Shapely polygon.</p>
+<p>This function retrieves the coordinates of the currently active object
+and converts them into a Shapely Polygon data structure. It is useful
+for geometric operations and spatial analysis using the Shapely library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Shapely Polygon object created from the active object’s coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Polygon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.make_visible">
+<span class="sig-name descname"><span class="pre">make_visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#make_visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.make_visible" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.restore_visibility">
+<span class="sig-name descname"><span class="pre">restore_visibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#restore_visibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.restore_visibility" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.subdivide_short_lines">
+<span class="sig-name descname"><span class="pre">subdivide_short_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">co</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#subdivide_short_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.subdivide_short_lines" title="Link to this definition">#</a></dt>
+<dd><p>Subdivide all polylines to have at least three points.</p>
+<p>This function iterates through the splines of a curve, checks if they are not bezier
+and if they have less or equal to two points. If so, each spline is subdivided to get
+at least three points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>co</strong> (<em>Object</em>) – A curve object to be analyzed and modified.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.subdivide_long_edges">
+<span class="sig-name descname"><span class="pre">subdivide_long_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#subdivide_long_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.subdivide_long_edges" title="Link to this definition">#</a></dt>
+<dd><p>Subdivide edges of a mesh object that exceed a specified length.</p>
+<p>This function iteratively checks the edges of a given mesh object and
+subdivides those that are longer than a specified threshold. The process
+involves toggling the edit mode of the object, selecting the long edges,
+and applying a subdivision operation. The function continues to
+subdivide until no edges exceed the threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ob</strong> (<em>bpy.types.Object</em>) – The Blender object containing the mesh to be
+subdivided.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The length threshold above which edges will be
+subdivided.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.dilate_array">
+<span class="sig-name descname"><span class="pre">dilate_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#dilate_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.dilate_array" title="Link to this definition">#</a></dt>
+<dd><p>Dilate a binary array using a specified number of cycles.</p>
+<p>This function performs a dilation operation on a 2D binary array. For
+each cycle, it updates the array by applying a logical OR operation
+between the current array and its neighboring elements. The dilation
+effect expands the boundaries of the foreground (True) pixels in the
+binary array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ar</strong> (<em>numpy.ndarray</em>) – A 2D binary array (numpy array) where
+dilation will be applied.</p></li>
+<li><p><strong>cycles</strong> (<em>int</em>) – The number of dilation cycles to perform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The function modifies the input array in place and does not</dt><dd><p>return a value.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.utilities.simple_utils.rotate_point_by_point">
+<span class="sig-name descname"><span class="pre">rotate_point_by_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">originp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ang</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/utilities/simple_utils.html#rotate_point_by_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.utilities.simple_utils.rotate_point_by_point" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../silhouette_utils/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.utilities.silhouette_utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../slice_utils/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.utilities.slice_utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_add"><code class="docutils literal notranslate"><span class="pre">tuple_add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_subtract"><code class="docutils literal notranslate"><span class="pre">tuple_subtract()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_multiply"><code class="docutils literal notranslate"><span class="pre">tuple_multiply()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.tuple_length"><code class="docutils literal notranslate"><span class="pre">tuple_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_init"><code class="docutils literal notranslate"><span class="pre">timing_init()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_start"><code class="docutils literal notranslate"><span class="pre">timing_start()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_add"><code class="docutils literal notranslate"><span class="pre">timing_add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.timing_print"><code class="docutils literal notranslate"><span class="pre">timing_print()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.progress"><code class="docutils literal notranslate"><span class="pre">progress()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.activate"><code class="docutils literal notranslate"><span class="pre">activate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.distance_2d"><code class="docutils literal notranslate"><span class="pre">distance_2d()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.delete_object"><code class="docutils literal notranslate"><span class="pre">delete_object()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.duplicate_object"><code class="docutils literal notranslate"><span class="pre">duplicate_object()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_to_group"><code class="docutils literal notranslate"><span class="pre">add_to_group()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.is_vertical_limit"><code class="docutils literal notranslate"><span class="pre">is_vertical_limit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.get_cache_path"><code class="docutils literal notranslate"><span class="pre">get_cache_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.get_simulation_path"><code class="docutils literal notranslate"><span class="pre">get_simulation_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.safe_filename"><code class="docutils literal notranslate"><span class="pre">safe_filename()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.unit_value_to_string"><code class="docutils literal notranslate"><span class="pre">unit_value_to_string()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.select_multiple"><code class="docutils literal notranslate"><span class="pre">select_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.join_multiple"><code class="docutils literal notranslate"><span class="pre">join_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.remove_multiple"><code class="docutils literal notranslate"><span class="pre">remove_multiple()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.deselect"><code class="docutils literal notranslate"><span class="pre">deselect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.make_active"><code class="docutils literal notranslate"><span class="pre">make_active()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_name"><code class="docutils literal notranslate"><span class="pre">active_name()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.union"><code class="docutils literal notranslate"><span class="pre">union()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.intersect"><code class="docutils literal notranslate"><span class="pre">intersect()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.difference"><code class="docutils literal notranslate"><span class="pre">difference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.duplicate"><code class="docutils literal notranslate"><span class="pre">duplicate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.mirror_x"><code class="docutils literal notranslate"><span class="pre">mirror_x()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.mirror_y"><code class="docutils literal notranslate"><span class="pre">mirror_y()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.move"><code class="docutils literal notranslate"><span class="pre">move()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rotate"><code class="docutils literal notranslate"><span class="pre">rotate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.remove_doubles"><code class="docutils literal notranslate"><span class="pre">remove_doubles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_overcut"><code class="docutils literal notranslate"><span class="pre">add_overcut()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_bound_rectangle"><code class="docutils literal notranslate"><span class="pre">add_bound_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.add_rectangle"><code class="docutils literal notranslate"><span class="pre">add_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_to_coords"><code class="docutils literal notranslate"><span class="pre">active_to_coords()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.active_to_shapely_poly"><code class="docutils literal notranslate"><span class="pre">active_to_shapely_poly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.make_visible"><code class="docutils literal notranslate"><span class="pre">make_visible()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.restore_visibility"><code class="docutils literal notranslate"><span class="pre">restore_visibility()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.subdivide_short_lines"><code class="docutils literal notranslate"><span class="pre">subdivide_short_lines()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.subdivide_long_edges"><code class="docutils literal notranslate"><span class="pre">subdivide_long_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.dilate_array"><code class="docutils literal notranslate"><span class="pre">dilate_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.utilities.simple_utils.rotate_point_by_point"><code class="docutils literal notranslate"><span class="pre">rotate_point_by_point()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

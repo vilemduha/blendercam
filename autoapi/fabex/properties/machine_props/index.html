@@ -1,0 +1,851 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.properties.machine_props &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/properties/machine_props/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.properties.material_props" href="../material_props/index.html" />
+    <link rel="prev" title="fabex.properties.interface_props" href="../interface_props/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../gcode/index.html">fabex.gcode</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gcode/gcode_import/index.html">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.properties</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/properties/machine_props/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.properties.machine_props</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.path_color"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.path_color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.wire_color"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.wire_color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.unit_system"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.unit_system</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.post_processor"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.post_processor</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.use_position_definitions"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.use_position_definitions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.starting_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.starting_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.mtc_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.mtc_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.ending_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.ending_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.working_area"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.working_area</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_min"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_min</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_max"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_max</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_default"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_default</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.hourly_rate"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.hourly_rate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_min"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_min</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_max"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_max</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_default"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_default</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_start_time"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_start_time</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_enable"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_enable</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_steps"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_steps</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_skip_threshold"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_skip_threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_total_time"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_total_time</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_4"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.axis_4</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_5"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.axis_5</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.eval_splitting"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.eval_splitting</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.split_limit"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.split_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.collet_size"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.collet_size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_block_numbers"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_block_numbers</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.start_block_number"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.start_block_number</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.block_number_increment"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.block_number_increment</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_definitions"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_tool_definitions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_change"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_tool_change</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_G43_on_tool_change"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_G43_on_tool_change</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.properties.machine_props">
+<span id="fabex-properties-machine-props"></span><h1>fabex.properties.machine_props<a class="headerlink" href="#module-fabex.properties.machine_props" title="Link to this heading">#</a></h1>
+<p>Fabex ‘machine_settings.py’</p>
+<p>All CAM machine properties.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.properties.machine_props.CAM_MACHINE_Properties" title="fabex.properties.machine_props.CAM_MACHINE_Properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties</span></code></a></p></td>
+<td><p>stores all data for machines</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CAM_MACHINE_Properties</span></span><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">bpy.types.PropertyGroup</span></code></p>
+<p>stores all data for machines</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.path_color">
+<span class="sig-name descname"><span class="pre">path_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Path</span> <span class="pre">Color'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Color</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">CAM_path</span> <span class="pre">object</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">viewport'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'COLOR'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.path_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.path_color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.wire_color">
+<span class="sig-name descname"><span class="pre">wire_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wire</span> <span class="pre">Color'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Color</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">CAM_Machine</span> <span class="pre">box</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">viewport'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">1.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'COLOR'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.wire_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.wire_color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.unit_system">
+<span class="sig-name descname"><span class="pre">unit_system</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Units'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'INCHES'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Inches</span> <span class="pre">(in)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Dimensions</span> <span class="pre">use</span> <span class="pre">Inches</span> <span class="pre">(Imperial)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'MILLIMETERS'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Millimeters</span> <span class="pre">(mm)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Dimensions</span> <span class="pre">use</span> <span class="pre">Millimeters</span> <span class="pre">(Metric)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="pre">update_unit_system</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.unit_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.unit_system" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.post_processor">
+<span class="sig-name descname"><span class="pre">post_processor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EnumProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Post</span> <span class="pre">Processor'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'ISO'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Iso'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Exports</span> <span class="pre">standardized</span> <span class="pre">gcode</span> <span class="pre">ISO</span> <span class="pre">6983</span> <span class="pre">(RS-274)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'MACH3'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Mach3'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Default</span> <span class="pre">mach3'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'EMC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'LinuxCNC</span> <span class="pre">-</span> <span class="pre">EMC2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Linux</span> <span class="pre">based</span> <span class="pre">CNC</span> <span class="pre">control</span> <span class="pre">software</span> <span class="pre">-</span> <span class="pre">formally</span> <span class="pre">EMC2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FADAL'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Fadal'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Fadal</span> <span class="pre">VMC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'GRBL'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'grbl'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Optimized</span> <span class="pre">gcode</span> <span class="pre">for</span> <span class="pre">grbl</span> <span class="pre">firmware</span> <span class="pre">on</span> <span class="pre">Arduino</span> <span class="pre">with</span> <span class="pre">cnc</span> <span class="pre">shield'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'HEIDENHAIN'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Heidenhain'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Heidenhain'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'HEIDENHAIN530'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Heidenhain530'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Heidenhain530'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'TNC151'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Heidenhain</span> <span class="pre">TNC151'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Post</span> <span class="pre">Processor</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">Heidenhain</span> <span class="pre">TNC151</span> <span class="pre">machine'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'SIEGKX1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sieg</span> <span class="pre">KX1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Sieg</span> <span class="pre">KX1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'HM50'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Hafco</span> <span class="pre">HM-50'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Hafco</span> <span class="pre">HM-50'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'CENTROID'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Centroid</span> <span class="pre">M40'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Centroid</span> <span class="pre">M40'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ANILAM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Anilam</span> <span class="pre">Crusader</span> <span class="pre">M'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Anilam</span> <span class="pre">Crusader</span> <span class="pre">M'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'GRAVOS'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Gravos'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Gravos'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'WIN-PC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'WinPC-NC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'German</span> <span class="pre">CNC</span> <span class="pre">by</span> <span class="pre">Burkhard</span> <span class="pre">Lewetz'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'SHOPBOT</span> <span class="pre">MTC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ShopBot</span> <span class="pre">MTC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ShopBot</span> <span class="pre">MTC'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'LYNX_OTTER_O'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Lynx</span> <span class="pre">Otter</span> <span class="pre">o'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Lynx</span> <span class="pre">Otter</span> <span class="pre">o'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'USER'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'User</span> <span class="pre">Custom'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Customizable</span> <span class="pre">User</span> <span class="pre">Post</span> <span class="pre">Processor</span> <span class="pre">(based</span> <span class="pre">on</span> <span class="pre">ISO)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Post</span> <span class="pre">Processor'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'MACH3'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.post_processor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.post_processor" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.use_position_definitions">
+<span class="sig-name descname"><span class="pre">use_position_definitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Use</span> <span class="pre">Position</span> <span class="pre">Definitions'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Define</span> <span class="pre">own</span> <span class="pre">positions</span> <span class="pre">for</span> <span class="pre">op</span> <span class="pre">start,</span> <span class="pre">toolchange,</span> <span class="pre">ending</span> <span class="pre">position'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.use_position_definitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.use_position_definitions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.starting_position">
+<span class="sig-name descname"><span class="pre">starting_position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Start</span> <span class="pre">Position'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'XYZ'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="pre">update_machine</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.starting_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.starting_position" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.mtc_position">
+<span class="sig-name descname"><span class="pre">mtc_position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'MTC</span> <span class="pre">Position'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'XYZ'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="pre">update_machine</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.mtc_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.mtc_position" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.ending_position">
+<span class="sig-name descname"><span class="pre">ending_position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'End</span> <span class="pre">Position'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'XYZ'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="pre">update_machine</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.ending_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.ending_position" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.working_area">
+<span class="sig-name descname"><span class="pre">working_area</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatVectorProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Work</span> <span class="pre">Area'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">0.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">subtype</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'XYZ'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="pre">update_machine</span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.working_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.working_area" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_min">
+<span class="sig-name descname"><span class="pre">feedrate_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Feedrate</span> <span class="pre">Minimum</span> <span class="pre">/min'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.feedrate_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_min" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_max">
+<span class="sig-name descname"><span class="pre">feedrate_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Feedrate</span> <span class="pre">Maximum</span> <span class="pre">/min'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.feedrate_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_max" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_default">
+<span class="sig-name descname"><span class="pre">feedrate_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Feedrate</span> <span class="pre">Default</span> <span class="pre">/min'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1.5</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.feedrate_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_default" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.hourly_rate">
+<span class="sig-name descname"><span class="pre">hourly_rate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Price</span> <span class="pre">per</span> <span class="pre">Hour'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">100</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.005</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.hourly_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.hourly_rate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_min">
+<span class="sig-name descname"><span class="pre">spindle_min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Spindle</span> <span class="pre">Speed</span> <span class="pre">Minimum</span> <span class="pre">RPM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">5000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_min" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_max">
+<span class="sig-name descname"><span class="pre">spindle_max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Spindle</span> <span class="pre">Speed</span> <span class="pre">Maximum</span> <span class="pre">RPM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">30000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_max" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_default">
+<span class="sig-name descname"><span class="pre">spindle_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Spindle</span> <span class="pre">Speed</span> <span class="pre">Default</span> <span class="pre">RPM'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">15000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_default" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_start_time">
+<span class="sig-name descname"><span class="pre">spindle_start_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Spindle</span> <span class="pre">Start</span> <span class="pre">Delay</span> <span class="pre">Seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Wait</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">spindle</span> <span class="pre">to</span> <span class="pre">start</span> <span class="pre">spinning</span> <span class="pre">before</span> <span class="pre">starting</span> <span class="pre">the</span> <span class="pre">feeds</span> <span class="pre">,</span> <span class="pre">in</span> <span class="pre">seconds'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_start_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_start_time" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_enable">
+<span class="sig-name descname"><span class="pre">spindle_slow_start_enable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Spindle</span> <span class="pre">Slow</span> <span class="pre">Start</span> <span class="pre">Enable'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Enable</span> <span class="pre">gradual</span> <span class="pre">spindle</span> <span class="pre">speed</span> <span class="pre">ramping</span> <span class="pre">from</span> <span class="pre">minimum</span> <span class="pre">to</span> <span class="pre">target</span> <span class="pre">speed'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_slow_start_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_enable" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_steps">
+<span class="sig-name descname"><span class="pre">spindle_slow_start_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Slow</span> <span class="pre">Start</span> <span class="pre">Steps'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">intermediate</span> <span class="pre">speed</span> <span class="pre">steps</span> <span class="pre">when</span> <span class="pre">ramping</span> <span class="pre">from</span> <span class="pre">minimum</span> <span class="pre">to</span> <span class="pre">target</span> <span class="pre">spindle</span> <span class="pre">speed.</span> <span class="pre">More</span> <span class="pre">steps</span> <span class="pre">=</span> <span class="pre">smoother</span> <span class="pre">acceleration'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">8</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">20</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_slow_start_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_steps" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_skip_threshold">
+<span class="sig-name descname"><span class="pre">spindle_slow_start_skip_threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Skip</span> <span class="pre">Threshold</span> <span class="pre">(RPM)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'If</span> <span class="pre">target</span> <span class="pre">speed</span> <span class="pre">is</span> <span class="pre">within</span> <span class="pre">this</span> <span class="pre">RPM</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">minimum</span> <span class="pre">speed,</span> <span class="pre">skip</span> <span class="pre">slow</span> <span class="pre">start</span> <span class="pre">and</span> <span class="pre">go</span> <span class="pre">directly</span> <span class="pre">to</span> <span class="pre">target'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">500</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">5000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_slow_start_skip_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_skip_threshold" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_total_time">
+<span class="sig-name descname"><span class="pre">spindle_slow_start_total_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Total</span> <span class="pre">Ramp</span> <span class="pre">Time</span> <span class="pre">(seconds)'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Total</span> <span class="pre">time</span> <span class="pre">in</span> <span class="pre">seconds</span> <span class="pre">to</span> <span class="pre">ramp</span> <span class="pre">from</span> <span class="pre">minimum</span> <span class="pre">to</span> <span class="pre">target</span> <span class="pre">speed,</span> <span class="pre">distributed</span> <span class="pre">equally</span> <span class="pre">across</span> <span class="pre">all</span> <span class="pre">steps'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="pre">2.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">0.1</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="pre">10.0</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.spindle_slow_start_total_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_total_time" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.axis_4">
+<span class="sig-name descname"><span class="pre">axis_4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'4th</span> <span class="pre">Axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Machine</span> <span class="pre">has</span> <span class="pre">4th</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.axis_4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_4" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.axis_5">
+<span class="sig-name descname"><span class="pre">axis_5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'5th</span> <span class="pre">Axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Machine</span> <span class="pre">has</span> <span class="pre">5th</span> <span class="pre">axis'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.axis_5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_5" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.eval_splitting">
+<span class="sig-name descname"><span class="pre">eval_splitting</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Split</span> <span class="pre">Files'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Split</span> <span class="pre">gcode</span> <span class="pre">file</span> <span class="pre">with</span> <span class="pre">large</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">operations'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.eval_splitting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.eval_splitting" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.split_limit">
+<span class="sig-name descname"><span class="pre">split_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Operations</span> <span class="pre">per</span> <span class="pre">File'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Split</span> <span class="pre">files</span> <span class="pre">with</span> <span class="pre">larger</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">operations</span> <span class="pre">than</span> <span class="pre">this'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">20000000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">800000</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.split_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.split_limit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.collet_size">
+<span class="sig-name descname"><span class="pre">collet_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">FloatProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Collet</span> <span class="pre">Size'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Collet</span> <span class="pre">size</span> <span class="pre">for</span> <span class="pre">collision</span> <span class="pre">detection'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">33</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="pre">1e-05</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">320000</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="pre">PRECISION</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'LENGTH'</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.collet_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.collet_size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.output_block_numbers">
+<span class="sig-name descname"><span class="pre">output_block_numbers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">Block</span> <span class="pre">Numbers'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">block</span> <span class="pre">numbers</span> <span class="pre">ie</span> <span class="pre">N10</span> <span class="pre">at</span> <span class="pre">start</span> <span class="pre">of</span> <span class="pre">line'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.output_block_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_block_numbers" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.start_block_number">
+<span class="sig-name descname"><span class="pre">start_block_number</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Start</span> <span class="pre">Block</span> <span class="pre">Number'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'The</span> <span class="pre">starting</span> <span class="pre">block</span> <span class="pre">number</span> <span class="pre">ie</span> <span class="pre">10'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.start_block_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.start_block_number" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.block_number_increment">
+<span class="sig-name descname"><span class="pre">block_number_increment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">IntProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Block</span> <span class="pre">Number</span> <span class="pre">Increment'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'How</span> <span class="pre">much</span> <span class="pre">the</span> <span class="pre">block</span> <span class="pre">number</span> <span class="pre">should</span> <span class="pre">increment</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">next</span> <span class="pre">line'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.block_number_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.block_number_increment" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_definitions">
+<span class="sig-name descname"><span class="pre">output_tool_definitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">Tool</span> <span class="pre">Definitions'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">tool</span> <span class="pre">definitions'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.output_tool_definitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_definitions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_change">
+<span class="sig-name descname"><span class="pre">output_tool_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">Tool</span> <span class="pre">Change</span> <span class="pre">Commands'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">tool</span> <span class="pre">change</span> <span class="pre">commands</span> <span class="pre">ie:</span> <span class="pre">Tn</span> <span class="pre">M06'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.output_tool_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_change" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.properties.machine_props.CAM_MACHINE_Properties.output_G43_on_tool_change">
+<span class="sig-name descname"><span class="pre">output_G43_on_tool_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BoolProperty</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">G43</span> <span class="pre">on</span> <span class="pre">Tool</span> <span class="pre">Change'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'Output</span> <span class="pre">G43</span> <span class="pre">on</span> <span class="pre">tool</span> <span class="pre">change</span> <span class="pre">line'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="k"><span class="pre">False</span></span><span class="p"><span class="pre">)</span></span></em><a class="reference internal" href="../../../../_modules/fabex/properties/machine_props.html#CAM_MACHINE_Properties.output_G43_on_tool_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_G43_on_tool_change" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../interface_props/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.properties.interface_props</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../material_props/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.properties.material_props</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.path_color"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.path_color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.wire_color"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.wire_color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.unit_system"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.unit_system</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.post_processor"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.post_processor</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.use_position_definitions"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.use_position_definitions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.starting_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.starting_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.mtc_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.mtc_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.ending_position"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.ending_position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.working_area"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.working_area</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_min"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_min</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_max"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_max</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.feedrate_default"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.feedrate_default</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.hourly_rate"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.hourly_rate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_min"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_min</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_max"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_max</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_default"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_default</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_start_time"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_start_time</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_enable"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_enable</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_steps"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_steps</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_skip_threshold"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_skip_threshold</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.spindle_slow_start_total_time"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.spindle_slow_start_total_time</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_4"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.axis_4</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.axis_5"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.axis_5</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.eval_splitting"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.eval_splitting</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.split_limit"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.split_limit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.collet_size"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.collet_size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_block_numbers"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_block_numbers</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.start_block_number"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.start_block_number</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.block_number_increment"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.block_number_increment</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_definitions"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_tool_definitions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_tool_change"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_tool_change</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.properties.machine_props.CAM_MACHINE_Properties.output_G43_on_tool_change"><code class="docutils literal notranslate"><span class="pre">CAM_MACHINE_Properties.output_G43_on_tool_change</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

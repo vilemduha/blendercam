@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.gcode.gcode_import &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/gcode/gcode_import/index';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="fabex.joinery" href="../../joinery/index.html" />
+    <link rel="prev" title="fabex.gcode.gcode_export" href="../gcode_export/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">fabex.gcode</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../gcode_export/index.html">fabex.gcode.gcode_export</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">fabex.gcode.gcode_import</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../joinery/index.html">fabex.joinery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/arc_bar/index.html">fabex.joinery.arc_bar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/finger/index.html">fabex.joinery.finger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/flex/index.html">fabex.joinery.flex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/interlock_twist/index.html">fabex.joinery.interlock_twist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/mortise/index.html">fabex.joinery.mortise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../joinery/multiangle/index.html">fabex.joinery.multiangle</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/compatibility_op/index.html">fabex.operators.compatibility_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/log_ops/index.html">fabex.operators.log_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/name_props/index.html">fabex.properties.name_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../properties/preset_props/index.html">fabex.properties.preset_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../strategies/index.html">fabex.strategies</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/block/index.html">fabex.strategies.block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/carve/index.html">fabex.strategies.carve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/circles/index.html">fabex.strategies.circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/crazy/index.html">fabex.strategies.crazy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cross/index.html">fabex.strategies.cross</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/curve_to_path/index.html">fabex.strategies.curve_to_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/cutout/index.html">fabex.strategies.cutout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/drill/index.html">fabex.strategies.drill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/helix_4_axis/index.html">fabex.strategies.helix_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/medial_axis/index.html">fabex.strategies.medial_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/outline_fill/index.html">fabex.strategies.outline_fill</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel/index.html">fabex.strategies.parallel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/parallel_4_axis/index.html">fabex.strategies.parallel_4_axis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pencil/index.html">fabex.strategies.pencil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/pocket/index.html">fabex.strategies.pocket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/project_curve/index.html">fabex.strategies.project_curve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/spiral/index.html">fabex.strategies.spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../strategies/waterline/index.html">fabex.strategies.waterline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../toolpath/index.html">fabex.toolpath</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/collision_utils/index.html">fabex.utilities.collision_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/curve_utils/index.html">fabex.utilities.curve_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/gear_utils/index.html">fabex.utilities.gear_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_shapely_utils/index.html">fabex.utilities.image_shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/internal_utils/index.html">fabex.utilities.internal_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/logging_utils/index.html">fabex.utilities.logging_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/pack_utils/index.html">fabex.utilities.pack_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parametric_utils/index.html">fabex.utilities.parametric_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/parent_utils/index.html">fabex.utilities.parent_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/polygon_utils/index.html">fabex.utilities.polygon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/relief_utils/index.html">fabex.utilities.relief_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/silhouette_utils/index.html">fabex.utilities.silhouette_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slice_utils/index.html">fabex.utilities.slice_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/slope_utils/index.html">fabex.utilities.slope_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/stroke_utils/index.html">fabex.utilities.stroke_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/voronoi_utils/index.html">fabex.utilities.voronoi_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utilities/waterline_utils/index.html">fabex.utilities.waterline_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../version/index.html">fabex.version</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/fabex/gcode/gcode_import/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.gcode.gcode_import</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.import_gcode"><code class="docutils literal notranslate"><span class="pre">import_gcode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.segments_to_meshdata"><code class="docutils literal notranslate"><span class="pre">segments_to_meshdata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.obj_from_pydata"><code class="docutils literal notranslate"><span class="pre">obj_from_pydata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser"><code class="docutils literal notranslate"><span class="pre">GcodeParser</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.comment"><code class="docutils literal notranslate"><span class="pre">GcodeParser.comment</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.model"><code class="docutils literal notranslate"><span class="pre">GcodeParser.model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_file"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_line"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_line()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_args"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_args()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G1"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G1()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G0"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G0()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G90"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G90()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G91"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G91()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G92"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G92()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.warn"><code class="docutils literal notranslate"><span class="pre">GcodeParser.warn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.error"><code class="docutils literal notranslate"><span class="pre">GcodeParser.error()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel"><code class="docutils literal notranslate"><span class="pre">GcodeModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.parser"><code class="docutils literal notranslate"><span class="pre">GcodeModel.parser</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.relative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.relative</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.offset"><code class="docutils literal notranslate"><span class="pre">GcodeModel.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.isRelative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.isRelative</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.color"><code class="docutils literal notranslate"><span class="pre">GcodeModel.color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.toolnumber"><code class="docutils literal notranslate"><span class="pre">GcodeModel.toolnumber</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.segments"><code class="docutils literal notranslate"><span class="pre">GcodeModel.segments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.layers"><code class="docutils literal notranslate"><span class="pre">GcodeModel.layers</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_G1"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_G1()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_G92"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_G92()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_M163"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_M163()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.set_relative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.set_relative()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.add_segment"><code class="docutils literal notranslate"><span class="pre">GcodeModel.add_segment()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.warn"><code class="docutils literal notranslate"><span class="pre">GcodeModel.warn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.error"><code class="docutils literal notranslate"><span class="pre">GcodeModel.error()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.classify_segments"><code class="docutils literal notranslate"><span class="pre">GcodeModel.classify_segments()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.subdivide"><code class="docutils literal notranslate"><span class="pre">GcodeModel.subdivide()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.draw"><code class="docutils literal notranslate"><span class="pre">GcodeModel.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment"><code class="docutils literal notranslate"><span class="pre">Segment</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.type"><code class="docutils literal notranslate"><span class="pre">Segment.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.coords"><code class="docutils literal notranslate"><span class="pre">Segment.coords</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.color"><code class="docutils literal notranslate"><span class="pre">Segment.color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.toolnumber"><code class="docutils literal notranslate"><span class="pre">Segment.toolnumber</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.lineNb"><code class="docutils literal notranslate"><span class="pre">Segment.lineNb</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.line"><code class="docutils literal notranslate"><span class="pre">Segment.line</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.style"><code class="docutils literal notranslate"><span class="pre">Segment.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.layerIdx"><code class="docutils literal notranslate"><span class="pre">Segment.layerIdx</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.__str__"><code class="docutils literal notranslate"><span class="pre">Segment.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.Z"><code class="docutils literal notranslate"><span class="pre">Layer.Z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.segments"><code class="docutils literal notranslate"><span class="pre">Layer.segments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.distance"><code class="docutils literal notranslate"><span class="pre">Layer.distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.extrudate"><code class="docutils literal notranslate"><span class="pre">Layer.extrudate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.__str__"><code class="docutils literal notranslate"><span class="pre">Layer.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.path"><code class="docutils literal notranslate"><span class="pre">path</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.gcode.gcode_import">
+<span id="fabex-gcode-gcode-import"></span><h1>fabex.gcode.gcode_import<a class="headerlink" href="#module-fabex.gcode.gcode_import" title="Link to this heading">#</a></h1>
+<p>Fabex ‘gcodeimportparser.py’</p>
+<p>Code modified from YAGV (Yet Another G-code Viewer) - <a class="github reference external" href="https://github.com/jonathanwin/yagv">jonathanwin/yagv</a></p>
+<p>No license terms found in YAGV repo, will assume GNU release</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.path" title="fabex.gcode.gcode_import.path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.GcodeParser" title="fabex.gcode.gcode_import.GcodeParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GcodeParser</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.GcodeModel" title="fabex.gcode.gcode_import.GcodeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GcodeModel</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.Segment" title="fabex.gcode.gcode_import.Segment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Segment</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.Layer" title="fabex.gcode.gcode_import.Layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.import_gcode" title="fabex.gcode.gcode_import.import_gcode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_gcode</span></code></a>(self, context, filepath)</p></td>
+<td><p>Import G-code data into the scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.segments_to_meshdata" title="fabex.gcode.gcode_import.segments_to_meshdata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segments_to_meshdata</span></code></a>(segments)</p></td>
+<td><p>Convert a list of segments into mesh data consisting of vertices and</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.gcode.gcode_import.obj_from_pydata" title="fabex.gcode.gcode_import.obj_from_pydata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obj_from_pydata</span></code></a>(name, verts[, edges, close, ...])</p></td>
+<td><p>Create a Blender object from provided vertex and edge data.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.import_gcode">
+<span class="sig-name descname"><span class="pre">import_gcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#import_gcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.import_gcode" title="Link to this definition">#</a></dt>
+<dd><p>Import G-code data into the scene.</p>
+<p>This function reads G-code from a specified file and processes it</p>
+<p>according to the settings defined in the context. It utilizes the</p>
+<p>GcodeParser to parse the file and classify segments of the model.</p>
+<p>Depending on the options set in the scene, it may subdivide the model</p>
+<p>and draw it with or without layer splitting. The time taken for the
+import process is printed to the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<a class="reference internal" href="../../utilities/voronoi_utils/index.html#fabex.utilities.voronoi_utils.Context" title="fabex.utilities.voronoi_utils.Context"><em>Context</em></a>) – The context containing the scene and tool settings.</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>) – The path to the G-code file to be imported.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A dictionary indicating the import status, typically</p>
+<blockquote>
+<div><p>{‘FINISHED’}.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.segments_to_meshdata">
+<span class="sig-name descname"><span class="pre">segments_to_meshdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#segments_to_meshdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.segments_to_meshdata" title="Link to this definition">#</a></dt>
+<dd><p>Convert a list of segments into mesh data consisting of vertices and
+edges.</p>
+<p>This function processes a list of segment objects, extracting the</p>
+<p>coordinates of vertices and defining edges based on the styles of the</p>
+<p>segments. It identifies when to add vertices and edges based on whether</p>
+<p>the segments are in ‘extrude’ or ‘travel’ styles. The resulting mesh</p>
+<p>data can be used for 3D modeling or rendering applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>segments</strong> (<em>list</em>) – <p>A list of segment objects, each containing ‘style’ and</p>
+<p>’coords’ attributes.</p>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple containing two elements:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>list: A list of vertices, where each vertex is represented as a</p></li>
+</ul>
+<p>list of coordinates [X, Y, Z].</p>
+<ul class="simple">
+<li><p>list: A list of edges, where each edge is represented as a list</p></li>
+</ul>
+<p>of indices corresponding to the vertices.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.obj_from_pydata">
+<span class="sig-name descname"><span class="pre">obj_from_pydata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#obj_from_pydata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.obj_from_pydata" title="Link to this definition">#</a></dt>
+<dd><p>Create a Blender object from provided vertex and edge data.</p>
+<p>This function generates a mesh object in Blender using the specified</p>
+<p>vertices and edges. If edges are not provided, it automatically creates</p>
+<p>a chain of edges connecting the vertices. The function also allows for</p>
+<p>the option to close the mesh by connecting the last vertex back to the</p>
+<p>first. Additionally, it can place the created object into a specified</p>
+<p>collection within the Blender scene. The object is scaled down to a</p>
+<p>smaller size for better visibility in the Blender environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the object to be created.</p></li>
+<li><p><strong>verts</strong> (<em>list</em>) – <p>A list of vertex coordinates, where each vertex is represented as a</p>
+<p>tuple of (x, y, z).</p>
+</p></li>
+<li><p><strong>edges</strong> (<em>list?</em>) – A list of edges defined by pairs of vertex indices. Defaults to None.</p></li>
+<li><p><strong>close</strong> (<em>bool?</em>) – <p>Whether to close the mesh by connecting the last vertex to the first.</p>
+<p>Defaults to True.</p>
+</p></li>
+<li><p><strong>collection_name</strong> (<em>str?</em>) – <p>The name of the collection to which the object should be added. Defaults</p>
+<p>to None.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>The function does not return a value; it creates an object in the</p>
+<blockquote>
+<div><p>Blender scene.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GcodeParser</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.comment">
+<span class="sig-name descname"><span class="pre">comment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.comment" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_file">
+<span class="sig-name descname"><span class="pre">parse_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_file" title="Link to this definition">#</a></dt>
+<dd><p>Parse a G-code file and update the model.</p>
+<p>This function reads a G-code file line by line, increments a line</p>
+<p>counter for each line, and processes each line using the <cite>parseLine</cite></p>
+<p>method. The function assumes that the file is well-formed and that each</p>
+<p>line can be parsed without errors. After processing all lines, it</p>
+<p>returns the updated model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The file path to the G-code file to be parsed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated model after parsing the G-code file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_line">
+<span class="sig-name descname"><span class="pre">parse_line</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_line" title="Link to this definition">#</a></dt>
+<dd><p>Parse a line of G-code and execute the corresponding command.</p>
+<p>This method processes a line of G-code by stripping comments, cleaning</p>
+<p>the command, and identifying the command code and its arguments. It</p>
+<p>handles specific G-code commands and invokes the appropriate parsing</p>
+<p>method if available. If the command is unsupported, it prints an error</p>
+<p>message. The method also manages tool numbers and coordinates based on
+the parsed command.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_args">
+<span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_args" title="Link to this definition">#</a></dt>
+<dd><p>Parse command-line arguments into a dictionary.</p>
+<p>This function takes a string of arguments, splits it into individual</p>
+<p>components, and maps each component’s first character to its</p>
+<p>corresponding numeric value. If a numeric value cannot be converted from</p>
+<p>the string, it defaults to 1. The resulting dictionary contains the</p>
+<p>first characters as keys and their associated numeric values as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>str</em>) – <p>A string of space-separated arguments, where each argument</p>
+<p>consists of a letter followed by a numeric value.</p>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping each letter to its corresponding numeric value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_G1">
+<span class="sig-name descname"><span class="pre">parse_G1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_G1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_G1" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_G0">
+<span class="sig-name descname"><span class="pre">parse_G0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'G0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_G0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_G0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_G90">
+<span class="sig-name descname"><span class="pre">parse_G90</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_G90"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_G90" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_G91">
+<span class="sig-name descname"><span class="pre">parse_G91</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_G91"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_G91" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.parse_G92">
+<span class="sig-name descname"><span class="pre">parse_G92</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.parse_G92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.parse_G92" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.warn">
+<span class="sig-name descname"><span class="pre">warn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.warn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.warn" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeParser.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeParser.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeParser.error" title="Link to this definition">#</a></dt>
+<dd><p>Log an error message and raise an exception.</p>
+<p>This method prints an error message to the console, including the line</p>
+<p>number, the provided message, and the text associated with the error.</p>
+<p>After logging the error, it raises a generic Exception with the same
+message format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – The error message to be logged.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – Always raises an Exception with the formatted error message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GcodeModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.parser">
+<span class="sig-name descname"><span class="pre">parser</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.parser" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.relative">
+<span class="sig-name descname"><span class="pre">relative</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.relative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.relative" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.offset" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.isRelative">
+<span class="sig-name descname"><span class="pre">isRelative</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.isRelative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.isRelative" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.color">
+<span class="sig-name descname"><span class="pre">color</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.toolnumber">
+<span class="sig-name descname"><span class="pre">toolnumber</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.toolnumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.toolnumber" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.segments">
+<span class="sig-name descname"><span class="pre">segments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.segments" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.layers">
+<span class="sig-name descname"><span class="pre">layers</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.layers" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.do_G1">
+<span class="sig-name descname"><span class="pre">do_G1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.do_G1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.do_G1" title="Link to this definition">#</a></dt>
+<dd><p>Perform a rapid or controlled movement based on the provided arguments.</p>
+<p>This method updates the current coordinates based on the input</p>
+<p>arguments, either in relative or absolute terms. It constructs a segment</p>
+<p>representing the movement and adds it to the model if there are changes</p>
+<p>in the XYZ coordinates. The function handles unknown axes by issuing a</p>
+<p>warning and ensures that the segment is only added if there are actual
+changes in position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>dict</em>) – A dictionary containing movement parameters for each axis.</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – <p>The type of movement (e.g., ‘G0’ for rapid move, ‘G1’ for controlled</p>
+<p>move).</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.do_G92">
+<span class="sig-name descname"><span class="pre">do_G92</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.do_G92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.do_G92" title="Link to this definition">#</a></dt>
+<dd><p>Set the current position of the axes without moving.</p>
+<p>This method updates the current coordinates for the specified axes based</p>
+<p>on the provided arguments. If no axes are mentioned, it sets all axes</p>
+<p>(X, Y, Z) to zero. The method adjusts the offset values by transferring</p>
+<p>the difference between the relative and specified values for each axis.</p>
+<p>If an unknown axis is provided, a warning is issued.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>dict</em>) – <p>A dictionary containing axis names as keys</p>
+<p>(e.g., ‘X’, ‘Y’, ‘Z’) and their corresponding</p>
+<p>position values as float.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.do_M163">
+<span class="sig-name descname"><span class="pre">do_M163</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.do_M163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.do_M163" title="Link to this definition">#</a></dt>
+<dd><p>Update the color settings for a specific segment based on given
+parameters.</p>
+<p>This method modifies the color attributes of an object by updating the</p>
+<p>CMYKW values for a specified segment. It first creates a new list from</p>
+<p>the existing color attribute to avoid reference issues. The method then</p>
+<p>extracts the index and weight from the provided arguments and updates</p>
+<p>the color list accordingly. Additionally, it retrieves RGB values from
+the last comment and applies them to the color list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>dict</em>) – <p>A dictionary containing the parameters for the operation.</p>
+<ul class="simple">
+<li><p>’S’ (int): The index of the segment to update.</p></li>
+<li><p>’P’ (float): The weight to set for the CMYKW color component.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This method does not return a value; it modifies the object’s state.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.set_relative">
+<span class="sig-name descname"><span class="pre">set_relative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isRelative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.set_relative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.set_relative" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.add_segment">
+<span class="sig-name descname"><span class="pre">add_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.add_segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.add_segment" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.warn">
+<span class="sig-name descname"><span class="pre">warn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.warn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.warn" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.error" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.classify_segments">
+<span class="sig-name descname"><span class="pre">classify_segments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.classify_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.classify_segments" title="Link to this definition">#</a></dt>
+<dd><p>Classify segments into layers based on their coordinates and extrusion</p>
+<p>style.</p>
+<p>This method processes a list of segments, determining their extrusion</p>
+<p>style (travel, retract, restore, or extrude) based on the movement of</p>
+<p>the coordinates and the state of the extruder. It organizes the segments</p>
+<p>into layers, which are used for later rendering. The classification is</p>
+<p>based on changes in the Z-coordinate and the extruder’s position.  The</p>
+<p>function initializes the coordinates and iterates through each segment,</p>
+<p>checking for movements in the X, Y, and Z directions. It identifies when</p>
+<p>a new layer begins based on changes in the Z-coordinate and the</p>
+<p>extruder’s state. Segments are then grouped into layers for further</p>
+<p>processing.  Raises:     None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.subdivide">
+<span class="sig-name descname"><span class="pre">subdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subd_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.subdivide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.subdivide" title="Link to this definition">#</a></dt>
+<dd><p>Subdivide segments based on a specified threshold.</p>
+<p>This method processes a list of segments and subdivides them into</p>
+<p>smaller segments if the distance between consecutive segments exceeds</p>
+<p>the given threshold. The subdivision is performed by interpolating</p>
+<p>points between the original segment’s coordinates, ensuring that the</p>
+<p>resulting segments maintain the original order and properties. This is</p>
+<p>particularly useful for manipulating attributes such as color and</p>
+<p>continuous deformation in graphical representations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subd_threshold</strong> (<em>float</em>) – <p>The distance threshold for subdividing segments.</p>
+<p>Segments with a distance greater than this value</p>
+<p>will be subdivided.</p>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The method modifies the instance’s segments attribute in place.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.GcodeModel.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">split_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#GcodeModel.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.GcodeModel.draw" title="Link to this definition">#</a></dt>
+<dd><p>Draws a mesh from segments and layers.</p>
+<p>This function creates a Blender curve and vertex information in a text</p>
+<p>file, which includes coordinates, style, and color. If the</p>
+<p><cite>split_layers</cite> parameter is set to True, it processes each layer</p>
+<p>individually, generating vertices and edges for each layer. If False, it</p>
+<p>processes the segments as a whole.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>split_layers</strong> (<em>bool</em>) – <p>A flag indicating whether to split the drawing into</p>
+<p>separate layers or not.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolnumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineNb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.coords">
+<span class="sig-name descname"><span class="pre">coords</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.coords" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.color">
+<span class="sig-name descname"><span class="pre">color</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.toolnumber">
+<span class="sig-name descname"><span class="pre">toolnumber</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.toolnumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.toolnumber" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.lineNb">
+<span class="sig-name descname"><span class="pre">lineNb</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.lineNb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.lineNb" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.line">
+<span class="sig-name descname"><span class="pre">line</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.line" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.style">
+<span class="sig-name descname"><span class="pre">style</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.style" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.layerIdx">
+<span class="sig-name descname"><span class="pre">layerIdx</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.layerIdx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.layerIdx" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Segment.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Segment.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Segment.__str__" title="Link to this definition">#</a></dt>
+<dd><p>Return a string representation of the object.</p>
+<p>This method constructs a string that includes the coordinates, line</p>
+<p>number, style, layer index, and color of the object. It formats these</p>
+<p>attributes into a readable string format for easier debugging and
+logging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A formatted string representing the object’s attributes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer.Z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer.Z" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer.segments">
+<span class="sig-name descname"><span class="pre">segments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer.segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer.segments" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer.distance" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer.extrudate">
+<span class="sig-name descname"><span class="pre">extrudate</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer.extrudate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer.extrudate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.Layer.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#Layer.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.Layer.__str__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="fabex.gcode.gcode_import.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'test.gcode'</span></em><a class="reference internal" href="../../../../_modules/fabex/gcode/gcode_import.html#path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.gcode.gcode_import.path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../gcode_export/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.gcode.gcode_export</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../joinery/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.joinery</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.import_gcode"><code class="docutils literal notranslate"><span class="pre">import_gcode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.segments_to_meshdata"><code class="docutils literal notranslate"><span class="pre">segments_to_meshdata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.obj_from_pydata"><code class="docutils literal notranslate"><span class="pre">obj_from_pydata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser"><code class="docutils literal notranslate"><span class="pre">GcodeParser</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.comment"><code class="docutils literal notranslate"><span class="pre">GcodeParser.comment</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.model"><code class="docutils literal notranslate"><span class="pre">GcodeParser.model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_file"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_line"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_line()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_args"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_args()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G1"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G1()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G0"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G0()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G90"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G90()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G91"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G91()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.parse_G92"><code class="docutils literal notranslate"><span class="pre">GcodeParser.parse_G92()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.warn"><code class="docutils literal notranslate"><span class="pre">GcodeParser.warn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeParser.error"><code class="docutils literal notranslate"><span class="pre">GcodeParser.error()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel"><code class="docutils literal notranslate"><span class="pre">GcodeModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.parser"><code class="docutils literal notranslate"><span class="pre">GcodeModel.parser</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.relative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.relative</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.offset"><code class="docutils literal notranslate"><span class="pre">GcodeModel.offset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.isRelative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.isRelative</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.color"><code class="docutils literal notranslate"><span class="pre">GcodeModel.color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.toolnumber"><code class="docutils literal notranslate"><span class="pre">GcodeModel.toolnumber</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.segments"><code class="docutils literal notranslate"><span class="pre">GcodeModel.segments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.layers"><code class="docutils literal notranslate"><span class="pre">GcodeModel.layers</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_G1"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_G1()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_G92"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_G92()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.do_M163"><code class="docutils literal notranslate"><span class="pre">GcodeModel.do_M163()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.set_relative"><code class="docutils literal notranslate"><span class="pre">GcodeModel.set_relative()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.add_segment"><code class="docutils literal notranslate"><span class="pre">GcodeModel.add_segment()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.warn"><code class="docutils literal notranslate"><span class="pre">GcodeModel.warn()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.error"><code class="docutils literal notranslate"><span class="pre">GcodeModel.error()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.classify_segments"><code class="docutils literal notranslate"><span class="pre">GcodeModel.classify_segments()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.subdivide"><code class="docutils literal notranslate"><span class="pre">GcodeModel.subdivide()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.GcodeModel.draw"><code class="docutils literal notranslate"><span class="pre">GcodeModel.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment"><code class="docutils literal notranslate"><span class="pre">Segment</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.type"><code class="docutils literal notranslate"><span class="pre">Segment.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.coords"><code class="docutils literal notranslate"><span class="pre">Segment.coords</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.color"><code class="docutils literal notranslate"><span class="pre">Segment.color</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.toolnumber"><code class="docutils literal notranslate"><span class="pre">Segment.toolnumber</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.lineNb"><code class="docutils literal notranslate"><span class="pre">Segment.lineNb</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.line"><code class="docutils literal notranslate"><span class="pre">Segment.line</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.style"><code class="docutils literal notranslate"><span class="pre">Segment.style</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.layerIdx"><code class="docutils literal notranslate"><span class="pre">Segment.layerIdx</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Segment.__str__"><code class="docutils literal notranslate"><span class="pre">Segment.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.Z"><code class="docutils literal notranslate"><span class="pre">Layer.Z</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.segments"><code class="docutils literal notranslate"><span class="pre">Layer.segments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.distance"><code class="docutils literal notranslate"><span class="pre">Layer.distance</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.extrudate"><code class="docutils literal notranslate"><span class="pre">Layer.extrudate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.Layer.__str__"><code class="docutils literal notranslate"><span class="pre">Layer.__str__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.gcode.gcode_import.path"><code class="docutils literal notranslate"><span class="pre">path</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
