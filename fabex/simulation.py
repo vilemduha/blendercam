@@ -95,12 +95,10 @@ def create_simulation_object(name, operations, i):
         t.image = i
 
     else:
-
         bpy.ops.texture.new()
 
         for t in bpy.data.textures:
             if t.name == "Texture":
-
                 t.type = "IMAGE"
                 t.name = oname
                 t = t.type_recast()
@@ -128,7 +126,6 @@ def create_simulation_object(name, operations, i):
         asset_library,
         current_file,
     ):
-
         for material in asset_library.materials:
             if material == material_name:
                 current_file.materials.append(material)

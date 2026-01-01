@@ -113,7 +113,9 @@ def export_gcode_path(filename, vertslist, operations):
     unitcorr = (
         METRIC_CORRECTION
         if unit_system == "METRIC"
-        else IMPERIAL_CORRECTION if unit_system == "IMPERIAL" else 1
+        else IMPERIAL_CORRECTION
+        if unit_system == "IMPERIAL"
+        else 1
     )
 
     rotcorr = ROTATION_CORRECTION

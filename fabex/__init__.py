@@ -53,7 +53,6 @@ classes = (
 
 
 def register() -> None:
-
     # Register classes from the list above
     for cls in classes:
         bpy.utils.register_class(cls)
