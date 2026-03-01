@@ -19,6 +19,7 @@ import numpy as np
 import pickle
 
 from shapely.geometry import Polygon
+from shapely.ops import unary_union
 
 import bpy
 from bpy_extras import object_utils
