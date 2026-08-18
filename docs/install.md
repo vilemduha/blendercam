@@ -11,7 +11,7 @@ To use **Fabex** with **Blender** 4.1 and earlier use one of the **blendercam.zi
 
 ```{note}
 If you are a Linux user, it is recommended that you download **Blender** from their website, and **NOT install via a Package Manager.**
-**Blender** has elected to support only Python 3.11 for Extensions, so Fabex is packaged with dependencies that are only compatible with Python 3.11.
+**Fabex** packages dependencies for Python 3.11 and 3.13. Official Blender 4.2 through 5.0 builds use Python 3.11, while Blender 5.1+ uses Python 3.13. Python 3.13 wheels are currently included for Windows x64.
 Since many distros will allow you to install **Blender** and Python separately this can lead to version mismatch and a broken Extension.
 
 *For details on how to work around this issue, see the FAQ.*

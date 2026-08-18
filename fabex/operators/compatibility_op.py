@@ -14,17 +14,18 @@ class Fabex_Compatibility_Panel(Operator):
     architecture = platform.uname()[4]
     python_version = sys.version.split(" (")[0]
     python_executable = sys.executable
-    correct_python_version = "3.11.13"
+    supported_python_versions = ((3, 11), (3, 13))
+    supported_python_text = "3.11 or 3.13"
 
     string_1 = f"""Hello and welcome to Fabex!
 This popup will check your system for compatibility and assist with issues in the installation process."""
 
-    string_2 = f"""Fabex officially supports Blender 4.2+ using Python {correct_python_version}.
-We recommend downloading Blender from blender.org so it comes with the correct version of Python."""
+    string_2 = f"""Fabex officially supports Blender 4.2+ using Python {supported_python_text}.
+We recommend downloading Blender from blender.org so it comes with a supported Python version."""
 
     string_3 = f"""Linux users may install Blender with a Package Manager then find that Fabex will not install / work correctly.
 apt, dnf, pacman, zypper etc. will provide copies of Blender that use your system's Python install.
-If your Python version is not ⚠️⚠️⚠️ EXACTLY {correct_python_version} ⚠️⚠️⚠️ then Fabex will not install / work correctly.
+If your Python version is not ⚠️⚠️⚠️ {supported_python_text} ⚠️⚠️⚠️ then Fabex will not install / work correctly.
     """
 
     string_4 = f"""{'OS:':>19} {os}
@@ -33,7 +34,7 @@ Architecture: {architecture}
 {'Python:':>16} {python_version}
 {'Location:':>15} {python_executable}"""
 
-    compatible = python_version == correct_python_version
+    compatible = sys.version_info[:2] in supported_python_versions
 
     title: StringProperty(default="Fabex Compatibility Check")
 
@@ -135,7 +136,7 @@ Architecture: {architecture}
             col.label(
                 text="You can manually manage the packages available to Blender's Python to resolve missing modules."
             )
-            col.label(text="Fabex comes with pre-built binary packages for Python 3.11.13")
+            col.label(text="Fabex comes with pre-built binary packages for Python 3.11 and 3.13")
             col.label(
                 text="You will need to provide replacements for: shapely, opencamlib, llvmlite, numba"
             )

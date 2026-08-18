@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 100
 exclude = "/fabex/presets/"
-target-version = ['py311']
+target-version = ['py311', 'py313']
 include = '\.py'
 

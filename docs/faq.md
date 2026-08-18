@@ -121,17 +121,17 @@ Unfortunately, the Extension system is not without issues, leading to the next m
 ## I can't install or enable **Fabex**, what's going on?
 *Or - 'I get an error that says `No module name 'shapely.lib'`, but I can still `import shapely`'*
 
-**Blender** officially supports Python 3.11. At the time of this writing, Python 3.13 is the latest release.
+Official **Blender** builds use Python 3.11 in Blender 4.2 through 5.0 and Python 3.13 in Blender 5.1 and later.
 
 Users whose **Blender** installs do not come from the **Blender** website may not come with their own Python binary, and will fall back on their system's Python installation.
 
-If this is Python 3.12 or higher, then **Fabex** will not work, but most of **Blender** still will.
+If this is a Python version other than 3.11 or 3.13, then **Fabex** will not work, but most of **Blender** still will. Fabex currently bundles Python 3.13 binary dependencies for Windows x64.
 
-If you are not comfortable with Python version or dependency management, then the easiest option is to just download **Blender** from their website - it will include Python 3.11, and **Fabex** and all other Extensions will work.
+If you are not comfortable with Python version or dependency management, the easiest option is to download **Blender** from its official website so it includes the Python version expected by that Blender release.
 
 If you have installed **Blender** from a package manager and you want to make **Fabex** work, you have a couple of options:
 - manually manage the dependencies by `pip install`-ing `shapely`, and `opencamlib`
-- manually manage Python versions by installing 3.11, or using a version management tool like `pyenv`
+- manually manage Python versions by installing 3.11 or 3.13, or using a version management tool like `pyenv`
 
 ---
 ## Where is **Fabex** installed?
