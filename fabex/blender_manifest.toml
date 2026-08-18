@@ -1,7 +1,7 @@
 schema_version = "3.0.2"
 
 id = "fabex"
-version = "3.0.2"
+version = "3.0.3"
 name = "Fabex CNC (formerly BlenderCAM)"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
@@ -30,6 +30,7 @@ wheels = [
   "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-win_amd64.whl",
+  "./wheels/llvmlite-0.49.0-cp313-cp313-win_amd64.whl",
 
     # numba
   "./wheels/numba-0.60.0-cp311-cp311-macosx_10_9_x86_64.whl",
@@ -37,6 +38,7 @@ wheels = [
   "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-win_amd64.whl",
+  "./wheels/numba-0.67.0-cp313-cp313-win_amd64.whl",
 
     # opencamlib
   "./wheels/opencamlib-2023.1.11-cp311-cp311-macosx_10_9_x86_64.whl",
@@ -45,6 +47,7 @@ wheels = [
   "./wheels/opencamlib-2023.1.11-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-win_amd64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-win32.whl",
+  "./wheels/opencamlib-2022.12.18-cp313-cp313-win_amd64.whl",
 
     # shapely
   "./wheels/shapely-2.0.5-cp311-cp311-macosx_10_9_x86_64.whl",
@@ -53,6 +56,7 @@ wheels = [
   "./wheels/shapely-2.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-win_amd64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-win32.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-win_amd64.whl",
 ]
 
 [permissions]

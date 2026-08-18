@@ -1,7 +1,7 @@
 # ! IMPORTANT ! BEFORE YOU INSTALL !
 Most issues during installation can be avoided by checking a few settings first:
-### Python must be v3.11
-Download Blender from blender.org to ensure that it comes with the correct Python version.  Blender installed via Package Managers will often use a different / incompatible version of Python. Fabex comes packed with Python dependencies for v3.11 only, using a different Python version is not officially supported, and you are responsible for sourcing and managing dependencies.
+### Python must be v3.11 or v3.13
+Download Blender from blender.org to ensure that it comes with a supported Python version. Blender installed via Package Managers may use a different, incompatible Python version. Fabex includes Python 3.11 dependencies for Blender 4.2 through 5.0 on all supported platforms and Python 3.13 dependencies for Blender 5.1+ on Windows x64.
 ### Enable Online Access
 Fabex requires addons that used to ship as part of Blender, but have now been moved to an online repository. `Enable Online Access` in Blender's `Preferences > System` before installing and Fabex will automatically download what it needs.
 ### Restart After Installation
