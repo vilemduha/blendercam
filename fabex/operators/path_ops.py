@@ -676,7 +676,10 @@ class PathsChain(Operator, AsyncOperatorMixin):
             path_prefix = bpy.context.scene.cam_names.path_prefix
             meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
 
-        export_gcode_path(chain.filename, meshes, chainops)
+        name_raw = chain.name if chain.link_chain_file_names else chain.filename
+        name = safe_filename(name_raw)
+
+        export_gcode_path(name, meshes, chainops)
         return {"FINISHED"}
 
 
@@ -733,7 +736,10 @@ class PathExportChain(Operator):
             path_prefix = bpy.context.scene.cam_names.path_prefix
             meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
 
-        export_gcode_path(chain.filename, meshes, chainops)
+        name_raw = chain.name if chain.link_chain_file_names else chain.filename
+        name = safe_filename(name_raw)
+
+        export_gcode_path(name, meshes, chainops)
         return {"FINISHED"}
 
 

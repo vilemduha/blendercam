@@ -1,0 +1,9 @@
+# Ignore newly generated .tap and .gcode files
+**.tap
+**.gcode
+# Ignore blend file backups
+*.blend1
+# Track reference .tap and .gcode files (names start with _)
+!_**.tap
+!_**.gcode
+!.gitignore

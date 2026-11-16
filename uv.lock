@@ -74,14 +74,14 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "bpy", specifier = ">=5.1.2" },
+    { name = "bpy", specifier = ">=5.3" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = ">=0.16.0" },
 ]
 
 [[package]]
 name = "bpy"
-version = "5.2.3"
+version = "5.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cattrs" },
@@ -91,10 +91,10 @@ dependencies = [
     { name = "zstandard" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/56/c6393e1a9695d1b80d88c15fcec372932fc92cac0c873b521cf3b58abeef/bpy-5.2.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:3e34901f855ca1b11b19457cfd6720fb4d31e5860f6dbe336148051a8b4f3480", size = 245184706, upload-time = "2026-10-22T09:46:23.138Z" },
-    { url = "https://files.pythonhosted.org/packages/66/e7/810fe7b89d36b98e28a0774b38bf227e926e0c8e01f5bfc6933986f2c5bf/bpy-5.2.3-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:8ef4a335930d647233c661ae21be1abf81207af33e1440fc5a4fc2f2f2d44db7", size = 402843256, upload-time = "2026-10-22T09:45:16.824Z" },
-    { url = "https://files.pythonhosted.org/packages/95/82/c0403458ffdb3fd8119e643819cc942f7e1b250c3265ba57d3b9d0eb3d8a/bpy-5.2.3-cp313-cp313-win_amd64.whl", hash = "sha256:81c6aed7a0f2f6e755a51b507687e5b719b15dfea818859b59af351fac8cce96", size = 339609561, upload-time = "2026-10-22T09:47:54.215Z" },
-    { url = "https://files.pythonhosted.org/packages/e3/1b/3eebc7e79b4c2633fdfeb052ad8b4ba554f1224289913e084eac8f7e7b65/bpy-5.2.3-cp313-cp313-win_arm64.whl", hash = "sha256:dd3304de44a2471ac46465384cae6f99687ca4028eddfde68656aae84fb2fe3d", size = 210635222, upload-time = "2026-10-22T09:49:08.862Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/6d/4ebf0e7c2630232ffe8a6cb5eca6377858b6e65c3861a1169bf44a8a61b4/bpy-5.3.0-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:75f306ce22e7f020021bee53810343bd21d8fbd8e48c060bcbf3b7dfb61caac5", size = 254501590, upload-time = "2026-11-10T16:37:08.201Z" },
+    { url = "https://files.pythonhosted.org/packages/a1/15/b54ab677660ca4bf957de2787f6ea394d3e1f275bb3587accffefadb7fe8/bpy-5.3.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:5850cd39369e4cd8c67ed067d39ec1e57426103ddc709436e13209b56665c6a0", size = 427524100, upload-time = "2026-11-10T16:34:39.39Z" },
+    { url = "https://files.pythonhosted.org/packages/61/4f/2864babf5d1535d18dfce52fef02774e6d6de901cbdfb2acc46c2ba69fc3/bpy-5.3.0-cp313-cp313-win_amd64.whl", hash = "sha256:9501b722e49b61ac9dcc8b2fded7a0de4e9dc05852d75abe10b76baf4cc5fb5e", size = 356260532, upload-time = "2026-11-10T16:22:55.63Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/1d/c1e5631d718b374d264e0fbbf06253e59884d44edf91fba9f716792826bb/bpy-5.3.0-cp313-cp313-win_arm64.whl", hash = "sha256:011e865d6689c529449a3d2d1a7ba1a8e4de69741ff070d92fe71a37444a5b16", size = 236297335, upload-time = "2026-11-10T16:19:22.457Z" },
 ]
 
 [[package]]

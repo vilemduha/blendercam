@@ -94,7 +94,7 @@ target-version = 'py313'
 
 [dependency-groups]
 dev = [
-    "bpy>=5.1.2",
+    "bpy>=5.3",
     "pytest>=9.1.1",
     "ruff>=0.16.0",
 ]

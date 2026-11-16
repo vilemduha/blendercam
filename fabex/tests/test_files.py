@@ -156,7 +156,7 @@ class BlendFileTest(TestCase):
         paths = [
             ("cam_path_fern", 8532),
             ("cam_path_MedialPocket", 1751),
-            # ("cam_path_Text_MedialPocket", 1572),
+            # ("cam_path_Text_MedialPocket", 1572), # Need to re-add equivalent later
             ("cam_path_text", 4340),
         ]
         run_test_file(test)

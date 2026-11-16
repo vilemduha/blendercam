@@ -2,7 +2,7 @@
 *.pyc
 *.ocio
 *.spi3d
-*.blend1
+# *.blend1
 *.zip
 
 .venv
