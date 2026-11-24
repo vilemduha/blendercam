@@ -4,10 +4,9 @@
 # Simple ISO NC code parsing
 #
 
-import nc_read as nc
 import re
-import sys
-import math
+
+import nc_read as nc
 
 ################################################################################
 
@@ -18,11 +17,11 @@ class Parser(nc.Parser):
 
         self.pattern_main = re.compile(
             "([(!;].*"
-            "|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?"
-            "|\w\#\d+|\(.*?\)"
-            "|\#\d+\=(?:[+-])?\d*(?:\.\d*)? )"
+            r"|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?"
+            r"|\w\#\d+|\(.*?\)"
+            r"|\#\d+\=(?:[+-])?\d*(?:\.\d*)? )"
         )
-        self.pattern_tool = re.compile("([(!;].*" "|\S+" "|\s+|\d)")
+        self.pattern_tool = re.compile(r"([(!;].*|\S+|\s+|\d)")
         self.oldx = 0
         self.oldy = 0
         self.oldz = 150
@@ -40,10 +39,9 @@ class Parser(nc.Parser):
                 self.col = "tool call"
                 self.move = False
             elif self.col == "tool call":
-                if not self.t > 0:
-                    if word[0] >= "0" and word[0] <= "9":
-                        self.t = eval(word[0:])
-                        self.col = "tool no"
+                if not self.t > 0 and word[0] >= "0" and word[0] <= "9":
+                    self.t = eval(word[0:])
+                    self.col = "tool no"
         except:
             pass
 
@@ -139,17 +137,17 @@ class Parser(nc.Parser):
                     self.add_line(self.x, self.y, self.z, self.a, self.b, self.rapid)
                 else:
                     self.add_arc(self.x, self.y, self.z, self.i, self.j, self.k, self.r, self.arc)
-                if self.x != None:
+                if self.x is not None:
                     self.oldx = self.x
-                if self.y != None:
+                if self.y is not None:
                     self.oldy = self.y
-                if self.z != None:
+                if self.z is not None:
                     self.oldz = self.z
-                if self.a != None:
+                if self.a is not None:
                     self.olda = self.a
-                if self.b != None:
+                if self.b is not None:
                     self.oldb = self.b
-                if self.c != None:
+                if self.c is not None:
                     self.oldc = self.c
 
             elif self.t:

@@ -1,5 +1,4 @@
-from . import nc
-from . import iso
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -37,14 +36,13 @@ class Creator(iso.Creator):
     # def PLANE_YZ(self): return('19\n')
 
     def dwell(self, t):
-        pass
         """
-		self.write_blocknum()
-		self.write_preps()
-		self.write(self.FORMAT_DWELL() % t)
-		self.write_misc()
-		self.write('\n')
-		"""
+        self.write_blocknum()
+        self.write_preps()
+        self.write(self.FORMAT_DWELL() % t)
+        self.write_misc()
+        self.write('\n')
+        """
 
     def tool_change(self, id):
         pass

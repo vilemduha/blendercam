@@ -7,11 +7,8 @@
 #
 ################################################################################
 
-from . import nc
-from . import iso
-import math
+from . import iso, nc
 from .format import Format
-from .format import *
 
 
 class Creator(iso.Creator):
@@ -48,7 +45,7 @@ class Creator(iso.Creator):
         return "%i"
 
     def COMMENT(self, comment):
-        return ";%s" % comment
+        return f";{comment}"
 
     def BEGIN_PGM(self):
         return "BEGIN PGM %i"
@@ -157,24 +154,24 @@ class Creator(iso.Creator):
 
         self.write_preps()
 
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
 
-        if y != None:
-            dy = y - self.y
+        if y is not None:
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
             self.y = y
 
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
@@ -186,7 +183,7 @@ class Creator(iso.Creator):
         self.write_misc()
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        (x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
+        (x, y, z, _a, _b, _c, axis_count) = self.filter_xyz(x, y, z)
         if axis_count == 0:
             return
 
@@ -197,23 +194,23 @@ class Creator(iso.Creator):
 
         dx = dy = dz = 0
 
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if y != None:
-            dy = y - self.y
+        if y is not None:
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
 
             self.y = y
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
@@ -229,7 +226,7 @@ class Creator(iso.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
 
 nc.creator = Creator()

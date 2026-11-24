@@ -1,87 +1,39 @@
 name: Run tests on push / PR
+
 on:
   push:
   pull_request:
+
 jobs:
   build_and_test:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest','windows-latest']
-        blender_version: ['5.0.0']
-        # include:
-        #   - os: 'macos-latest'
-        #     blender_version: '4.2.1'
+        # Enter the OS to use
+        # And the version of Blender to install
+        os: ['ubuntu-latest','windows-latest', 'macos-latest']
+        blender_version: ['5.2']
     runs-on: ${{ matrix.os }}
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.1
-    # - name: Install bash 4(macOS)
-    #   if: runner.os == 'macOS'
-    #   run: brew install bash
-    # - name: Install blender (macOS)
-    #   if: runner.os == 'macOS'
-    #   run: brew install --cask blender
-    - name: Cache blender
-      id: cache-blender
-      if: runner.os != 'macOS'
-      uses:  actions/cache/restore@v4
+      # Blender Install Action
+    - uses: actions/checkout@v5
+    - name: Install Blender
+      uses: bradyajohnston/setup-blender@v5
       with:
-        path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-    - name: Download blender
-      id: download
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      shell: bash
+        version: ${{ matrix.blender_version }}
+
+      # Install uv 
+    - name: Install uv
+      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+
+      # uv lockfile ensures we use the custom opencamlib wheel
+    - name: Test
       run: |
-        declare -A os_suffixes
-        os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
-        os_suffixes["macos-latest"]="macos-x64.dmg"
-        os_suffixes["windows-latest"]="windows-x64.zip"
-        export OS_SUFFIX=${os_suffixes["${{ matrix.os }}"]}
-        IFS='.' read -ra BLENDER_SPLIT <<< "${{ matrix.blender_version }}"
-        export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
-        export BLENDER_MINOR=${BLENDER_SPLIT[2]}
-        export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
-        echo Major version: $BLENDER_MAJOR
-        echo Minor version: $BLENDER_MINOR
-        echo Archive name: $BLENDER_ARCHIVE
-        curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
-        echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
-    - name: Extract blender
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      run: |
-        import shutil
-        import os
-        os.makedirs("blender",exist_ok=True)
-        shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
-      shell: python
-    - name: Save blender
-      uses:  actions/cache/save@v4
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      with:
-        path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-    - name: Make addon zip
-      uses: thedoctor0/zip-release@0.7.5
-      if: always()
-      with:
-        type: 'zip'
-        filename: 'blendercam.zip'
-        directory: './'
-        path: 'fabex'
-        exclusions: '/*docs/* /*tests/*'
-    - name: Run tests
-      shell: bash
-      run: |
-        if [ "${{ runner.os }}" != "macOS" ]; then
-          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-          export PATH=$PATH:${BLENDER_BIN_PATH}
-        fi
-        export ADDON_PATH=${PWD}/blendercam.zip
-        cd tests
-        python install_addon.py ${ADDON_PATH}
-        python test_suite.py -vvv
+        uv sync --locked --all-extras --dev
+        uv run ruff format .
+        uv run pytest -vvv -rA --ignore=blender --capture=sys
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:

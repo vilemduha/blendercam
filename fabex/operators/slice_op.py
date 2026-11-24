@@ -4,23 +4,22 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.props import (
     BoolProperty,
-    EnumProperty,
-    StringProperty,
     FloatProperty,
 )
 from bpy.types import Operator
 
 from ..constants import PRECISION
+from ..utilities.bounds_utils import get_bounds_worldspace
+from ..utilities.logging_utils import log
 from ..utilities.slice_utils import (
     slicing_2d,
     slicing_3d,
 )
-
-from ..utilities.bounds_utils import get_bounds_worldspace
-from ..utilities.logging_utils import log
 
 
 class CamSliceObjects(Operator):
@@ -29,7 +28,7 @@ class CamSliceObjects(Operator):
     # warning, this is a separate and neglected feature, it's a mess - by now it just slices up the object.
     bl_idname = "object.cam_slice_objects"
     bl_label = "Slice Object - Useful for Lasercut Puzzles etc"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     slice_distance: FloatProperty(
         name="Slicing Distance",
@@ -90,7 +89,7 @@ class CamSliceObjects(Operator):
             bpy.context.scene.collection.children.link(tcollection)
 
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
-        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
+        _minx, _miny, minz, _maxx, _maxy, maxz = get_bounds_worldspace([ob])
 
         start_height = minz
         if above0 and minz < 0:
@@ -105,7 +104,7 @@ class CamSliceObjects(Operator):
             slicename = "slice_" + t  # name for the current slice
             tslicename = "t_" + t  # name for the current slice text
             height += start_height
-            log.info(slicename)
+            log.info(f"Slice Name: {slicename}")
 
             ob.select_set(True)  # select object to be sliced
             bpy.context.view_layer.objects.active = ob  # make object to be sliced active

@@ -19,7 +19,7 @@ class Parser:
     # Internals
 
     def files_open(self, name, oname=None):
-        if oname == None:
+        if oname is None:
             oname = name + ".scr"
         self.file_in = open(name, "r")
         self.file_out = open(oname, "w")
@@ -32,10 +32,7 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if len(self.line):
-            return True
-        else:
-            return False
+        return bool(len(self.line))
 
     def write(self, s):
         self.file_out.write(s)
@@ -52,12 +49,12 @@ class Parser:
         return
 
     def set_tool(self, number=None):
-        if number != None:
+        if number is not None:
             self.file_out.write("-LAYER New T" + str(number) + "\n")
             self.file_out.write("-LAYER Set T" + str(number) + "\n")
 
     def begin_path(self, col=None):
-        if col != None:
+        if col is not None:
             if col == "rapid":
                 self.file_out.write("-color Red\n")
                 # self.file_out.write('')
@@ -75,56 +72,50 @@ class Parser:
         self.file_out.write("\n")
 
     def add_line(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        if x == None and y == None and z == None and a == None and b == None and c == None:
+        if x is None and y is None and z is None and a is None and b is None and c is None:
             return
         # self.file_out.write('line %s,%s %s,%s' %(self.currentx,self.currenty,x,y))
-        if x == None:
+        if x is None:
             x = self.currentx
-        if y == None:
+        if y is None:
             y = self.currenty
-        if z == None:
+        if z is None:
             z = self.currentz
-        self.file_out.write(
-            "line %s,%s,%s %s,%s,%s\n" % (self.currentx, self.currenty, self.currentz, x, y, z)
-        )
+        self.file_out.write(f"line {self.currentx},{self.currenty},{self.currentz} {x},{y},{z}\n")
         self.currentx = x
         self.currenty = y
         self.currentz = z
 
     def add_arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, d=None):
         if (
-            x == None
-            and y == None
-            and z == None
-            and i == None
-            and j == None
-            and k == None
-            and r == None
-            and d == None
+            x is None
+            and y is None
+            and z is None
+            and i is None
+            and j is None
+            and k is None
+            and r is None
+            and d is None
         ):
             return
 
         z = self.currentz
-        if x == None:
+        if x is None:
             x = self.currentx
-        if y == None:
+        if y is None:
             y = self.currenty
-        if z == None:
+        if z is None:
             z = self.currentz
         if d == 1:
-            self.file_out.write("arc %s,%s,%s\n" % (self.currentx, self.currenty, self.currentz))
+            self.file_out.write(f"arc {self.currentx},{self.currenty},{self.currentz}\n")
             self.file_out.write("c\n")
-            self.file_out.write(
-                "%s,%s,%s\n" % (self.currentx + i, self.currenty + j, self.currentz)
-            )
-            self.file_out.write("%s,%s,%s" % (x, y, z))
+            self.file_out.write(f"{self.currentx + i},{self.currenty + j},{self.currentz}\n")
+            self.file_out.write(f"{x},{y},{z}")
         else:
-            self.file_out.write("arc %s,%s,%s\n" % (x, y, z))
+            self.file_out.write(f"arc {x},{y},{z}\n")
             self.file_out.write("c\n")
-            self.file_out.write(
-                "%s,%s,%s\n" % (self.currentx + i, self.currenty + j, self.currentz)
-            )
-            self.file_out.write("%s,%s,%s" % (self.currentx, self.currenty, self.currentz))
+            self.file_out.write(f"{self.currentx + i},{self.currenty + j},{self.currentz}\n")
+            self.file_out.write(f"{self.currentx},{self.currenty},{self.currentz}")
         self.currentx = x
         self.currenty = y
         self.currentz = z

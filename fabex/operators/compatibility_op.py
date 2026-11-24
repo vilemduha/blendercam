@@ -1,9 +1,9 @@
-import sys
 import platform
+import sys
 
 import bpy
+from bpy.props import StringProperty
 from bpy.types import Operator
-from bpy.props import StringProperty, BoolProperty
 
 
 class Fabex_Compatibility_Panel(Operator):
@@ -16,7 +16,7 @@ class Fabex_Compatibility_Panel(Operator):
     python_executable = sys.executable
     correct_python_version = "3.11.13"
 
-    string_1 = f"""Hello and welcome to Fabex!
+    string_1 = """Hello and welcome to Fabex!
 This popup will check your system for compatibility and assist with issues in the installation process."""
 
     string_2 = f"""Fabex officially supports Blender 4.2+ using Python {correct_python_version}.
@@ -27,11 +27,11 @@ apt, dnf, pacman, zypper etc. will provide copies of Blender that use your syste
 If your Python version is not ⚠️⚠️⚠️ EXACTLY {correct_python_version} ⚠️⚠️⚠️ then Fabex will not install / work correctly.
     """
 
-    string_4 = f"""{'OS:':>19} {os}
+    string_4 = f"""{"OS:":>19} {os}
 Architecture: {architecture}
-{'Blender:':>16} {bpy.app.version_string}
-{'Python:':>16} {python_version}
-{'Location:':>15} {python_executable}"""
+{"Blender:":>16} {bpy.app.version_string}
+{"Python:":>16} {python_version}
+{"Location:":>15} {python_executable}"""
 
     compatible = python_version == correct_python_version
 

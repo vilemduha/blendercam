@@ -3,7 +3,6 @@
 'Active Operation' Pie Menu - Parent to all active_op Pie Menus
 """
 
-import bpy
 from bpy.types import Menu
 
 
@@ -13,7 +12,7 @@ class VIEW3D_MT_PIE_Operation(Menu):
 
     def draw(self, context):
         scene = context.scene
-        operation = scene.cam_operations[scene.cam_active_operation]
+        scene.cam_operations[scene.cam_active_operation]
 
         layout = self.layout
         layout.use_property_split = True

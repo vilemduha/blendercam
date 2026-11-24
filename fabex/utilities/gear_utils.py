@@ -70,22 +70,21 @@ from math import (
     sqrt,
 )
 
-from shapely.geometry import Polygon
-
 import bpy
+from shapely.geometry import Polygon
 
 from .shapely_utils import shapely_to_curve
 from .simple_utils import (
-    deselect,
-    duplicate,
-    rotate,
-    join_multiple,
     active_name,
-    union,
-    remove_doubles,
-    difference,
     add_rectangle,
+    deselect,
+    difference,
+    duplicate,
+    join_multiple,
     move,
+    remove_doubles,
+    rotate,
+    union,
 )
 
 

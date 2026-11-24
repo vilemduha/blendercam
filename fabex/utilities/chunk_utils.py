@@ -1,36 +1,29 @@
 """Fabex 'chunk_utils.py' © 2012 Vilem Novak"""
 
-from math import (
-    ceil,
-    cos,
-    pi,
-    sin,
-)
 import sys
 import time
+from math import (
+    ceil,
+    pi,
+)
 
+import bpy
 import numpy as np
+from bpy_extras import object_utils
+from mathutils import Vector
 from shapely import contains, points
 from shapely.geometry import (
     Point,
     Polygon,
 )
 
-import bpy
-from bpy_extras import object_utils
-from mathutils import Vector
-
-try:
-    import bl_ext.blender_org.simplify_curves_plus as curve_simplify
-except ImportError:
-    pass
-
-
-from .async_utils import progress_async
 from ..chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
 )
+from ..exception import CamException
+from .addon_utils import add_collections
+from .async_utils import progress_async
 from .collision_utils import (
     cleanup_bullet_collision,
     get_sample_bullet,
@@ -42,12 +35,11 @@ from .image_utils import (
     prepare_area,
 )
 from .internal_utils import _optimize_internal
-from .logging_utils import log
+from .logging_utils import heading, log
 from .ocl_utils import (
-    oclSample,
     oclResampleChunks,
+    oclSample,
 )
-
 from .operation_utils import (
     get_ambient,
     get_operation_axes,
@@ -58,6 +50,7 @@ from .parent_utils import (
 )
 from .simple_utils import (
     activate,
+    is_vertical_limit,
     progress,
     timing_add,
     timing_init,
@@ -65,14 +58,14 @@ from .simple_utils import (
     tuple_add,
     tuple_multiply,
     tuple_subtract,
-    is_vertical_limit,
 )
-
-from ..exception import CamException
 
 
 def chunks_refine(chunks, o):
     """Add Extra Points in Between for Chunks"""
+    if o.distance_along_paths <= 0:
+        message = "distance_along_paths must be greater than zero"
+        raise CamException(message)
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -172,8 +165,6 @@ def optimize_chunk(chunk, operation):
         points = chunk.points
         naxispoints = False
         if len(chunk.startpoints) > 0:
-            startpoints = chunk.startpoints
-            endpoints = chunk.endpoints
             naxispoints = True
 
         protect_vertical = operation.movement.protect_vertical and operation.machine_axes == "3"
@@ -195,11 +186,9 @@ def optimize_chunk(chunk, operation):
         chunk.points = points[keep_points]
         if naxispoints:
             # list comprehension so we don't have to do tons of appends
-            chunk.startpoints = [
-                chunk.startpoints[i] for i, b in enumerate(keep_points) if b == True
-            ]
-            chunk.endpoints = [chunk.endpoints[i] for i, b in enumerate(keep_points) if b == True]
-            chunk.rotations = [chunk.rotations[i] for i, b in enumerate(keep_points) if b == True]
+            chunk.startpoints = [chunk.startpoints[i] for i, b in enumerate(keep_points) if b]
+            chunk.endpoints = [chunk.endpoints[i] for i, b in enumerate(keep_points) if b]
+            chunk.rotations = [chunk.rotations[i] for i, b in enumerate(keep_points) if b]
     return chunk
 
 
@@ -220,7 +209,6 @@ def extend_chunks_5_axis(chunks, o):
 
     s = bpy.context.scene
     m = s.cam_machine
-    s = bpy.context.scene
     free_height = o.movement.free_height  # o.max.z +
     if m.use_position_definitions:  # dhull
         cutterstart = Vector(
@@ -230,8 +218,8 @@ def extend_chunks_5_axis(chunks, o):
         # start point for casting
         cutterstart = Vector((0, 0, max(o.max.z, free_height)))
     cutterend = Vector((0, 0, o.min.z))
-    oriname = o.name + " orientation"
-    ori = s.objects[oriname]
+    oriname = f"{o.name}_Orientation"
+    s.objects[oriname]
     # rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
     log.info(f"rot {o.rotationaxes}")
     a, b = o.rotationaxes  # this is all nonsense by now.
@@ -301,7 +289,7 @@ def chunks_coherency(chunks):
             # doesn't check for 1 point chunks here, they shouldn't get here at all.
             lastvec = Vector(chunk.points[1]) - Vector(chunk.points[0])
 
-            for i in range(0, len(chunk.points) - 1):
+            for i in range(len(chunk.points) - 1):
                 nchunk.points.append(chunk.points[i])
                 vec = Vector(chunk.points[i + 1]) - Vector(chunk.points[i])
                 angle = vec.angle(lastvec, vec)
@@ -313,8 +301,7 @@ def chunks_coherency(chunks):
                 lastvec = vec
 
             if len(nchunk.points) > 4:  # this is a testing threshold
-                nchunk.points = np.array(nchunk.points)
-                nchunks.append(nchunk)
+                nchunks.append(nchunk.to_chunk())
 
     return nchunks
 
@@ -332,7 +319,6 @@ def limit_chunks(chunks, o, force=False):
         nchunks = []
 
         for ch in chunks:
-            prevsampled = True
             nch = CamPathChunkBuilder()
             nch1 = None
             closed = True
@@ -351,8 +337,6 @@ def limit_chunks(chunks, o, force=False):
 
                 elif sampled:
                     nch.points.append(s)
-
-                prevsampled = sampled
 
             if (
                 len(nch.points) > 2
@@ -405,8 +389,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
         list: A list of sampled chunks organized by layers.
     """
 
-    #
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     # prepare collision world
     if o.update_bullet_collision_tag:
@@ -416,40 +399,41 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
     cutter = o.cutter_shape
     cutterdepth = cutter.dimensions.z / 2
-    t = time.time()
+    time.time()
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
-    log.info("~ Sampling Paths ~")
+    log.info(heading("Sampling Paths"))
 
     for chs in pathSamples:
         totlen += len(chs.startpoints)
 
     layerchunks = []
-    minz = o.min_z
     layeractivechunks = []
     lastrunchunks = []
 
-    for l in layers:
+    for layer in layers:
         layerchunks.append([])
         layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
 
     n = 0
     last_percent = -1
-    lastz = minz
 
     for patternchunk in pathSamples:
-        thisrunchunks = []
+        thisrunchunks = [[] for layer in layers]
 
-        for l in layers:
-            thisrunchunks.append([])
+        # for layer in layers:
+        #     thisrunchunks.append([])
         lastlayer = None
         currentlayer = None
         lastsample = None
+        laststartpoint = None
+        lastendpoint = None
+        lastdistance = None
         lastrotation = (0, 0, 0)
         spl = len(patternchunk.startpoints)
 
-        for si in range(0, spl):
+        for si in range(spl):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
             percent = int(100 * n / totlen)
@@ -485,9 +469,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             newsample = get_sample_bullet_n_axis(cutter, startp, endp, rotation, cutterdepth)
 
-            ################################
-            # handling samples
-            ############################################
+            ####################
+            # handling samples #
+            ####################
             # this is weird, but will leave it this way now.. just prototyping here.
             if newsample is not None:
                 sampled = True
@@ -496,13 +480,12 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                 sampled = True
 
             if sampled:
-                for i, l in enumerate(layers):
-                    terminatechunk = False
+                for i, layer in enumerate(layers):
                     ch = layeractivechunks[i]
                     v = startp - newsample
                     distance = -v.length
 
-                    if l[1] <= distance <= l[0]:
+                    if layer[1] <= distance <= layer[0]:
                         lastlayer = currentlayer
                         currentlayer = i
 
@@ -510,6 +493,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                             lastsample is not None
                             and lastlayer is not None
                             and currentlayer is not None
+                            and laststartpoint is not None
+                            and lastdistance is not None
+                            and lastendpoint is not None
                             and lastlayer != currentlayer
                         ):  # sampling for sorted paths in layers-
                             # to go to the border of the sampled layer at least...
@@ -517,15 +503,11 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                             if currentlayer < lastlayer:
                                 growing = True
                                 r = range(currentlayer, lastlayer)
-                                spliti = 1
                             else:
                                 r = range(lastlayer, currentlayer)
                                 growing = False
-                                spliti = 0
 
-                            li = 0
-
-                            for ls in r:
+                            for li, ls in enumerate(r):
                                 splitdistance = layers[ls][1]
 
                                 ratio = (splitdistance - lastdistance) / (distance - lastdistance)
@@ -533,7 +515,13 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                 # this probably doesn't work at all!!!! check this algoritm>
                                 betweenrotation = tuple_add(
                                     lastrotation,
-                                    tuple_multiply(tuple_subtract(rotation, lastrotation), ratio),
+                                    tuple_multiply(
+                                        tuple_subtract(
+                                            rotation,
+                                            lastrotation,
+                                        ),
+                                        ratio,
+                                    ),
                                 )
                                 # startpoint = retract point, it has to be always available...
                                 betweenstartpoint = (
@@ -570,23 +558,21 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                     layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
                                     layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
 
-                                li += 1
                         # this chunk is terminated, and allready in layerchunks /
                         ch.points.append(newsample)
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
-                        lastdistance = distance
 
-                    elif l[1] > distance:
-                        v = sweepvect * l[1]
+                    elif layer[1] > distance:
+                        v = sweepvect * layer[1]
                         p = startp - v
                         ch.points.append(p)
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
 
-                    elif l[0] < distance:  # retract to original track
+                    elif layer[0] < distance:  # retract to original track
                         ch.points.append(startp)
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
@@ -594,17 +580,18 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             lastsample = newsample
             lastrotation = rotation
+            lastdistance = distance
             laststartpoint = startp
             lastendpoint = endp
 
         # convert everything to actual chunks
         # rather than chunkBuilders
-        for i, l in enumerate(layers):
+        for i, layer in enumerate(layers):
             layeractivechunks[i] = (
                 layeractivechunks[i].to_chunk() if layeractivechunks[i] is not None else None
             )
 
-        for i, l in enumerate(layers):
+        for i, layer in enumerate(layers):
             ch = layeractivechunks[i]
             if ch.count() > 0:
                 layerchunks[i].append(ch)
@@ -616,7 +603,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("~ Checking Relations Between Paths ~")
+    progress(heading("Checking Relations Between Paths"))
     """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
@@ -625,7 +612,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                 parentChild(layerchunks[i+1],layerchunks[i],o)
     """
     chunks = []
-    for i, l in enumerate(layers):
+    for i, layer in enumerate(layers):
         chunks.extend(layerchunks[i])
 
     return chunks
@@ -655,6 +642,9 @@ def sample_path_low(o, ch1, ch2, dosample):
         CamPathChunk: An object representing the generated path points.
     """
 
+    if o.distance_along_paths <= 0:
+        message = "distance_along_paths must be greater than zero"
+        raise CamException(message)
     v1 = Vector(ch1.get_point(-1))
     v2 = Vector(ch2.get_point(0))
     v = v2 - v1
@@ -674,28 +664,25 @@ def sample_path_low(o, ch1, ch2, dosample):
 
     pixsize = o.optimisation.pixsize
 
-    if dosample:
-        if not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
-            if o.optimisation.use_exact:
-                if o.update_bullet_collision_tag:
-                    prepare_bullet_collision(o)
-                    o.update_bullet_collision_tag = False
+    if dosample and not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
+        if o.optimisation.use_exact:
+            if o.update_bullet_collision_tag:
+                prepare_bullet_collision(o)
+                o.update_bullet_collision_tag = False
 
-                cutterdepth = o.cutter_shape.dimensions.z / 2
+            cutterdepth = o.cutter_shape.dimensions.z / 2
 
-                for p in bpath_points:
-                    z = get_sample_bullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.min_z)
+            for p in bpath_points:
+                z = get_sample_bullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.min_z)
 
-                    if z > p[2]:
-                        p[2] = z
-            else:
-                for p in bpath_points:
-                    xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2
-                    ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2
-                    z = get_sample_image((xs, ys), o.offset_image, o.min_z) + o.skin
+                p[2] = max(p[2], z)
+        else:
+            for p in bpath_points:
+                xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2
+                ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2
+                z = get_sample_image((xs, ys), o.offset_image, o.min_z) + o.skin
 
-                    if z > p[2]:
-                        p[2] = z
+                p[2] = max(p[2], z)
 
     return CamPathChunk(bpath_points)
 
@@ -724,7 +711,7 @@ async def sample_chunks(o, pathSamples, layers):
             the sampled paths.
     """
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, minz, _maxx, _maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     get_ambient(o)
 
     if o.optimisation.use_exact:  # prepare collision world
@@ -746,9 +733,9 @@ async def sample_chunks(o, pathSamples, layers):
         pixsize = o.optimisation.pixsize
         coordoffset = o.borderwidth + pixsize / 2  # -m
         res = ceil(o.cutter_diameter / o.optimisation.pixsize)
-        m = res / 2
+        res / 2
 
-    t = time.time()
+    time.time()
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
@@ -760,19 +747,17 @@ async def sample_chunks(o, pathSamples, layers):
     layeractivechunks = []
     lastrunchunks = []
 
-    for l in layers:
+    for layer in layers:
         layerchunks.append([])
         layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
 
-    zinvert = 0
-
     if o.inverse:
         ob = bpy.data.objects[o.object_name]
-        zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
+        ob.location.z + maxz  # ob.bound_box[6][2]
 
     log.info(f"Total Sample Points: {totlen}")
-    log.info("-")
+    # log.info("-")
 
     n = 0
     last_percent = -1
@@ -781,13 +766,12 @@ async def sample_chunks(o, pathSamples, layers):
     sortingtime = timing_init()
     totaltime = timing_init()
     timing_start(totaltime)
-    lastz = minz
 
     for patternchunk in pathSamples:
-        thisrunchunks = []
+        thisrunchunks = [[] for layer in layers]
 
-        for l in layers:
-            thisrunchunks.append([])
+        # for layer in layers:
+        #     thisrunchunks.append([])
 
         lastlayer = None
         currentlayer = None
@@ -810,8 +794,7 @@ async def sample_chunks(o, pathSamples, layers):
                 if o.optimisation.use_opencamlib and o.optimisation.use_exact:
                     z = s[2]
 
-                    if minz > z:
-                        z = minz
+                    z = max(z, minz)
                     newsample = (x, y, z)
 
                 # ampling
@@ -819,7 +802,12 @@ async def sample_chunks(o, pathSamples, layers):
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
                         z = get_sample_bullet(
-                            cutter, x, y, cutterdepth, 1, lastsample[2] - o.distance_along_paths
+                            cutter,
+                            x,
+                            y,
+                            cutterdepth,
+                            1,
+                            lastsample[2] - o.distance_along_paths,
                         )  # first try to the last sample
 
                         if z < minz - 1:
@@ -845,15 +833,14 @@ async def sample_chunks(o, pathSamples, layers):
                 # handling samples
                 ############################################
 
-                if minz > z:
-                    z = minz
+                z = max(z, minz)
                 newsample = (x, y, z)
 
-            for i, l in enumerate(layers):
+            for i, layer in enumerate(layers):
                 terminatechunk = False
                 ch = layeractivechunks[i]
 
-                if l[1] <= newsample[2] <= l[0]:
+                if layer[1] <= newsample[2] <= layer[0]:
                     lastlayer = None  # rather the last sample here ? has to be set to None,
                     # since sometimes lastsample vs lastlayer didn't fit and did ugly ugly stuff....
                     if lastsample is not None:
@@ -869,11 +856,9 @@ async def sample_chunks(o, pathSamples, layers):
                         if currentlayer < lastlayer:
                             growing = True
                             r = range(currentlayer, lastlayer)
-                            spliti = 1
                         else:
                             r = range(lastlayer, currentlayer)
                             growing = False
-                            spliti = 0
 
                         li = 0
 
@@ -914,20 +899,19 @@ async def sample_chunks(o, pathSamples, layers):
 
                     # ch.points.append(betweensample.to_tuple())#
                     ch.points.append(newsample)
-                elif l[1] > newsample[2]:
-                    ch.points.append((newsample[0], newsample[1], l[1]))
-                elif l[0] < newsample[2]:  # terminate chunk
+                elif layer[1] > newsample[2]:
+                    ch.points.append((newsample[0], newsample[1], layer[1]))
+                elif layer[0] < newsample[2]:  # terminate chunk
                     terminatechunk = True
 
-                if terminatechunk:
-                    if len(ch.points) > 0:
-                        as_chunk = ch.to_chunk()
-                        layerchunks[i].append(as_chunk)
-                        thisrunchunks[i].append(as_chunk)
-                        layeractivechunks[i] = CamPathChunkBuilder([])
+                if terminatechunk and len(ch.points) > 0:
+                    as_chunk = ch.to_chunk()
+                    layerchunks[i].append(as_chunk)
+                    thisrunchunks[i].append(as_chunk)
+                    layeractivechunks[i] = CamPathChunkBuilder([])
             lastsample = newsample
 
-        for i, l in enumerate(layers):
+        for i, layer in enumerate(layers):
             ch = layeractivechunks[i]
             if len(ch.points) > 0:
                 as_chunk = ch.to_chunk()
@@ -943,39 +927,39 @@ async def sample_chunks(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("~ Checking Relations Between Paths ~")
+    progress(heading("Checking Relations Between Paths"))
     timing_start(sortingtime)
 
-    if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
-        if len(layers) > 1:  # sorting help so that upper layers go first always
-            for i in range(0, len(layers) - 1):
-                parents = []
-                children = []
-                # only pick chunks that should have connectivity assigned - 'last' and 'first' ones of the layer.
-                for ch in layerchunks[i + 1]:
-                    if not ch.children:
-                        parents.append(ch)
-                for ch1 in layerchunks[i]:
-                    if not ch1.parents:
-                        children.append(ch1)
+    if o.strategy in ["PARALLEL", "CROSS", "OUTLINEFILL"] and len(layers) > 1:
+        # sorting help so that upper layers go first always
+        for i in range(len(layers) - 1):
+            parents = [ch for ch in layerchunks[i + 1] if not ch.children]
+            children = [ch1 for ch1 in layerchunks[i] if not ch1.parents]
+            # only pick chunks that should have connectivity assigned - 'last' and 'first' ones of the layer.
+            # for ch in layerchunks[i + 1]:
+            #     if not ch.children:
+            #         parents.append(ch)
+            # for ch1 in layerchunks[i]:
+            #     if not ch1.parents:
+            #         children.append(ch1)
 
-                # parent only last and first chunk, before it did this for all.
-                parent_child(parents, children, o)
+            # parent only last and first chunk, before it did this for all.
+            parent_child(parents, children, o)
     timing_add(sortingtime)
     chunks = []
 
-    for i, l in enumerate(layers):
+    for i, layer in enumerate(layers):
         if o.movement.ramp:
             for ch in layerchunks[i]:
-                ch.zstart = layers[i][0]
-                ch.zend = layers[i][1]
+                ch.zstart = layer[0]
+                ch.zend = layer[1]
         chunks.extend(layerchunks[i])
     timing_add(totaltime)
 
     log.info(f"Sampling Time: {samplingtime[0]}")
     log.info(f"Sorting Time: {sortingtime[0]}")
     log.info(f"Total Time: {totaltime[0]}")
-    log.info("-")
+    # log.info("-")
 
     return chunks
 
@@ -1018,9 +1002,11 @@ async def connect_chunks_low(chunks, o):
 
     if o.movement.merge_distance > 0:
         mergedist = o.movement.merge_distance
+
+    #mergedist = min(mergedist, o.cutter_diameter)
     # mergedist=10
     lastch = None
-    i = len(chunks)
+    len(chunks)
     pos = (0, 0, 0)
 
     for ch in chunks:
@@ -1081,7 +1067,7 @@ async def sort_chunks(chunks, o, last_pos=None):
         list: A sorted list of chunk objects.
     """
 
-    log.info("-")
+    # log.info("-")
 
     if o.strategy != "WATERLINE":
         await progress_async("Sorting Paths")
@@ -1094,6 +1080,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     last_progress_time = time.time()
     total = len(chunks)
     i = len(chunks)
+    stall_count = 0
     pos = (0, 0, 0) if last_pos is None else last_pos
 
     while len(chunks) > 0:
@@ -1122,6 +1109,15 @@ async def sort_chunks(chunks, o, last_pos=None):
             sortedchunks.append(ch)
             lastch = ch
             pos = lastch.get_point(-1)
+            stall_count = 0
+        else:
+            stall_count += 1
+            if stall_count >= len(chunks):  # full pass with no progress — avoid infinite loop
+                log.warning(
+                    f"sort_chunks: {len(chunks)} chunks could not be sorted, appending as-is"
+                )
+                sortedchunks.extend(chunks)
+                break
 
         i -= 1
 
@@ -1164,7 +1160,7 @@ def chunks_to_mesh(chunks, o):
 
     free_height = o.movement.free_height
 
-    three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(o)
+    three_axis, four_axis, _five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(o)
 
     user_origin = (
         machine.starting_position.x,
@@ -1190,8 +1186,8 @@ def chunks_to_mesh(chunks, o):
 
     if o.array:
         array_chunks = []
-        for x in range(0, o.array_x_count):
-            for y in range(0, o.array_y_count):
+        for x in range(o.array_x_count):
+            for y in range(o.array_y_count):
                 log.info(f"{x}, {y}")
 
                 for chunk in chunks:
@@ -1204,12 +1200,11 @@ def chunks_to_mesh(chunks, o):
                     array_chunks.append(chunk)
         chunks = array_chunks
 
-    log.info("-")
-    progress("~ Building Paths from Chunks ~")
+    log.info(heading("Building Paths from Chunks"))
     e = 0.0001
     lifted = True
 
-    for chunk_index in range(0, len(chunks)):
+    for chunk_index in range(len(chunks)):
         chunk = chunks[chunk_index]
         # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
         if chunk.count() > 0:
@@ -1273,7 +1268,7 @@ def chunks_to_mesh(chunks, o):
     t = time.time()
 
     # Blender Object generation starts here:
-    edges = [(a, a + 1) for a in range(0, len(vertices) - 1)]
+    edges = [(a, a + 1) for a in range(len(vertices) - 1)]
     path_name = scene.cam_names.path_name_full
     mesh = bpy.data.meshes.new(path_name)
     mesh.name = path_name
@@ -1301,7 +1296,7 @@ def chunks_to_mesh(chunks, o):
             shapek.data[i].co = co
 
     log.info(f"Path Object Generation Time: {time.time() - t}")
-    log.info("-")
+    # log.info("-")
 
     ob.location = (0, 0, 0)
     ob.color = scene.cam_machine.path_color
@@ -1309,12 +1304,18 @@ def chunks_to_mesh(chunks, o):
 
     collections = bpy.data.collections
     if "Paths" in collections:
-        bpy.context.collection.objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
+        try:
+            bpy.data.collections["Collection"].objects.unlink(ob)
+            collections["Paths"].objects.link(ob)
+        except (KeyError, RuntimeError):
+            pass
     else:
-        add_collections()
-        bpy.context.collection.objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
+        if "Paths" not in collections:
+            add_collections()
+        if ob.name in bpy.context.collection.objects:
+            bpy.context.collection.objects.unlink(ob)
+        if ob.name not in collections["Paths"].objects:
+            collections["Paths"].objects.link(ob)
 
     # parent the path object to source object if object mode
     if (o.geometry_source == "OBJECT") and o.parent_path_to_object:

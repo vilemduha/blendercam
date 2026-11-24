@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 ################################################################################
 # iso_.py
 #
 
-import nc_read as nc
-import re
-import sys
 import math
+import re
+
+import nc_read as nc
 
 ################################################################################
 
@@ -59,7 +58,7 @@ class Parser(nc.Parser):
         s.replace("<", "&lt;")
         s.replace(">", "&gt;")
         s += self.SPACE + "\n"
-        if col != None:
+        if col is not None:
             self.file_out.write('\t\t<text col="' + col + '">' + s + " </text>\n")
         else:
             self.file_out.write("\t\t<text>" + s + " </text>\n")
@@ -277,9 +276,7 @@ class Parser(nc.Parser):
                     col = "comment"
                 elif word[0] == "#":
                     col = "variable"
-                elif words[0] == ("//" + self.SPACE):
-                    col = "comment"
-                elif words[0] == ("/*" + self.SPACE):
+                elif words[0] == ("//" + self.SPACE) or words[0] == ("/*" + self.SPACE):
                     col = "comment"
                 # self.add_text(word, col)
 

@@ -86,6 +86,17 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
                 col.prop(self.machine, "mtc_position")
                 col.prop(self.machine, "ending_position")
 
+        # Job Start Height
+        if self.level >= 1:
+            layout.use_property_split = False
+            header, panel = layout.panel("job_start_height", default_closed=True)
+            header.prop(self.machine, "use_job_start_height", text="Job Start Height")
+            if panel:
+                col = panel.column()
+                col.use_property_split = True
+                col.enabled = self.machine.use_job_start_height
+                col.prop(self.machine, "job_start_height")
+
         layout.use_property_split = True
         # Feedrates
         if self.level >= 1:
@@ -96,6 +107,7 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
                 col = panel.column(align=True)
                 col.prop(self.machine, "feedrate_min", text="Minimum")
                 col.prop(self.machine, "feedrate_max", text="Maximum")
+                col.prop(self.machine, "feedrate_rapid", text="Rapids")
 
         # Spindle Speeds
         # TODO: spindle default and feedrate default should become part of the cutter definition...

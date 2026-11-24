@@ -3,6 +3,8 @@
 'Pack Curves on Sheet' panel in Properties > Render
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.types import Panel
 
@@ -18,7 +20,8 @@ class CAM_PACK_Panel(CAMParentPanel, Panel):
 
     bl_label = "[ Pack ]"
     bl_idname = "FABEX_PT_CAM_PACK"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options: ClassVar = {"DEFAULT_CLOSED"}
+
     panel_interface_level = 2
     use_property_split = True
 

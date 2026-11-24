@@ -6,9 +6,7 @@
 #
 # Dan Heeks, 5th March 2009
 
-from . import nc
-from . import iso_modal
-import math
+from . import iso_modal, nc
 
 ################################################################################
 

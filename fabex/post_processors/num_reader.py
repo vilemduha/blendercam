@@ -1,6 +1,4 @@
 from . import nc_read as nc
-import sys
-import math
 
 # a base class for hpgl parsers, and maybe others
 

@@ -3,7 +3,6 @@
 'Pack, Slice and Bas Relief' Pie Menu
 """
 
-import bpy
 from bpy.types import Menu
 
 
@@ -12,7 +11,6 @@ class VIEW3D_MT_PIE_PackSliceRelief(Menu):
 
     def draw(self, context):
         layout = self.layout
-        scene = context.scene
         # layout.use_property_split = True
         layout.use_property_decorate = False
 

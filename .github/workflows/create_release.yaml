@@ -18,8 +18,10 @@ jobs:
     permissions:
       contents: write
     steps:
+
     - name: Checkout
       uses: actions/checkout@v4.1.1
+
     - name: Bump version
       shell: python
       env:
@@ -72,6 +74,7 @@ jobs:
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
 
         print(f"New version: {major}.{minor}.{patch}")
+
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       with:
@@ -80,17 +83,20 @@ jobs:
         directory: './'
         path: 'fabex'
         exclusions: '/*docs/* /*tests/*'
+
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
         git config --global user.name 'Release robot'
         git config --global user.email 'release-robot@users.noreply.github.com'
         git commit -am "Version number" || true
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+
     - name: make release
       uses: ncipollo/release-action@v1
       with:

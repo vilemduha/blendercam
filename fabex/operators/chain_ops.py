@@ -4,6 +4,8 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.types import Operator
 
@@ -13,7 +15,7 @@ class CamChainAdd(Operator):
 
     bl_idname = "scene.cam_chain_add"
     bl_label = "Add New CAM Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -53,7 +55,7 @@ class CamChainRemove(Operator):
 
     bl_idname = "scene.cam_chain_remove"
     bl_label = "Remove CAM Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -86,7 +88,7 @@ class CamChainOperationAdd(Operator):
 
     bl_idname = "scene.cam_chain_operation_add"
     bl_label = "Add Operation to Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -122,7 +124,7 @@ class CamChainOperationUp(Operator):
 
     bl_idname = "scene.cam_chain_operation_up"
     bl_label = "Add Operation to Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -159,7 +161,7 @@ class CamChainOperationDown(Operator):
 
     bl_idname = "scene.cam_chain_operation_down"
     bl_label = "Add Operation to Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -195,7 +197,7 @@ class CamChainOperationRemove(Operator):
 
     bl_idname = "scene.cam_chain_operation_remove"
     bl_label = "Remove Operation from Chain"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -223,6 +225,5 @@ class CamChainOperationRemove(Operator):
         chain = s.cam_chains[s.cam_active_chain]
         chain.operations.remove(chain.active_operation)
         chain.active_operation -= 1
-        if chain.active_operation < 0:
-            chain.active_operation = 0
+        chain.active_operation = max(chain.active_operation, 0)
         return {"FINISHED"}

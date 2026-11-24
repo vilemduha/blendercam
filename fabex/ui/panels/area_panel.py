@@ -98,30 +98,41 @@ class CAM_AREA_Panel(CAMParentPanel, Panel):
                     col.prop(self.op, "source_image_crop_end_y", text="End Y")
 
         # Draw Ambient
-        if self.level >= 1:
-            if self.op.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS"]:
-                box = main.box()
-                col = box.column(align=True)
-                col.label(text="Ambient")
-                col.prop(self.op, "ambient_behaviour", text="Surfaces")
-                if self.op.ambient_behaviour == "AROUND":
-                    col.prop(self.op, "ambient_radius")
-                row = col.row()
-                row.use_property_split = False
-                row.prop(self.op, "ambient_cutter_restrict")
+        if self.level >= 1 and self.op.strategy in [
+            "BLOCK",
+            "SPIRAL",
+            "CIRCLES",
+            "PARALLEL",
+            "CROSS",
+        ]:
+            box = main.box()
+            col = box.column(align=True)
+            col.label(text="Ambient")
+            col.prop(self.op, "ambient_behaviour", text="Surfaces")
+            if self.op.ambient_behaviour == "AROUND":
+                col.prop(self.op, "ambient_radius")
+            row = col.row()
+            row.use_property_split = False
+            row.prop(self.op, "ambient_cutter_restrict")
 
         # Draw Limit Curve
-        if self.level >= 1:
-            if self.op.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS", "WATERLINE"]:
-                main.use_property_split = False
-                col = main.column(align=False)
-                header, panel = col.panel("limit", default_closed=True)
-                header.prop(self.op, "use_limit_curve", text="Limit Curve")
-                if panel:
-                    panel.enabled = self.op.use_limit_curve
-                    col = panel.column(align=True)
-                    col.use_property_split = True
-                    col.prop_search(self.op, "limit_curve", bpy.data, "objects", text="Curve")
+        if self.level >= 1 and self.op.strategy in [
+            "BLOCK",
+            "SPIRAL",
+            "CIRCLES",
+            "PARALLEL",
+            "CROSS",
+            "WATERLINE",
+        ]:
+            main.use_property_split = False
+            col = main.column(align=False)
+            header, panel = col.panel("limit", default_closed=True)
+            header.prop(self.op, "use_limit_curve", text="Limit Curve")
+            if panel:
+                panel.enabled = self.op.use_limit_curve
+                col = panel.column(align=True)
+                col.use_property_split = True
+                col.prop_search(self.op, "limit_curve", bpy.data, "curves", text="Curve")
 
         # Use Layers
         main.use_property_split = False

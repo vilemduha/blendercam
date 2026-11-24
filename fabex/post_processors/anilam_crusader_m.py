@@ -2,8 +2,7 @@
 # This code modified from iso.py and emc2.py distriuted with HeeksCAD as of Sep 2010
 # Kurt Jensen 6 Sep 2010
 # Use at your own risk.
-from . import nc
-from . import iso
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -68,17 +67,17 @@ class Creator(iso.Creator):
     # Tools
 
     def tool_change(self, id):
-        self.write(("T%i" % id) + "\n")
+        self.write((f"T{id}") + "\n")
         self.t = id
 
     def tool_defn(self, id, name="", params=None):
         self.write(("T10%.2d" % id) + " ")
 
-        if radius != None:
-            self.write(("X%.3f" % radius) + " ")
+        if radius is not None:
+            self.write((f"X{radius:.3f}") + " ")
 
-        if length != None:
-            self.write("Z%.3f" % length)
+        if length is not None:
+            self.write(f"Z{length:.3f}")
 
         self.write("\n")
 
@@ -88,9 +87,7 @@ class Creator(iso.Creator):
         if (id >= 1) and (id <= 6):
             self.write((self.WORKPLANE() % (id + self.WORKPLANE_BASE())) + "\n")
         if (id >= 7) and (id <= 9):
-            self.write(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6))) + "\n"
-            )
+            self.write(((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}")) + "\n")
 
     def drill(
         self,

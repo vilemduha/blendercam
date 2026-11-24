@@ -9,7 +9,7 @@ try:
     from numba import jit, prange
 
     log.info("Numba library is available.")
-except:
+except ModuleNotFoundError:
     log.info("Numba library is not installed.")
 
     def jit(f=None, *args, **kwargs):

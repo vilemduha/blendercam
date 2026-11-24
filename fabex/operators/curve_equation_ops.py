@@ -4,15 +4,14 @@ Operators to create a number of geometric shapes with curves.
 """
 
 from math import (
+    cos,  # noqa: F401
     pi,
-    sin,
-    cos,
-    sqrt,
+    sin,  # noqa: F401
+    sqrt,  # noqa: F401
 )
+from typing import ClassVar
 
 import numpy as np
-
-import bpy
 from bpy.props import (
     EnumProperty,
     FloatProperty,
@@ -22,8 +21,8 @@ from bpy.props import (
 from bpy.types import Operator
 
 from ..utilities.geom_utils import (
-    triangle,
     s_sine,
+    triangle,
 )
 from ..utilities.logging_utils import log
 from ..utilities.parametric_utils import create_parametric_curve
@@ -34,7 +33,7 @@ class CamSineCurve(Operator):
 
     bl_idname = "object.sine"
     bl_label = "Periodic Wave"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     # zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
     axis: EnumProperty(
@@ -188,14 +187,14 @@ class CamSineCurve(Operator):
             zstring = s_sine(amp, period, dc_offset=offset, phase_shift=shift)
             if self.beat_period != 0:
                 zstring += (
-                    f"+ {s_sine(amp, period+beatperiod, dc_offset=offset, phase_shift=shift)}"
+                    f"+ {s_sine(amp, period + beatperiod, dc_offset=offset, phase_shift=shift)}"
                 )
 
         # build triangle wave from fourier series
         elif self.wave == "triangle":
             zstring = f"{round(offset, 6)} + {triangle(80, period, amp)}"
             if self.beat_period != 0:
-                zstring += f"+ {triangle(80, period+beatperiod, amp)}"
+                zstring += f"+ {triangle(80, period + beatperiod, amp)}"
 
         elif self.wave == "cycloid":
             zstring = f"abs({s_sine(amp, period, dc_offset=offset, phase_shift=shift)})"
@@ -203,7 +202,7 @@ class CamSineCurve(Operator):
         elif self.wave == "invcycloid":
             zstring = f"-1 * abs({s_sine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
-        log.info(zstring)
+        log.info(f"Equation: {zstring}")
         # make equation from string
 
         def e(t):
@@ -212,19 +211,36 @@ class CamSineCurve(Operator):
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0, angle_offset: float = 0.0):
             if self.axis == "XY":
-                c = (e(t + angle_offset) + offset, t, 0)
+                c = (
+                    e(t + angle_offset) + offset,
+                    t,
+                    0,
+                )
             elif self.axis == "YX":
-                c = (t, e(t + angle_offset) + offset, 0)
+                c = (
+                    t,
+                    e(t + angle_offset) + offset,
+                    0,
+                )
             elif self.axis == "ZX":
-                c = (t, offset, e(t + angle_offset))
+                c = (
+                    t,
+                    offset,
+                    e(t + angle_offset),
+                )
             elif self.axis == "ZY":
-                c = (offset, t, e(t + angle_offset))
+                c = (
+                    offset,
+                    t,
+                    e(t + angle_offset),
+                )
             return c
 
         for i in range(self.wave_amount):
             angle_off = self.wave_angle_offset * period * i / (2 * pi)
             create_parametric_curve(
                 f,
+                curve_name="Periodic Wave",
                 offset=self.wave_distance * i,
                 min=self.min_t,
                 max=self.max_t,
@@ -241,7 +257,7 @@ class CamLissajousCurve(Operator):
 
     bl_idname = "object.lissajous"
     bl_label = "Lissajous Figure"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     amplitude_a: FloatProperty(
         name="Amplitude A",
@@ -253,7 +269,10 @@ class CamLissajousCurve(Operator):
     )
     wave_a: EnumProperty(
         name="Wave X",
-        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        items=(
+            ("sine", "Sine Wave", "Sine Wave"),
+            ("triangle", "Triangle Wave", "triangle wave"),
+        ),
         default="sine",
     )
 
@@ -267,7 +286,10 @@ class CamLissajousCurve(Operator):
     )
     wave_b: EnumProperty(
         name="Wave Y",
-        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        items=(
+            ("sine", "Sine Wave", "Sine Wave"),
+            ("triangle", "Triangle Wave", "triangle wave"),
+        ),
         default="sine",
     )
     period_a: FloatProperty(
@@ -360,8 +382,8 @@ class CamLissajousCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        log.info(f"X= {xstring}")
-        log.info(f"Y= {ystring}")
+        log.info(f"X: {xstring}")
+        log.info(f"Y: {ystring}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -369,7 +391,13 @@ class CamLissajousCurve(Operator):
             return c
 
         create_parametric_curve(
-            f, offset=0.0, min=self.min_t, max=self.max_t, use_cubic=True, iterations=self.iteration
+            f,
+            curve_name="Lissajous",
+            offset=0.0,
+            min=self.min_t,
+            max=self.max_t,
+            use_cubic=True,
+            iterations=self.iteration,
         )
 
         return {"FINISHED"}
@@ -380,7 +408,7 @@ class CamHypotrochoidCurve(Operator):
 
     bl_idname = "object.hypotrochoid"
     bl_label = "Spirograph Type Figure"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     typecurve: EnumProperty(
         name="Type of Curve",
@@ -429,7 +457,7 @@ class CamHypotrochoidCurve(Operator):
         Rpr = round(R + r, 6)  # R +r
         Rpror = round(Rpr / r, 6)  # (R+r)/r
         Rmror = round(Rmr / r, 6)  # (R-r)/r
-        maxangle = 2 * pi * ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
+        maxangle = 2 * pi * (np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000))
 
         if self.typecurve == "hypo":
             xstring = f"{Rmr} * cos(t) + {d} * cos({Rmror} * t)"
@@ -450,10 +478,10 @@ class CamHypotrochoidCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        log.info(f"X= {xstring}")
-        log.info(f"Y= {ystring}")
-        log.info(f"Z= {zstring}")
-        log.info(f"MaxAngle {maxangle}")
+        log.info(f"X: {xstring}")
+        log.info(f"Y: {ystring}")
+        log.info(f"Z: {zstring}")
+        log.info(f"Max Angle: {maxangle}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -462,10 +490,11 @@ class CamHypotrochoidCurve(Operator):
 
         iter = int(maxangle * 10)
         if iter > 10000:  # do not calculate more than 10000 points
-            log.info("limiting calculations to 10000 points")
+            log.info("Status: Limiting Calculations to 10000 Points")
             iter = 10000
         create_parametric_curve(
             f,
+            curve_name="Hypotrochoid",
             offset=0.0,
             min=0,
             max=maxangle,
@@ -481,7 +510,7 @@ class CamCustomCurve(Operator):
 
     bl_idname = "object.customcurve"
     bl_label = "Custom Curve"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     x_string: StringProperty(
         name="X Equation",
@@ -523,9 +552,9 @@ class CamCustomCurve(Operator):
     )
 
     def execute(self, context):
-        log.info(f"X= {self.x_string}")
-        log.info(f"Y= {self.y_string}")
-        log.info(f"Z= {self.z_string}")
+        log.info(f"X: {self.x_string}")
+        log.info(f"Y: {self.y_string}")
+        log.info(f"Z: {self.z_string}")
 
         # make equation from string
         def ex(t):
@@ -544,6 +573,7 @@ class CamCustomCurve(Operator):
 
         create_parametric_curve(
             f,
+            curve_name="Custom",
             offset=0.0,
             min=self.min_t,
             max=self.max_t,

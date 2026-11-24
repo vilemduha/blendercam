@@ -1,8 +1,8 @@
-schema_version = "3.0.2"
+schema_version = "3.3.1"
 
 id = "fabex"
-version = "3.0.2"
-name = "Fabex CNC (formerly BlenderCAM)"
+version = "3.3.1"
+name = "Fabex CNC"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
 type = "add-on"
@@ -18,51 +18,79 @@ license = [
 ]
 
 copyright = [
-  "2012-2024 Vilem Novak, Alain Pelletier & contributors",
+  "2012-2026 Vilem Novak, Alain Pelletier & contributors",
 ]
 
 platforms = ["windows-x64", "macos-x64", "macos-arm64", "linux-x64"]
 
 wheels = [
-    # llvmlite
+  # llvmlite
+  # 3.11
   "./wheels/llvmlite-0.43.0-cp311-cp311-macosx_10_9_x86_64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-macosx_11_0_arm64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/llvmlite-0.43.0-cp311-cp311-win_amd64.whl",
+  # 3.13
+  "./wheels/llvmlite-0.46.0-cp313-cp313-macosx_12_0_arm64.whl",
+  "./wheels/llvmlite-0.46.0-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+  "./wheels/llvmlite-0.46.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+  "./wheels/llvmlite-0.46.0-cp313-cp313-win_amd64.whl",
 
-    # numba
+  # numba
+  # 3.11
   "./wheels/numba-0.60.0-cp311-cp311-macosx_10_9_x86_64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-macosx_11_0_arm64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
   "./wheels/numba-0.60.0-cp311-cp311-win_amd64.whl",
+  # 3.13
+  "./wheels/numba-0.63.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+  "./wheels/numba-0.64.0-cp313-cp313-macosx_12_0_arm64.whl",
+  "./wheels/numba-0.64.0-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+  "./wheels/numba-0.64.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+  "./wheels/numba-0.64.0-cp313-cp313-win_amd64.whl",
 
-    # opencamlib
+  # opencamlib
+  # 3.11
   "./wheels/opencamlib-2023.1.11-cp311-cp311-macosx_10_9_x86_64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-macosx_11_0_arm64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-win_amd64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-win32.whl",
+  # 3.13
+  "./wheels/opencamlib-2026.3.3.dev27-cp313-cp313-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl",
+  "./wheels/opencamlib-2026.3.3.dev27-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+  "./wheels/opencamlib-2026.10.16.dev335-cp313-cp313-win_amd64.whl",
+  "./wheels/opencamlib-2026.10.16.dev335-cp313-cp313-win32.whl",
+  "./wheels/opencamlib-2026.3.5.dev92-cp313-cp313-macosx_15_0_arm64.whl",
+  "./wheels/opencamlib-2026.3.5.dev118-cp313-cp313-macosx_14_0_x86_64.whl",
 
-    # shapely
+  # shapely
+  # 3.11
   "./wheels/shapely-2.0.5-cp311-cp311-macosx_10_9_x86_64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-macosx_11_0_arm64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-win_amd64.whl",
   "./wheels/shapely-2.0.5-cp311-cp311-win32.whl",
+  # 3.13
+  "./wheels/shapely-2.1.2-cp313-cp313-macosx_10_13_x86_64.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-macosx_11_0_arm64.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-win_amd64.whl",
+  "./wheels/shapely-2.1.2-cp313-cp313-win32.whl",
 ]
 
 [permissions]
 files = "Import/export G-code files from/to disk"
 
-# Optional: build settings.
-# https://docs.blender.org/manual/en/dev/advanced/extensions/command_line_arguments.html#command-line-args-extension-build
-# [build]
-# paths_exclude_pattern = [
-#   "__pycache__/",
-#   "/.git/",
-#   "/*.zip",
-# ]
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "/.git/",
+  "/*.zip",
+  "/tests/"
+]

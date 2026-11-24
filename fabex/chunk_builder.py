@@ -12,9 +12,8 @@ from math import (
 )
 
 import numpy as np
-from shapely.geometry import Polygon
-
 from mathutils import Vector
+from shapely.geometry import Polygon
 
 from .utilities.internal_utils import _internal_x_y_distance_to
 from .utilities.logging_utils import log
@@ -65,7 +64,7 @@ class CamPathChunk:
         self.length = 0  # this is total length of this chunk.
         self.zstart = 0  # this is stored for ramps mainly,
         # because they are added afterwards, but have to use layer info
-        self.zend = 0  #
+        self.zend = 0
 
     def update_poly(self):
         self.poly = Polygon(self.points[:, 0:2]) if len(self.points) > 2 else Polygon()
@@ -110,7 +109,7 @@ class CamPathChunk:
 
     def set_z(self, z, if_bigger=False):
         if if_bigger:
-            self.points[:, 2] = z if z > self.points[:, 2] else self.points[:, 2]
+            self.points[:, 2] = max(self.points[:, 2], z)
         else:
             self.points[:, 2] = z
 
@@ -216,7 +215,6 @@ class CamPathChunk:
         # finds closest chunk that can be milled, when inside sorting hierarchy.
         mind = 100000000000
         self.cango = False
-        closest = None
         testlist = tested = [child for child in self.children]
         ch = None
 
@@ -273,15 +271,9 @@ class CamPathChunk:
 
     def dedupe_points(self):
         if len(self.points) > 1:
-            keep_points = np.empty(self.points.shape[0], dtype=bool)
-            keep_points[0] = True
-            diff_points = np.sum((self.points[1:] - self.points[:1]) ** 2, axis=1)
-            keep_points[1:] = diff_points > 0.000000001
-
-            # Fix from vukhanhtrung
-            # diffs = np.sum((self.points[1:] - self.points[:-1]) ** 2, axis=1)
-            # keep_points = np.ones(len(self.points), dtype=bool)
-            # keep_points[1:] = diffs > 1e-9
+            diffs = np.sum((self.points[1:] - self.points[:-1]) ** 2, axis=1)
+            keep_points = np.ones(len(self.points), dtype=bool)
+            keep_points[1:] = diffs > 1e-12
 
             self.points = self.points[keep_points, :]
 
@@ -356,10 +348,9 @@ class CamPathChunk:
 
     def clip_points(self, minx, maxx, miny, maxy):
         """Remove Any Points Outside This Range"""
-        in_range_x = (self.points[:, 0] >= minx) and (self.points[:, 0] <= maxx)
-        in_range_y = (self.points[:, 1] >= maxy) and (self.points[:, 1] <= maxy)
-        included_values = in_range_x and in_range_y
-        self.points = self.points[included_values]
+        in_range_x = (self.points[:, 0] >= minx) & (self.points[:, 0] <= maxx)
+        in_range_y = (self.points[:, 1] >= miny) & (self.points[:, 1] <= maxy)
+        self.points = self.points[in_range_x & in_range_y]
 
     def ramp_contour(self, zstart, zend, o):
         stepdown = zstart - zend
@@ -371,9 +362,11 @@ class CamPathChunk:
         endpoint = None
         i = 0
         znew = 10
+        z = zstart  # initialize before loop to avoid NameError on first ramp step
         rounds = 0  # for counting if ramping makes more layers
+        max_rounds = 200  # safety cap against float == never becoming True
 
-        while endpoint is None and not (znew == zend and i == 0):
+        while endpoint is None and not (abs(znew - zend) < 1e-9 and i == 0) and rounds < max_rounds:
             s = self.points[i]
 
             s2 = self.points[i - 1] if i > 0 else self.points[-1] if rounds > 0 and i == 0 else None
@@ -439,7 +432,9 @@ class CamPathChunk:
         ):
             z = zend
 
-            while z < o.max_z:
+            max_ramp_out_iters = len(self.points) * 20
+            ramp_out_iters = 0
+            while z < o.max_z and ramp_out_iters < max_ramp_out_iters:
                 if i == len(self.points):
                     i = 0
                 s1 = self.points[i]
@@ -448,8 +443,14 @@ class CamPathChunk:
                 if i2 < 0:
                     i2 = len(self.points) - 1
                 s2 = self.points[i2]
-                l = distance_2d(s1, s2)
-                znew = z + tan(o.movement.ramp_out_angle) * l
+                length = distance_2d(s1, s2)
+
+                if length < 1e-9:  # skip zero-length segment to avoid infinite loop
+                    i += 1
+                    ramp_out_iters += 1
+                    continue
+
+                znew = z + tan(o.movement.ramp_out_angle) * length
 
                 if znew > o.max_z:
                     ratio = (z - o.max_z) / (z - znew)
@@ -462,13 +463,14 @@ class CamPathChunk:
                     chunk_points.append((s1[0], s1[1], znew))
                 z = znew
                 i += 1
+                ramp_out_iters += 1
 
         # TODO: convert to numpy properly
         self.points = np.array(chunk_points)
 
     def ramp_zig_zag(self, zstart, zend, o):
         # TODO: convert to numpy properly
-        if zend == None:
+        if zend is None:
             zend = self.points[0][2]
 
         chunk_points = []
@@ -531,7 +533,7 @@ class CamPathChunk:
                 log.info(f"Turns: {turns}")
 
                 for r in range(turns):
-                    for p in range(0, len(ramppoints)):
+                    for p in range(len(ramppoints)):
                         p1 = chunk_points[-1]
                         p2 = ramppoints[p]
                         d = distance_2d(p1, p2)
@@ -612,7 +614,7 @@ class CamPathChunk:
                         log.info(f"Turns: {turns}")
 
                         for r in range(turns):
-                            for p in range(0, len(ramppoints)):
+                            for p in range(len(ramppoints)):
                                 p1 = chunk_points[-1]
                                 p2 = ramppoints[p]
                                 d = distance_2d(p1, p2)
@@ -664,21 +666,19 @@ class CamPathChunk:
     def lead_contour(self, o):
         # 1 is Clockwise, 0 is CCW
         perimeterDirection = 1
-        if o.movement.spindle_rotation == "CW":
-            if o.movement.type == "CONVENTIONAL":
-                perimeterDirection = 0
+        if o.movement.spindle_rotation == "CW" and o.movement.type == "CONVENTIONAL":
+            perimeterDirection = 0
 
         if self.parents:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR
-            log.info("Has Parent")
+            log.info("Has Parent: True")
 
         if perimeterDirection == 1:
-            log.info("Path Direction is Clockwise")
+            log.info("Path Direction: Clockwise")
         else:
-            log.info("Path Direction is Counter Clockwise")
+            log.info("Path Direction: Counter Clockwise")
 
         iradius = o.lead_in
-        oradius = o.lead_out
         start = self.points[0]
         nextp = self.points[1]
         rpoint = rotate_point_by_point(start, nextp, pi / 2)

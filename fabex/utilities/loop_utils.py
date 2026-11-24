@@ -1,5 +1,4 @@
-"""Fabex 'loop_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'loop_utils.py' © 2012 Vilem Novak"""
 
 
 def add_loop(parentloop, start, end):
@@ -22,10 +21,9 @@ def add_loop(parentloop, start, end):
             return a value.
     """
 
-    added = False
-    for l in parentloop[2]:
-        if l[0] < start and l[1] > end:
-            add_loop(l, start, end)
+    for loop in parentloop[2]:
+        if loop[0] < start and loop[1] > end:
+            add_loop(loop, start, end)
             return
     parentloop[2].append([start, end, []])
 
@@ -58,9 +56,9 @@ def cut_loops(csource, parentloop, loops):
     copy = csource[parentloop[0] : parentloop[1]]
 
     for li in range(len(parentloop[2]) - 1, -1, -1):
-        l = parentloop[2][li]
+        loop = parentloop[2][li]
         # print(l)
-        copy = copy[: l[0] - parentloop[0]] + copy[l[1] - parentloop[0] :]
+        copy = copy[: loop[0] - parentloop[0]] + copy[loop[1] - parentloop[0] :]
     loops.append(copy)
-    for l in parentloop[2]:
-        cut_loops(csource, l, loops)
+    for loop in parentloop[2]:
+        cut_loops(csource, loop, loops)

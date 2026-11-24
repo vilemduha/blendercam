@@ -3,17 +3,16 @@
 Panels displayed in the 3D Viewport - Curve Tools, Creators and Import G-code
 """
 
-from bpy_extras.io_utils import ImportHelper
 from bpy.props import (
-    StringProperty,
     BoolProperty,
     EnumProperty,
     FloatProperty,
+    StringProperty,
 )
 from bpy.types import Operator
+from bpy_extras.io_utils import ImportHelper
 
 from ..gcode.gcode_import import import_gcode
-
 from ..utilities.logging_utils import log
 
 
@@ -60,7 +59,7 @@ class WM_OT_gcode_import(Operator, ImportHelper):
     )
 
     def execute(self, context):
-        log.info(self.filepath)
+        log.info(f"Filepath: {self.filepath}")
         context.scene.gcode_output_type = self.output
         return import_gcode(
             self,

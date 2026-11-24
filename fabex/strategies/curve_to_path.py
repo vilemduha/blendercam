@@ -1,16 +1,15 @@
 from ..exception import CamException
-
 from ..utilities.chunk_utils import (
-    chunks_to_mesh,
     chunks_refine,
+    chunks_to_mesh,
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
-    get_operation_sources,
     check_min_z,
     get_layers,
+    get_operation_sources,
 )
 from ..utilities.simple_utils import subdivide_short_lines
 
@@ -37,13 +36,14 @@ async def curve(o):
         CamException: If not all objects in the operation are curves.
     """
 
-    log.info("Strategy: Curve to Path")
+    log.info(heading("Strategy: Curve to Path"))
 
     path_samples = []
     get_operation_sources(o)
 
     if not o.onlycurves:
-        raise CamException("All Objects Must Be Curves for This Operation.")
+        message = "All Objects Must Be Curves for This Operation."
+        raise CamException(message)
 
     for ob in o.objects:
         # Ensure Polylines are at least three points long
@@ -65,18 +65,17 @@ async def curve(o):
             o.max_z,
             round(check_min_z(o), 6),
         )
-        chunk_copies = []
-        chunks = []
+        chunk_copies = [[chunk.copy(), layer] for chunk in path_samples for layer in layers]
 
         # Include Layer information in Chunk list
-        for layer in layers:
-            for chunk in path_samples:
-                chunk_copies.append([chunk.copy(), layer])
+        # for layer in layers:
+        #     for chunk in path_samples:
+        #         chunk_copies.append([chunk.copy(), layer])
 
         # Set offset Z for all chunks according to the layer information,
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
-            layer = chunk_layer[1] #
+            layer = chunk_layer[1]
             chunk.clamp_z(layer[1])
             # Limit Cut Depth to Operation Z Minimum
             chunk.clamp_z(o.min_z)
@@ -85,9 +84,11 @@ async def curve(o):
 
             log.info(f"Layer: {layer[1]}")
 
+        chunks = [chunk_layer[0] for chunk_layer in chunk_copies]
+
         # Strip Layer information from extendorder and transfer them to Chunks
-        for chunk_layer in chunk_copies:
-            chunks.append(chunk_layer[0])
+        # for chunk_layer in chunk_copies:
+        #     chunks.append(chunk_layer[0])
 
         chunks_to_mesh(chunks, o)  # finish by converting to mesh
 

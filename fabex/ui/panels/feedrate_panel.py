@@ -3,7 +3,6 @@
 'CAM Feedrate' panel in Properties > Render
 """
 
-import bpy
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel

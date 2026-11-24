@@ -1,6 +1,4 @@
-from . import nc
-from . import iso_modal
-import math
+from . import iso_modal, nc
 
 ################################################################################
 

@@ -34,7 +34,7 @@ class Codes:
         return "N%i" + self.SPACE()
 
     def COMMENT(self, comment):
-        return " (%s)\n" % comment
+        return f" ({comment})\n"
 
     def VARIABLE(self):
         return "#%i"
@@ -223,19 +223,19 @@ class Codes:
         return "M103"
 
     def EXTRUDER_TEMP(self, degree_celsius):
-        return "M104 S" + "%s" % degree_celsius
+        return "M104 S" + f"{degree_celsius}"
 
     def EXTRUDER_TEMP_WAIT(self, degree_celsius):
-        return "M109 S" + "%s" % degree_celsius
+        return "M109 S" + f"{degree_celsius}"
 
     def READ_EXTRUDER_TEMP(self):
         return "M105"
 
     def EXTRUDER_SPEED_PWM(self, speed_in_PWM):
-        return "M108 S" + "%s" % speed_in_PWM  # deprecated
+        return "M108 S" + f"{speed_in_PWM}"  # deprecated
 
     def EXTRUDER_SPEED_RPM(self, speed_in_RPM):
-        return "M108 P" + "%s" % speed_in_RPM  # deprecated
+        return "M108 P" + f"{speed_in_RPM}"  # deprecated
 
     def STEPPERS_OFF(self):
         return self.SPACE() + "M118"
@@ -251,19 +251,19 @@ class Codes:
         return self.SPACE() + "M107"
 
     def VALVE_OPEN(self, delay):
-        return self.SPACE() + ("M126 P" + "%" % delay)
+        return self.SPACE() + ("M126 P" + f"{delay}")
 
     def VALVE_CLOSE(self, delay):
-        return self.SPACE() + ("M127 P" + "%" % delay)
+        return self.SPACE() + ("M127 P" + f"{delay}")
 
     def BUILD_BED_TEMP(self, degree_celsius):
-        return "M140 S" + "%s" % degree_celsius
+        return "M140 S" + f"{degree_celsius}"
 
     def BED_HOLDING_PRESSURE(self, pressure):
-        return "M142 S" + "%s" % pressure
+        return "M142 S" + f"{pressure}"
 
     def CHAMBER_TEMP(self, degree_celsius):
-        return "M141 S" + "%s" % degree_celsius
+        return "M141 S" + f"{degree_celsius}"
 
 
 # The following codes are listed on the reprap wiki page at http://reprap.org/wiki/Mendel_User_Manual:_RepRapGCodes but require more study.

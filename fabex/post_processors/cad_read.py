@@ -3,14 +3,14 @@
 # Dan Falck 2011/01/06
 #
 
-""" use this script to backplot nc files to *.scr file for autocad,bricscad,
-    draftsight,progecad,ares commander, etc....
-    usage: python cad_read.py temp.nc temp.scr
+"""use this script to backplot nc files to *.scr file for autocad,bricscad,
+draftsight,progecad,ares commander, etc....
+usage: python cad_read.py temp.nc temp.scr
 """
 
-from . import cad_iso_read as iso
 import sys
 
+from . import cad_iso_read as iso
 
 # Override some iso parser methods to interpret arc centers as relative to origin, not relative to start of arc.
 
@@ -124,9 +124,7 @@ class CAD_backplot(iso.Parser):
                     path_col = "feed"
                     col = "feed"
                     arc = +1
-                elif word == "G10" or word == "g10":
-                    no_move = True
-                elif word == "L1" or word == "l1":
+                elif word == "G10" or word == "g10" or word == "L1" or word == "l1":
                     no_move = True
                 elif word == "G20" or word == "G70":
                     col = "prep"
@@ -135,17 +133,14 @@ class CAD_backplot(iso.Parser):
                     col = "prep"
                     self.set_mode(units=1.0)
                 # Note: Anilam has very non standard params for drill cycles.  Not Yet implemented!
-                elif word == "G81" or word == "g81":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G82" or word == "g82":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G83" or word == "g83":
+                elif (
+                    word == "G81"
+                    or word == "g81"
+                    or word == "G82"
+                    or word == "g82"
+                    or word == "G83"
+                    or word == "g83"
+                ):
                     drill = True
                     no_move = True
                     path_col = "feed"
@@ -203,11 +198,7 @@ class CAD_backplot(iso.Parser):
                     col = "axis"
                     z = eval(word[1:])
                     move = True
-                elif word[0] == "(":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == "!":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == ";":
+                elif word[0] == "(" or word[0] == "!" or word[0] == ";":
                     (col, cdata) = ("comment", True)
                 elif word[0] == "#":
                     col = "variable"
@@ -245,11 +236,11 @@ class CAD_backplot(iso.Parser):
 
                     if arc:
                         z = oldz
-                        if (x != None) and (oldx != None) and (i != None):
+                        if (x is not None) and (oldx is not None) and (i is not None):
                             iout = i
-                        if (y != None) and (oldy != None) and (j != None):
+                        if (y is not None) and (oldy is not None) and (j is not None):
                             jout = j
-                        if (z != None) and (oldz != None) and (k != None):
+                        if (z is not None) and (oldz is not None) and (k is not None):
                             kout = k
                         self.add_arc(x, y, z, iout, jout, kout, r, arc)
                         # if (arc == -1):
@@ -266,23 +257,23 @@ class CAD_backplot(iso.Parser):
 
                     else:
                         self.add_line(x, y, z, a, b, c)
-                        if x == None:
+                        if x is None:
                             x = oldx
-                        if y == None:
+                        if y is None:
                             y = oldy
-                        if z == None:
+                        if z is None:
                             z = oldz
-                        scr_line = "line %s,%s,%s %s,%s,%s \n" % (oldx, oldy, oldz, x, y, z)
+                        scr_line = f"line {oldx},{oldy},{oldz} {x},{y},{z} \n"
                         # print scr_line
 
                         # FILE.write(scr_line)
 
                     self.end_path()
-            if x != None:
+            if x is not None:
                 oldx = x
-            if y != None:
+            if y is not None:
                 oldy = y
-            if z != None:
+            if z is not None:
                 oldz = z
 
             # oldx = x

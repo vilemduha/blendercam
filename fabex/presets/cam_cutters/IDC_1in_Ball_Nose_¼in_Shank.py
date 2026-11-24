@@ -1,6 +1,7 @@
 ### IDC_1in_Ball_Nose_¼in_Shank.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
 correction = 0.0254

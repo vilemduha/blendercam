@@ -1,18 +1,13 @@
-from ..exception import CamException
+import bpy
+from mathutils import Vector
 
-from ..utilities.chunk_utils import (
-    chunks_to_mesh,
-    sort_chunks,
-    chunks_refine,
-)
+from ..exception import CamException
+from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
-    get_operation_sources,
-    check_min_z,
     get_layers,
 )
-from ..utilities.simple_utils import subdivide_short_lines
 
 
 async def projected_curve(o):
@@ -37,7 +32,7 @@ async def projected_curve(o):
         CamException: If the target curve is not of type 'CURVE'.
     """
 
-    log.info("Strategy: Projected Curve")
+    log.info(heading("Strategy: Projected Curve"))
 
     path_samples = []
     chunks = []
@@ -48,7 +43,8 @@ async def projected_curve(o):
     target_curve = s.objects[o.curve_target]
 
     if target_curve.type != "CURVE":
-        raise CamException("Projection Target and Source Have to Be Curve Objects!")
+        message = "Projection Target and Source Have to Be Curve Objects!"
+        raise CamException(message)
 
     if 1:
         extend_up = 0.1
@@ -63,7 +59,7 @@ async def projected_curve(o):
             for i, s in enumerate(chunk_points):
                 # move the points a bit
                 end_point = Vector(target_chunk[i])
-                start_point = Vector(chunk_points[i])
+                start_point = Vector(s)
 
                 # Extend Start Point
                 vector_start = start_point - end_point

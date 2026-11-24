@@ -1,5 +1,4 @@
-"""Fabex 'orient_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'orient_utils.py' © 2012 Vilem Novak"""
 
 import bpy
 from mathutils import Vector
@@ -21,14 +20,14 @@ def add_orientation_object(o):
     Args:
         o (object): An object containing properties such as name,
     """
-    name = o.name + " orientation"
+    name = f"{o.name}_Orientation"
     s = bpy.context.scene
-    if s.objects.find(name) == -1:
+    if name not in s.objects:
         bpy.ops.object.empty_add(type="ARROWS", align="WORLD", location=(0, 0, 0))
 
         ob = bpy.context.active_object
-        ob.empty_draw_size = 0.05
-        ob.show_name = True
+        # ob.empty_draw_size = 0.05
+        # ob.show_name = True
         ob.name = name
     ob = s.objects[name]
     if o.machine_axes == "4":

@@ -4,30 +4,21 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-import os
-
-import shapely
-from shapely import (
-    affinity,
-    prepared,
-    speedups,
-)
+from typing import ClassVar
 
 import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator
 
-from .async_op import (
-    AsyncCancelledException,
-    AsyncOperatorMixin,
-)
-
 from ..simulation import do_simulation
-
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     chain_valid,
     get_chain_operations,
+)
+from .async_op import (
+    AsyncCancelledException,
+    AsyncOperatorMixin,
 )
 
 
@@ -38,7 +29,7 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_simulate"
     bl_label = "CAM Simulation"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     operation: StringProperty(
         name="Operation",
@@ -72,13 +63,12 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
-        path_prefix = bpy.context.scene.cam_names.path_prefix
-        operation_name = f"{path_prefix}_{operation.name}"
+        operation_name = s.cam_names.path_name_full
 
         if operation_name in bpy.data.objects:
             try:
                 await do_simulation(operation_name, [operation])
-            except AsyncCancelledException as e:
+            except AsyncCancelledException:
                 return {"CANCELLED"}
 
         else:
@@ -110,7 +100,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM Simulation"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     def __init__(self, *args, **kwargs):
         Operator.__init__(self, *args, **kwargs)
@@ -173,16 +163,16 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
             if operation.name not in bpy.data.objects:
                 canSimulate = True  # force true
 
-            log.info(f"Operation Name {operation.name}")
+            log.info(f"Operation Name: {operation.name}")
 
         if canSimulate:
             try:
                 await do_simulation(chain.name, chainops)
-            except AsyncCancelledException as e:
+            except AsyncCancelledException:
                 return {"CANCELLED"}
 
         else:
-            log.info("No Computed Path to Simulate")
+            log.info("Error: No Computed Path to Simulate")
             return {"FINISHED"}
 
         return {"FINISHED"}

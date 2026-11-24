@@ -3,24 +3,15 @@
 Functions to render, save, convert and analyze image data.
 """
 
-from math import (
-    acos,
-    ceil,
-    cos,
-    floor,
-    pi,
-    radians,
-    sin,
-    tan,
-)
-from typing import Optional
 import os
-import random
 import time
-
-import numpy as np
+from math import (
+    ceil,
+    floor,
+)
 
 import bpy
+import numpy as np
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
@@ -28,22 +19,20 @@ except ImportError:
     pass
 
 from mathutils import (
-    Euler,
     Vector,
 )
 
-from .async_utils import progress_async
 from ..chunk_builder import CamPathChunkBuilder
-from .logging_utils import log
-from .operation_utils import get_cutter_array
-from .parent_utils import parent_child_distance
-from .simple_utils import (
-    progress,
-    get_cache_path,
-)
+from .async_utils import progress_async
+from .logging_utils import heading, log
 from .numba_utils import (
     jit,
     prange,
+)
+from .operation_utils import get_cutter_array
+from .simple_utils import (
+    get_cache_path,
+    progress,
 )
 
 
@@ -100,12 +89,11 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    log.info("-")
-    log.info("~ Converting Numpy Array to Blender Image ~")
+    log.info(heading("Converting Numpy Array to Blender Image"))
     log.info(f"Name: {iname}")
     log.info(f"Dimensions: {width}x{height}")
 
-    def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
+    def find_image(name: str, width: int, heigh: int) -> bpy.types.Image | None:
         if name in bpy.data.images:
             image = bpy.data.images[name]
 
@@ -138,10 +126,9 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     a = a.repeat(4)
     a[3::4] = 1
 
-    image.pixels[:] = a[:]  # this gives big speedup!
+    image.pixels[:] = a  # [:]  # this gives big speedup!
 
-    log.info(f"Time: {str(time.time() - t)}")
-    log.info("-")
+    log.info(f"Time: {time.time() - t!s}")
 
     return image
 
@@ -176,7 +163,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    log.info(f"\nTime of Image to Numpy {time.time() - t}")
+    log.info(f"Image to Numpy Time: {time.time() - t}")
     return na
 
 
@@ -206,7 +193,7 @@ def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, heigh
     """
 
     for y in prange(y1, y2):
-        for x in range(0, width - cwidth):
+        for x in range(width - cwidth):
             comparearea[x, y] = np.nanmax(
                 sourceArray[x : x + cwidth, y : y + cwidth] + cutterArrayNan
             )
@@ -231,7 +218,14 @@ async def offset_area(o, samples):
         numpy.ndarray: The updated offset image after applying the cutter and skin offsets.
     """
     if o.update_offset_image_tag:
-        minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+        _minx, _miny, minz, _maxx, _maxy, _maxz = (
+            o.min.x,
+            o.min.y,
+            o.min.z,
+            o.max.x,
+            o.max.y,
+            o.max.z,
+        )
 
         sourceArray = samples
         cutterArray = get_cutter_array(o, o.optimisation.pixsize)
@@ -254,7 +248,7 @@ async def offset_area(o, samples):
             cutterArray > -10, cutterArray, np.full(cutterArray.shape, np.nan)
         )
 
-        for y in range(0, 10):
+        for y in range(10):
             y1 = (y * comparearea.shape[1]) // 10
             y2 = ((y + 1) * comparearea.shape[1]) // 10
             _offset_inner_loop(
@@ -274,7 +268,7 @@ async def offset_area(o, samples):
             m : height - cwidth + m,
         ] = comparearea
 
-        log.info(f"\nOffset Image Time: {time.time() - t}")
+        log.info(f"Offset Image Time: {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image
@@ -352,6 +346,7 @@ def get_resolution(o):
     resolution_x = ceil(size_x / pixel_size) + 2 * border_width
     resolution_y = ceil(size_y / pixel_size) + 2 * border_width
     resolution = resolution_x * resolution_y
+    return resolution_x, resolution_y, resolution
 
 
 def _backup_render_settings(pairs):
@@ -373,10 +368,6 @@ def _backup_render_settings(pairs):
         list: A list containing the backed-up properties of the specified Blender
             objects.
     """
-
-    scene = bpy.context.scene
-    view_layer = bpy.context.view_layer
-    render = scene.render
 
     properties = []
     for owner, struct_name in pairs:
@@ -410,10 +401,6 @@ def _restore_render_settings(pairs, properties):
             values.
     """
 
-    scene = bpy.context.scene
-    view_layer = bpy.context.view_layer
-    render = scene.render
-
     for (owner, struct_name), obj_value in zip(pairs, properties):
         obj = getattr(owner, struct_name)
         if isinstance(obj, bpy.types.bpy_struct):
@@ -441,7 +428,7 @@ def render_sample_image(o):
     """
 
     t = time.time()
-    progress("~ Getting Z-Buffer ~")
+    log.info(heading("Getting Z-Buffer"))
     o.update_offset_image_tag = True
 
     if o.geometry_source in ["OBJECT", "COLLECTION"]:
@@ -472,7 +459,9 @@ def render_sample_image(o):
                 image_size_y = i.size[1]
 
                 if image_size_x != resolution_x or image_size_y != resolution_y:
-                    log.info(f"Z Buffer Size Changed: {i.size} {resolution_x} {resolution_y}")
+                    log.info(heading("Z Buffer Size Changed"))
+                    log.info(f"Image Size: {i.size}")
+                    log.info(f"Resolution: {resolution_x}x{resolution_y}")
                     o.update_z_buffer_image_tag = True
             except:
                 o.update_z_buffer_image_tag = True
@@ -494,8 +483,7 @@ def render_sample_image(o):
                 (scene.world, "mist_settings"),
             ]
 
-            for ob in scene.objects:
-                SETTINGS_TO_BACKUP.append((ob, "hide_render"))
+            SETTINGS_TO_BACKUP.extend((ob, "hide_render") for ob in scene.objects)
             backup_settings = None
 
             ############################################################3
@@ -523,7 +511,7 @@ def render_sample_image(o):
                     node_tree = scene.compositing_node_group
                 else:
                     scene.use_nodes = True
-                    scene.node_tree
+                    node_tree = scene.node_tree
 
                 node_tree.links.clear()
                 node_tree.nodes.clear()
@@ -611,10 +599,10 @@ def render_sample_image(o):
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    log.info("Failed to Backup Scene Settings")
+                    log.info("Status: Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(image_name)
-            print(f"Image load: {image_name}")
+            log.info(f"Image load: {image_name}")
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
         ####################################################################
@@ -700,10 +688,10 @@ def render_sample_image(o):
         o.min.z = np.min(image_array)
         o.zbuffer_image = image_array
 
-        log.info(f"Min Z {o.min.z}")
-        log.info(f"Max Z {o.max.z}")
-        log.info(f"Min Image {np.min(image_array)}")
-        log.info(f"Max Image {np.max(image_array)}")
+        log.info(f"Min Z: {o.min.z}")
+        log.info(f"Max Z: {o.max.z}")
+        log.info(f"Min Image: {np.min(image_array)}")
+        log.info(f"Max Image: {np.max(image_array)}")
 
     progress(time.time() - t)
     o.update_z_buffer_image_tag = False
@@ -771,8 +759,8 @@ def image_edge_search_on_line(o, ar, zimage):
         list: A list of chunks representing the detected edges in the image.
     """
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-    r = ceil((o.cutter_diameter / 12) / o.optimisation.pixsize)  # was commented
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    r = ceil((o.cutter_diameter / 12) / o.optimisation.pixsize)
     coef = 0.75
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
@@ -794,6 +782,12 @@ def image_edge_search_on_line(o, ar, zimage):
     itests = 0
     totaltests = 0
     maxtotaltests = startpix * 4
+
+    # TODO: Added here to fix 'testvect' undefined error
+    # Check that this is the correct calculation for testvect
+    lastvect = Vector((r, 0, 0))
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 4.0
 
     ar[xs, ys] = False
 
@@ -822,11 +816,14 @@ def image_edge_search_on_line(o, ar, zimage):
                 ar[xs, ys] = False
 
                 if 0:
-                    log.info("Success")
-                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
-                    log.info(lastvect)
-                    log.info(testvect)
-                    log.info(itests)
+                    log.info("Status: Success")
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    # log.info(f"Length: {testlength}")
+                    # log.info(f"Angle: {testangle}")
+                    # log.info(f"Last Vector: {lastvect}")
+                    log.info(f"Test Vector: {testvect}")
+                    log.info(f"Test Count: {itests}")
             else:
                 test_direction = last_direction
 
@@ -877,10 +874,12 @@ def image_edge_search_on_line(o, ar, zimage):
                 test_direction = directions[dindexmod]
 
                 if 0:
-                    log.info(
-                        f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
-                    )
-                    log.info(totpix)
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    log.info(f"Test Direction: {test_direction}")
+                    log.info(f"Last Direction: {last_direction}")
+                    log.info(f"Angular DIstance: {testangulardistance}")
+                    log.info(f"Pixel Count: {totpix}")
             itests += 1
             totaltests += 1
 
@@ -894,7 +893,7 @@ def image_edge_search_on_line(o, ar, zimage):
     for ch in chunk_builders:
         ch = ch.points
 
-        for i in range(0, len(ch)):
+        for i in range(len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
@@ -932,12 +931,12 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
-        iname = get_cache_path(o) + "_pencilthres.exr"
+        get_cache_path(o) + "_pencilthres.exr"
         # numpysave(ar,iname)#save for comparison before
         chunks = image_edge_search_on_line(o, ar, i)
-        iname = get_cache_path(o) + "_pencilthres_comp.exr"
+        get_cache_path(o) + "_pencilthres_comp.exr"
 
-        log.info("New Pencil Strategy")
+        log.info("Status: New Pencil Strategy")
 
     # crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
@@ -973,8 +972,8 @@ def image_to_chunks(o, image, with_border=False):
             points that outline the detected edges in the image.
     """
 
-    t = time.time()
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    time.time()
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
     image = image.astype(np.uint8)
     edges = []
@@ -990,7 +989,7 @@ def image_to_chunks(o, image, with_border=False):
     h = image.shape[1]
     coef = 0.75  # compensates for imprecisions
 
-    for id in range(0, len(indices1[0])):
+    for id in range(len(indices1[0])):
         a = indices1[0][id]
         b = indices1[1][id]
 
@@ -1000,7 +999,7 @@ def image_to_chunks(o, image, with_border=False):
     ar = image[:-1, :] - image[1:, :]
     indices2 = ar.nonzero()
 
-    for id in range(0, len(indices2[0])):
+    for id in range(len(indices2[0])):
         a = indices2[0][id]
         b = indices2[1][id]
 
@@ -1051,23 +1050,35 @@ def image_to_chunks(o, image, with_border=False):
                         verts.remove(v)
 
                     if not take:
-                        if (not white and comesfromtop) or (white and comesfrombottom):
+                        if (
+                            (not white and comesfromtop)
+                            or (white and comesfrombottom)
+                            and v1[0] + 0.5 < v[0]
+                        ):
                             # goes right
-                            if v1[0] + 0.5 < v[0]:
-                                take = True
-                        elif (not white and comesfrombottom) or (white and comesfromtop):
+                            take = True
+                        elif (
+                            (not white and comesfrombottom)
+                            or (white and comesfromtop)
+                            and v1[0] > v[0] + 0.5
+                        ):
                             # goes left
-                            if v1[0] > v[0] + 0.5:
-                                take = True
-                        elif (not white and comesfromleft) or (white and comesfromright):
+                            take = True
+                        elif (
+                            (not white and comesfromleft)
+                            or (white and comesfromright)
+                            and v1[1] > v[1] + 0.5
+                        ):
                             # goes down
-                            if v1[1] > v[1] + 0.5:
-                                take = True
-                        elif (not white and comesfromright) or (white and comesfromleft):
+                            take = True
+                        elif (
+                            (not white and comesfromright)
+                            or (white and comesfromleft)
+                            and v1[1] + 0.5 < v[1]
+                        ):
                             # goes up
-                            if v1[1] + 0.5 < v[1]:
-                                take = True
-                        if take:
+                            take = True
+                        if take and v in verts:
                             ch.append(v)
                             verts.remove(v)
 
@@ -1091,14 +1102,14 @@ def image_to_chunks(o, image, with_border=False):
                 polychunks.append(ch)
 
                 for si, s in enumerate(ch):
-                    if si > 0:  # first one was popped
-                        if d.get(s, None) is not None and len(d[s]) == 0:
-                            # this makes the case much less probable, but i think not impossible
-                            d.pop(s)
+                    if si > 0 and d.get(s, None) is not None and len(d[s]) == 0:
+                        # first one was popped
+                        # this makes the case much less probable, but i think not impossible
+                        d.pop(s)
                 if len(d) > 0:
                     newch = False
 
-                    while not newch:
+                    while not newch and len(d) > 0:
                         v1 = d.popitem()
 
                         if len(v1[1]) > 0:
@@ -1108,8 +1119,8 @@ def image_to_chunks(o, image, with_border=False):
             i += 1
 
             if i % 10000 == 0:
-                log.info(len(ch))
-                log.info(i)
+                log.info(f"Chunk Count: {len(ch)}")
+                log.info(f"Iterations: {i}")
 
         vecchunks = []
 
@@ -1117,7 +1128,7 @@ def image_to_chunks(o, image, with_border=False):
             vecchunk = []
             vecchunks.append(vecchunk)
 
-            for i in range(0, len(ch)):
+            for i in range(len(ch)):
                 ch[i] = (
                     (ch[i][0] + coef - o.borderwidth) * pixsize + minx,
                     (ch[i][1] + coef - o.borderwidth) * pixsize + miny,
@@ -1139,7 +1150,7 @@ def image_to_chunks(o, image, with_border=False):
             s = curve_simplify.simplify_RDP(ch, soptions)
             nch = CamPathChunkBuilder([])
 
-            for i in range(0, len(s)):
+            for i in range(len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
             if len(nch.points) > 2:

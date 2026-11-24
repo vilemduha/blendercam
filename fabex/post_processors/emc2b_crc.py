@@ -5,9 +5,7 @@
 #
 # Dan Heeks, 18th Jan 2011
 
-from . import nc
-from . import emc2b
-import math
+from . import emc2b, nc
 
 ################################################################################
 

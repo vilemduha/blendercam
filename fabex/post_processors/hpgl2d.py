@@ -4,15 +4,16 @@
 # This program is released under the BSD license. See the file COPYING for details.
 #
 
-from . import nc
 import math
+
+from . import nc
 
 
 class Creator(nc.Creator):
     def __init__(self):
         nc.Creator.__init__(self)
-        self.x = int(0)
-        self.y = int(0)  # these are in machine units, like 0.01mm or maybe 0.25mm
+        self.x = 0
+        self.y = 0  # these are in machine units, like 0.01mm or maybe 0.25mm
         self.metric()  # set self.units_to_mc_units
 
     def imperial(self):
@@ -56,9 +57,9 @@ class Creator(nc.Creator):
     def get_machine_x_y(self, x=None, y=None):
         machine_x = self.x
         machine_y = self.y
-        if x != None:
+        if x is not None:
             machine_x = self.closest_int(x * self.units_to_mc_units)
-        if y != None:
+        if y is not None:
             machine_y = self.closest_int(y * self.units_to_mc_units)
         return machine_x, machine_y
 
@@ -66,7 +67,7 @@ class Creator(nc.Creator):
         # ignore the z, any rapid will be assumed to be done with the pen up
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(("PU%i" % mx) + (" %i;\n" % my))
+            self.write((f"PU{mx}") + (f" {my};\n"))
             self.x = mx
             self.y = my
 
@@ -74,7 +75,7 @@ class Creator(nc.Creator):
         # ignore the z, any feed will be assumed to be done with the pen down
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(("PD%i" % mx) + (" %i;\n" % my))
+            self.write((f"PD{mx}") + (f" {my};\n"))
             self.x = mx
             self.y = my
 
@@ -102,7 +103,7 @@ class Creator(nc.Creator):
 
             mcx, mcy = self.get_machine_x_y(cx, cy)
 
-            self.write(("AA%i" % mcx) + (",%i" % mcy) + (",%d;\n" % (a * 180 / math.pi)))
+            self.write((f"AA{mcx}") + (f",{mcy}") + (f",{(a * 180 / math.pi)};\n"))
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(True, x, y, z, i, j, k, r)

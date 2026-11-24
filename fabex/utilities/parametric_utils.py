@@ -82,6 +82,7 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
 def create_parametric_curve(
     function,
     *args,
+    curve_name="Parametric",
     min: float = 0.0,
     max: float = 1.0,
     use_cubic: bool = True,
@@ -125,7 +126,7 @@ def create_parametric_curve(
     """
 
     # Create the Curve to populate with points.
-    curve = bpy.data.curves.new("Parametric", type="CURVE")
+    curve = bpy.data.curves.new(curve_name, type="CURVE")
     curve.dimensions = "3D"
     curve.resolution_u = 30
 
@@ -173,7 +174,7 @@ def create_parametric_curve(
             spline.bezier_points[i].handle_right_type = "VECTOR"
 
     # Create the Blender object and link it to the scene
-    curve_object = bpy.data.objects.new("Parametric", curve)
+    curve_object = bpy.data.objects.new(curve_name, curve)
     context = bpy.context
     scene = context.scene
     link_object = scene.collection.objects.link
@@ -200,7 +201,7 @@ def make_edge_loops(*objects):
     # Convert all curves to meshes
     for obj in objects:
         # Unlink old object
-        unlink_object(obj)
+        # unlink_object(obj)
 
         # Convert curve to a mesh
         if bpy.app.version >= (2, 80):
@@ -224,6 +225,7 @@ def make_edge_loops(*objects):
         vertex_groups.append(vertex_group)
 
         # Link our new object
+        link_object = scene.collection.objects.link
         link_object(new_object)
 
         # Add it to our list

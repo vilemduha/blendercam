@@ -4,7 +4,7 @@ Functions and Classes to allow asynchronous updates.
 Used to report progress during path calculation.
 """
 
-import sys
+from typing import ClassVar
 
 import bpy
 
@@ -39,6 +39,9 @@ class AsyncOperatorMixin:
             event (bpy.types.Event): The event being processed.
         """
 
+        wm = context.window_manager
+        workspace = bpy.context.workspace
+
         if bpy.app.background:
             return {"PASS_THROUGH"}
 
@@ -46,26 +49,27 @@ class AsyncOperatorMixin:
             try:
                 if self.tick(context):
                     return {"RUNNING_MODAL"}
+
                 else:
-                    context.window_manager.event_timer_remove(self.timer)
-                    bpy.context.workspace.status_text_set(None)
-                    context.window_manager.progress = 0
+                    wm.event_timer_remove(self.timer)
+                    workspace.status_text_set(None)
+                    wm.progress = 0
                     return {"FINISHED"}
+
             except Exception as e:
-                context.window_manager.event_timer_remove(self.timer)
-                bpy.context.workspace.status_text_set(None)
+                wm.event_timer_remove(self.timer)
+                workspace.status_text_set(None)
                 self.report({"ERROR"}, str(e))
                 return {"FINISHED"}
+
         elif event.type == "ESC":
             self._is_cancelled = True
             self.tick(context)
-            context.window_manager.event_timer_remove(self.timer)
-            bpy.context.workspace.status_text_set(None)
+            wm.event_timer_remove(self.timer)
+            workspace.status_text_set(None)
             return {"FINISHED"}
-        if "BLOCKING" in self.bl_options:
-            return {"RUNNING_MODAL"}
-        else:
-            return {"PASS_THROUGH"}
+
+        return {"RUNNING_MODAL" if "BLOCKING" in self.bl_options else "PASS_THROUGH"}
 
     def show_progress(self, context, text, n, value_type):
         """Display the progress of a task in the workspace and console.
@@ -86,15 +90,20 @@ class AsyncOperatorMixin:
                 percentage, units).
         """
 
+        wm = context.window_manager
+        workspace = bpy.context.workspace
+
         if n is not None:
             progress_text = f"{text}: {n:.2f}{value_type}"
-            context.window_manager.progress = n * 0.01
+            wm.progress = n * 0.01
             [a.tag_redraw() for a in context.screen.areas if a.type == "VIEW_3D"]
         else:
             progress_text = f"{text}"
-        bpy.context.workspace.status_text_set(progress_text + " (Press ESC to cancel)")
-        sys.stdout.write(f"Progress: {progress_text}\n")
-        sys.stdout.flush()
+
+        workspace.status_text_set(progress_text + " (Press ESC to cancel)")
+        log.info(progress_text)
+        # sys.stdout.write(f"{progress_text}\n")
+        # sys.stdout.flush()
 
     def tick(self, context):
         """Execute a tick of the coroutine and handle its progress.
@@ -118,21 +127,27 @@ class AsyncOperatorMixin:
             Exception: If an unexpected error occurs during the execution of the tick.
         """
 
-        if self.coroutine == None:
+        if self.coroutine is None:
             self.coroutine = self.execute_async(context)
+
         try:
             if self._is_cancelled:
-                (msg, args) = self.coroutine.send(AsyncCancelledException("Cancelled with ESC Key"))
+                (_msg, args) = self.coroutine.send(
+                    AsyncCancelledException("Cancelled with ESC Key")
+                )
                 raise StopIteration
             else:
-                (msg, args) = self.coroutine.send(None)
-            if msg == "Progress:":
-                self.show_progress(context, **args)
-            else:
-                sys.stdout.write(f"{msg},{args}")
+                (_msg, args) = self.coroutine.send(None)
+
+            # if msg == "Progress:":
+            self.show_progress(context, **args)
+            # else:
+            #     sys.stdout.write(f"{msg},{args}")
             return True
+
         except StopIteration:
             return False
+
         except Exception as e:
             log.error(f"Exception Thrown in Tick: {e}")
 
@@ -155,7 +170,7 @@ class AsyncOperatorMixin:
         if bpy.app.background:
             # running in background - don't run as modal,
             # otherwise tests all fail
-            while self.tick(context) == True:
+            while self.tick(context):
                 pass
             return {"FINISHED"}
         else:
@@ -169,7 +184,7 @@ class AsyncTestOperator(bpy.types.Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_async_test_operator"
     bl_label = "Test Operator for Async Stuff"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     async def execute_async(self, context):
         """Execute an asynchronous operation with a progress indicator.

@@ -8,23 +8,18 @@ import math
 import os
 import time
 
+import bpy
 import numpy as np
 
-
-import bpy
-
-from mathutils import Vector
-
-
 from . import __package__ as base_package
-
+from .exception import CamException
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import numpy_save
-from .utilities.logging_utils import log
+from .utilities.logging_utils import heading, log
 from .utilities.operation_utils import (
-    get_operation_sources,
     get_cutter_array,
+    get_operation_sources,
 )
 from .utilities.simple_utils import get_simulation_path
 
@@ -79,9 +74,9 @@ def create_simulation_object(name, operations, i):
     ob.scale.x = (o.max.x - o.min.x) / 2
     ob.scale.y = (o.max.y - o.min.y) / 2
 
-    log.info(f"{o.max.x}, {o.min.x}")
-    log.info(f"{o.max.y}, {o.min.y}")
-    log.info("Bounds")
+    log.info(heading("Bounds"))
+    log.info(f"X: {o.max.x}, {o.min.x}")
+    log.info(f"Y: {o.max.y}, {o.min.y}")
 
     disp = ob.modifiers[-1]
     disp.direction = "Z"
@@ -95,12 +90,10 @@ def create_simulation_object(name, operations, i):
         t.image = i
 
     else:
-
         bpy.ops.texture.new()
 
         for t in bpy.data.textures:
             if t.name == "Texture":
-
                 t.type = "IMAGE"
                 t.name = oname
                 t = t.type_recast()
@@ -112,10 +105,10 @@ def create_simulation_object(name, operations, i):
     bpy.ops.object.shade_smooth()
 
     # Assign Simulation Material
-    library_name = "Fabex Assets"
-    filename = "Fabex_Assets.blend"
     addon_prefs = bpy.context.preferences.addons[base_package].preferences
     material_name = str(addon_prefs.default_simulation_material).title()
+    library_name = "Fabex Assets"
+    filename = "Fabex_Assets.blend"
     filepaths = bpy.context.preferences.filepaths
     folder = filepaths.asset_libraries[library_name].path
     library_path = os.path.join(folder, filename)
@@ -128,11 +121,14 @@ def create_simulation_object(name, operations, i):
         asset_library,
         current_file,
     ):
-
         for material in asset_library.materials:
             if material == material_name:
-                current_file.materials.append(material)
+                if material not in bpy.data.materials:
+                    current_file.materials.append(material)
+                else:
+                    pass
 
+    # ob.material_slots[0].material = bpy.data.materials[material_name]
     ob.data.materials.append(bpy.data.materials[material_name])
     ob.active_material_index = len(ob.material_slots) - 1
     bpy.context.collection.objects.unlink(ob)
@@ -159,7 +155,7 @@ async def do_simulation(name, operations):
     i = await generate_simulation_image(operations, limits)
     cp = get_simulation_path() + name
 
-    log.info(f"Cache Path = {cp}")
+    log.info(f"Cache Path: {cp}")
 
     iname = cp + "_sim.exr"
     numpy_save(i, iname)
@@ -202,6 +198,12 @@ async def generate_simulation_image(operations, limits):
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 
+    max_sim_pixels = 8096 * 8096  # ~128 MB limit for the simulation array, upped to 512 MB as test
+    if resx * resy > max_sim_pixels:
+        message = f"Simulation resolution {resx}×{resy} ({resx * resy / 1e6:.1f}M pixels) exceeds limit.\n"
+        "Increase Simulation Detail or reduce the work area."
+        raise CamException(message)
+
     # create array in which simulation happens, similar to an image to be painted in.
     si = np.full(shape=(resx, resy), fill_value=maxz, dtype=float)
     num_operations = len(operations)
@@ -210,6 +212,10 @@ async def generate_simulation_image(operations, limits):
     for op_count, o in enumerate(operations):
         path_prefix = bpy.context.scene.cam_names.path_prefix
         ob = bpy.data.objects[f"{path_prefix}_{o.name}"]
+
+        log.debug(f"ob = {path_prefix}_{o.name}")
+        log.debug(f"path_name = {bpy.context.scene.cam_names.path_name_full}")
+
         m = ob.data
         verts = m.vertices
 
@@ -245,14 +251,14 @@ async def generate_simulation_image(operations, limits):
             if perc != int(100 * i / vtotal):
                 perc = int(100 * i / vtotal)
                 total_perc = (perc + op_count * 100) / num_operations
-                await progress_async(f"Simulation", int(total_perc))
+                await progress_async("Simulation", int(total_perc))
 
             if i > 0:
                 volume = 0
                 volume_partial = 0
                 s = vert.co
                 v = s - lasts
-                l = v.length
+                length = v.length
 
                 # only simulate inside material, and exclude lift-ups
                 if (lasts.z < maxz or s.z < maxz) and not (v.x == 0 and v.y == 0 and v.z > 0):
@@ -265,7 +271,7 @@ async def generate_simulation_image(operations, limits):
                         lastxs = xs
                         lastys = ys
 
-                        while v.length < l:
+                        while v.length < length:
                             xs = int(
                                 (lasts.x + v.x - minx) / simulation_detail
                                 + borderwidth
@@ -315,12 +321,14 @@ async def generate_simulation_image(operations, limits):
                 if o.do_simulation_feedrate:
                     volume += volume_partial
                     totalvolume += volume
-                    load = volume / l if l > 0 else 0
+                    load = volume / length if length > 0 else 0
 
                     # this will show the shapekey as debugging graph and will use same data to estimate parts
                     # with heavy load
-                    shapek.data[i].co.x = shapek.data[i - 1].co.x + l * 0.04
-                    shapek.data[i].co.y = (load) * 0.000002 if l != 0 else shapek.data[i - 1].co.y
+                    shapek.data[i].co.x = shapek.data[i - 1].co.x + length * 0.04
+                    shapek.data[i].co.y = (
+                        (load) * 0.000002 if length != 0 else shapek.data[i - 1].co.y
+                    )
                     shapek.data[i].co.z = 0
                 lasts = s
 
@@ -328,7 +336,7 @@ async def generate_simulation_image(operations, limits):
         if o.do_simulation_feedrate:
             xcoef = shapek.data[len(shapek.data) - 1].co.x / len(shapek.data)
 
-            for a in range(0, 10):
+            for a in range(10):
                 nvals = []
                 val1 = 0
                 val2 = 0
@@ -367,7 +375,6 @@ async def generate_simulation_image(operations, limits):
                 max_load = max(max_load, d.co.y)
 
             normal_load = total_load / len(shapek.data)
-            thres = 0.5
             scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
             totverts = len(shapek.data)
 
@@ -384,7 +391,7 @@ async def generate_simulation_image(operations, limits):
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
 
-    await progress_async("Simulated:", time.time() - start_time, "s")
+    await progress_async("Simulated", time.time() - start_time, "s")
 
     return si
 

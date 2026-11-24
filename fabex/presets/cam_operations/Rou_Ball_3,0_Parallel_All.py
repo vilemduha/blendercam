@@ -1,17 +1,17 @@
-import bpy
 from pathlib import Path
+
+import bpy
 
 bpy.ops.scene.cam_operation_add()
 
 scene = bpy.context.scene
 o = scene.cam_operations[scene.cam_active_operation]
+o.strategy = "PARALLEL"
 
 o.ambient_behaviour = "ALL"
-o.ambient_radius = 0.009999999776482582
-o.auto_nest = False
-o.borderwidth = 50
-o.carve_depth = 0.0010000000474974513
-o.circle_detail = 64
+o.ambient_radius = 0.01
+o.carve_depth = 0.001
+o.optimisation.circle_detail = 64
 o.curve_source = ""
 o.cut_type = "OUTSIDE"
 o.cutter_diameter = 0.003
@@ -21,41 +21,32 @@ o.cutter_type = "BALLNOSE"
 o.distance_along_paths = 0.0002
 o.distance_between_paths = 0.0024
 o.dont_merge = False
-o.duration = 96.3156509399414
-o.feedrate = 1.0
+o.feedrate = scene.cam_machine.feedrate_default or 1.0
 o.filename = o.name = f"{scene.cam_names.operation_name_full}_{Path(__file__).stem}"
-o.free_movement_height = 0.01
+o.movement.free_height = 0.01
 o.geometry_source = "OBJECT"
 o.inverse = False
-o.limit_curve = ""
-o.material_from_model = True
-o.material_origin = (0.0, 0.0, 0.0)
-o.material_radius_around_model = 0.003
-o.material_size = (0.20000000298023224, 0.20000000298023224, 0.10000000149011612)
-o.max = (0.1325458288192749, 0.14115460216999054, -0.041229985654354095)
-o.min = (0.02779383957386017, 0.014265235513448715, -0.1281193494796753)
-o.min_z = -0.1281193494796753
-o.min_z_from_ob = True
-o.movement_type = "MEANDER"
-o.object = None
-o.optimize = True
-o.optimize_threshold = 4.999999873689376e-05
+o.limit_curve = None
+o.material.estimate_from_model = True
+o.material.origin = (0.0, 0.0, 0.0)
+o.material.radius_around_model = 0.003
+o.material.size = (0.2, 0.2, 0.1)
+o.min_z = -0.128119
+o.movement.type = "MEANDER"
+o.optimisation.optimize = True
+o.optimisation.optimize_threshold = 5e-05
 o.parallel_angle = 0.0
-o.pixsize = 9.999999747378752e-05
+o.optimisation.pixsize = 0.0001
 o.plunge_feedrate = 30.0
-o.protect_vertical = True
-o.render_all = True
+o.movement.protect_vertical = True
 o.skin = 0.0003
-o.slice_detail = 0.0010000000474974513
+o.slice_detail = 0.001
 o.source_image_name = ""
 o.source_image_offset = (0.0, 0.0, 0.0)
 o.source_image_scale_z = 1.0
-o.source_image_size_x = 0.10000000149011612
-o.spindle = 30000.0
-o.stay_low = True
+o.source_image_size_x = 0.1
+o.movement.stay_low = True
 o.stepdown = 0.003
-o.strategy = "PARALLEL"
-o.testing = 0
 o.update_offset_image_tag = False
 o.update_silhouette_tag = True
 o.update_z_buffer_image_tag = False

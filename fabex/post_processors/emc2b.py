@@ -1,10 +1,8 @@
-from . import nc
-from . import iso_modal
-import math
 import datetime
-import time
 
-now = datetime.datetime.now()
+from . import iso_modal, nc
+
+now = datetime.datetime.now(datetime.UTC)
 
 
 class Creator(iso_modal.Creator):
@@ -15,7 +13,7 @@ class Creator(iso_modal.Creator):
         self.output_G43_on_tool_change_line = True
 
     def SPACE(self):
-        if self.start_of_line == True:
+        if self.start_of_line:
             self.start_of_line = False
             return ""
         else:
@@ -38,23 +36,19 @@ class Creator(iso_modal.Creator):
     # Begin Program
 
     def program_begin(self, id, comment):
-        if self.useCrc == False:
+        if not self.useCrc:
             self.write(
-                (
-                    "(Created with emc2b post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                )
+                "(Created with emc2b post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         else:
             self.write(
-                (
-                    "(Created with emc2b Cutter Radius Compensation post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                )
+                "(Created with emc2b Cutter Radius Compensation post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         iso_modal.Creator.program_begin(self, id, comment)
 

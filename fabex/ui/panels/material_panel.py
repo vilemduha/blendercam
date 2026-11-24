@@ -3,7 +3,6 @@
 'CAM Material' properties and panel in Properties > Render
 """
 
-import bpy
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
@@ -36,21 +35,20 @@ class CAM_MATERIAL_Panel(CAMParentPanel, Panel):
             col.label(text="Estimated from Image")
 
         # Estimate from Object
-        if self.level >= 1:
-            if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                box = layout.box()
-                col = box.column(align=True)
-                col.label(text="Size")
-                row = col.row()
-                row.prop(self.op.material, "material_source", text="Source")
-                if self.op.material.material_source == "MODEL":
-                    col.prop(self.op.material, "radius_around_model", text="Additional Radius")
-                if self.op.material.material_source == "OBJECT":
-                    col.prop(self.op.material, "alt_object")
-                    col.prop(self.op.material, "radius_around_model", text="Additional Radius")
-                if self.op.material.material_source == "DIMENSIONS":
-                    col.prop(self.op.material, "origin")
-                    col.prop(self.op.material, "size")
+        if self.level >= 1 and self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+            box = layout.box()
+            col = box.column(align=True)
+            col.label(text="Size")
+            row = col.row()
+            row.prop(self.op.material, "material_source", text="Source")
+            if self.op.material.material_source == "MODEL":
+                col.prop(self.op.material, "radius_around_model", text="Additional Radius")
+            if self.op.material.material_source == "OBJECT":
+                col.prop(self.op.material, "alt_object")
+                col.prop(self.op.material, "radius_around_model", text="Additional Radius")
+            if self.op.material.material_source == "DIMENSIONS":
+                col.prop(self.op.material, "origin")
+                col.prop(self.op.material, "size")
 
         # Axis Alignment
         if self.op.geometry_source in ["OBJECT", "COLLECTION"]:

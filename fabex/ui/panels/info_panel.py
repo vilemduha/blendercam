@@ -4,13 +4,13 @@
 """
 
 from datetime import timedelta
+from typing import ClassVar
 
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAMParentPanel
-
 from ...utilities.version_utils import get_fabex_version
+from .parent_panel import CAMParentPanel
 
 
 # Info panel
@@ -18,7 +18,7 @@ from ...utilities.version_utils import get_fabex_version
 class CAM_INFO_Panel(CAMParentPanel, Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
-    bl_options = {"HIDE_HEADER"}
+    bl_options: ClassVar = {"HIDE_HEADER"}
 
     bl_label = "Info & Warnings"
     bl_idname = "FABEX_PT_CAM_INFO"
@@ -39,8 +39,8 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         main = layout.box()
         # main.label(text=f"[ Fabex v{get_fabex_version()} Info ]", icon="INFO")
         column = main.column(align=True)
-        column.label(text=f"[ Info ]", icon="INFO")
-        column.label(text=f"Fabex v{get_fabex_version()}")
+        column.label(text="[ Info ]", icon="INFO")
+        column.label(text=f"Fabex version: {get_fabex_version()}")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
             col.scale_y = 2
@@ -52,7 +52,8 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         if self.op is None:
             return
         else:
-            if not self.op.info.warnings == "":
+            #            if not self.op.info.warnings == "":
+            if self.op.info.warnings:
                 # Operation Warnings
                 box = main.box()
                 col = box.column(align=True)
@@ -65,12 +66,12 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                             icon = "MOD_WIREFRAME"
                         if line.startswith(("Memory", "Detail")):
                             icon = "MEMORY"
-                        if line.startswith(("!!!")):
+                        if line.startswith("!!!"):
                             icon = "ERROR"
                         col.label(text=line, icon=icon)
 
             # Cutter Engagement
-            if not self.op.strategy == "CUTOUT" and not self.op.cutter_type in ["LASER", "PLASMA"]:
+            if self.op.strategy != "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
                 box = main.box()
                 col = box.column(align=True)
                 # Warns if cutter engagement is greater than 50%
@@ -125,7 +126,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             if self.op.info.chipload > 0:
                 chipload = self.op.feedrate / (self.op.spindle_rpm * self.op.cutter_flutes)
                 chipload = f"{chipload:.5f}"
-                title_col.label(text=f"Chipload:")
+                title_col.label(text="Chipload:")
                 value_col.label(
                     text=chipload,
                     icon="DRIVER_ROTATIONAL_DIFFERENCE",

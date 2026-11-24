@@ -31,17 +31,17 @@ Steve Fortune's homepage: http://netlib.bell-labs.com/cm/cs/who/sjf/index.html
 """
 
 import math
+from typing import ClassVar
 
 from ..constants import (
-    TOLERANCE,
     BIG_FLOAT,
     PY3,
+    TOLERANCE,
 )
-
 from .logging_utils import log
 
 
-class Context(object):
+class Context:
     def __init__(self):
         """Init function."""
         self.doPrint = 0
@@ -72,7 +72,7 @@ class Context(object):
             list: A list of tuples, where each tuple contains two points representing the
                 clipped edges.
         """
-        xmin, xmax, ymin, ymax = self.extent
+        _xmin, _xmax, _ymin, _ymax = self.extent
         clipEdges = []
         for edge in self.edges:
             equation = self.lines[edge[0]]  # line equation
@@ -234,10 +234,8 @@ class Context(object):
             # delete duplicate (happens if intersect point is at extent corner)
             intersectPts = set(intersectPts)
             # choose target intersect point
-            if leftDir:
-                pt = min(intersectPts)  # smaller x value
-            else:
-                pt = max(intersectPts)
+            pt = min(intersectPts) if leftDir else max(intersectPts)
+
             return pt
 
     def in_extent(self, x, y):
@@ -285,7 +283,7 @@ class Context(object):
         # try to get start & end point
         try:
             # start and end point aren't duplicate
-            startPt, endPt = [pt for pt in pts if pts.count(pt) < 2]
+            startPt, _endPt = [pt for pt in pts if pts.count(pt) < 2]
         except:  # all points are duplicate --> polygon is complete --> append some or other edge points
             complete = True
             firstIdx = 0
@@ -471,11 +469,10 @@ class Context(object):
 
         self.edges.append((edge.edgenum, sitenumL, sitenumR))
 
-        if not self.triangulate:
-            if self.doPrint:
-                log.info(f"e {edge.edgenum}")
-                log.info(f" {sitenumL} ")
-                log.info(f"{sitenumR}")
+        if not self.triangulate and self.doPrint:
+            log.info(f"e {edge.edgenum}")
+            log.info(f" {sitenumL} ")
+            log.info(f"{sitenumR}")
 
 
 def voronoi(siteList, context):
@@ -654,7 +651,7 @@ def is_equal(a, b, relativeError=TOLERANCE):
     return (norm < relativeError) or (abs(a - b) < (relativeError * norm))
 
 
-class Site(object):
+class Site:
     def __init__(self, x=0.0, y=0.0, sitenum=0):
         """Init function."""
         self.x = x
@@ -737,11 +734,11 @@ class Site(object):
         return math.sqrt(dx * dx + dy * dy)
 
 
-class Edge(object):
+class Edge:
     LE = 0  # left end indice --> edge.ep[Edge.LE]
     RE = 1  # right end indice
     EDGE_NUM = 0
-    DELETED = {}  # marker value
+    DELETED: ClassVar = {}  # marker value
 
     def __init__(self):
         """Init function."""
@@ -787,9 +784,7 @@ class Edge(object):
             bool: True if the opposite endpoint is set, False otherwise.
         """
         self.ep[lrFlag] = site
-        if self.ep[Edge.RE - lrFlag] is None:
-            return False
-        return True
+        return self.ep[Edge.RE - lrFlag] is not None
 
     @staticmethod
     def bisect(s1, s2):
@@ -840,7 +835,7 @@ class Edge(object):
         return newedge
 
 
-class Halfedge(object):
+class Halfedge:
     def __init__(self, edge=None, pm=Edge.LE):
         """Init function."""
         self.left = None  # left Halfedge in the edge list
@@ -874,7 +869,7 @@ class Halfedge(object):
         log.info(f"Right: {self.right}")
         log.info(f"Edge: {self.edge}")
         log.info(f"PM: {self.pm}")
-        log.info("Vertex: "),
+        (log.info("Vertex: "),)
         if self.vertex:
             self.vertex.dump()
         else:
@@ -1075,7 +1070,7 @@ class Halfedge(object):
         return Site(xint, yint)
 
 
-class EdgeList(object):
+class EdgeList:
     def __init__(self, xmin, xmax, nsites):
         """Init function."""
         if xmin > xmax:
@@ -1168,10 +1163,9 @@ class EdgeList(object):
             HalfEdge: The half-edge that is to the left of the given point.
         """
         # Use hash table to get close to desired halfedge
-        bucket = int(((pt.x - self.xmin) / self.deltax * self.hashsize))
+        bucket = int((pt.x - self.xmin) / self.deltax * self.hashsize)
 
-        if bucket < 0:
-            bucket = 0
+        bucket = max(bucket, 0)
 
         if bucket >= self.hashsize:
             bucket = self.hashsize - 1
@@ -1205,7 +1199,7 @@ class EdgeList(object):
         return he
 
 
-class PriorityQueue(object):
+class PriorityQueue:
     def __init__(self, ymin, ymax, nsites):
         """Init function."""
         self.ymin = ymin
@@ -1311,12 +1305,10 @@ class PriorityQueue(object):
             int: The calculated bucket index, constrained within the valid range.
         """
         bucket = int(((he.ystar - self.ymin) / self.deltay) * self.hashsize)
-        if bucket < 0:
-            bucket = 0
+        bucket = max(bucket, 0)
         if bucket >= self.hashsize:
             bucket = self.hashsize - 1
-        if bucket < self.minidx:
-            self.minidx = bucket
+        self.minidx = min(self.minidx, bucket)
         return bucket
 
     def get_min_point(self):
@@ -1355,7 +1347,7 @@ class PriorityQueue(object):
         return curr
 
 
-class SiteList(object):
+class SiteList:
     def __init__(self, pointList):
         """Init function."""
         self.__sites = []
@@ -1388,7 +1380,7 @@ class SiteList(object):
         site.sitenum = self.__sitenum
         self.__sitenum += 1
 
-    class Iterator(object):
+    class Iterator:
         def __init__(this, lst):
             """Init function."""
             this.generator = (s for s in lst)
@@ -1619,9 +1611,8 @@ def format_edges_output(edges):
     # get dict {values:index}
     valuesIdxDict = dict(zip(pts, range(len(pts))))
     # get edges index reference
-    edgesIdx = []
-    for edge in edges:
-        edgesIdx.append([valuesIdxDict[pt] for pt in edge])
+    edgesIdx = [[valuesIdxDict[pt] for pt in edge] for edge in edges]
+
     return list(pts), edgesIdx
 
 

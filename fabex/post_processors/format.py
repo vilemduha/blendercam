@@ -23,12 +23,12 @@ class Format:
         self.round_down = round_down
 
     def string(self, number):
-        if number == None:
+        if number is None:
             return "None"
         f = float(number) * math.pow(10, self.number_of_decimal_places)
         s = format(f, "f")
 
-        if self.round_down == False:
+        if not self.round_down:
             if f < 0:
                 f = f - 0.5
             else:
@@ -54,16 +54,15 @@ class Format:
 
         before_dp = before_dp.zfill(self.add_leading_zeros)
         if self.add_trailing_zeros:
-            for i in range(0, self.number_of_decimal_places - len(after_dp)):
+            for i in range(self.number_of_decimal_places - len(after_dp)):
                 after_dp += "0"
         else:
             after_dp = after_dp.rstrip("0")
 
         s = ""
 
-        if minus == False:
-            if self.add_plus == True:
-                s += "+"
+        if not minus and self.add_plus:
+            s += "+"
         s += before_dp
         if len(after_dp):
             if self.dp_wanted:
@@ -85,7 +84,7 @@ class Address:
         self.str = self.text + self.fmt.string(number)
 
     def write(self, writer):
-        if self.str == None:
+        if self.str is None:
             return ""
         if self.modal:
             if self.str != self.previous:
@@ -111,7 +110,7 @@ class AddressPlusMinus(Address):
 
     def write(self, writer):
         Address.write(self, writer)
-        if self.str2 == None:
+        if self.str2 is None:
             return ""
         if self.modal:
             if self.str2 != self.previous2:

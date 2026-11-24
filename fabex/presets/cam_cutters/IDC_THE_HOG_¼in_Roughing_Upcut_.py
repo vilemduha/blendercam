@@ -1,6 +1,7 @@
 ### IDC_THE_HOG_¼in_Roughing_Upcut_.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
 correction = 0.0254

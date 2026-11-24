@@ -4,12 +4,12 @@ Generate and Export G-Code based on scene, machine, chain, operation and path se
 """
 
 # G-code Generaton
+import time
 from importlib import import_module
 from math import (
     ceil,
     pi,
 )
-import time
 
 
 import bpy
@@ -22,14 +22,13 @@ from ..constants import (
     ROTATION_CORRECTION,
 )
 from ..post_processors import iso
-
 from ..utilities.compare_utils import point_on_line
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.simple_utils import (
-    progress,
     safe_filename,
     unit_value_to_string,
 )
+from ..utilities.version_utils import get_fabex_version
 
 
 def export_gcode_path(filename, vertslist, operations):
@@ -52,7 +51,7 @@ def export_gcode_path(filename, vertslist, operations):
         None: This function does not return a value; it writes the G-code to a file.
     """
     log.debug("EXPORT")
-    progress("~ Exporting G-code File ~")
+    log.info(heading("Exporting G-code File"))
 
     t = time.time()
     s = bpy.context.scene
@@ -87,6 +86,7 @@ def export_gcode_path(filename, vertslist, operations):
 
     processor_extension = {
         "ANILAM": ("anilam_crusader_m", ".tap"),
+        "BIESSE_CIX": ("biesse_cix", ".cix"),
         "CENTROID": ("centroid1", ".tap"),
         "EMC": ("emc2b", ".ngc"),
         "FADAL": ("fadal", ".tap"),
@@ -98,10 +98,11 @@ def export_gcode_path(filename, vertslist, operations):
         "ISO": ("iso", ".tap"),
         "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
         "MACH3": ("mach3", ".tap"),
+        "RTCNC_RTSX": ("rtcnc_rtsx.py", ".nc"),
         "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
         "SIEGKX1": ("siegkx1", ".tap"),
         "TNC151": ("tnc151", ".tap"),
-        "USER": {"user", ".gcode"},
+        "USER": ("user", ".gcode"),
         "WIN-PC": ("winpc", ".din"),
     }
 
@@ -137,7 +138,6 @@ def export_gcode_path(filename, vertslist, operations):
         filename = basefilename + fileindex + extension
 
         log.info(f"Writing: {filename}")
-        log.info("-")
 
         c = postprocessor.Creator()
 
@@ -162,7 +162,14 @@ def export_gcode_path(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        c.comment("G-code Generated with Fabex and NC library")
+        header_message = "G-code Generated with Fabex V"
+        header_message += get_fabex_version()
+        header_message += " on Blender V"
+        header_message += bpy.app.version_string
+        header_message += " and NC"
+        c.comment(header_message)
+        frf = round(m.feedrate_rapid * unitcorr, 2)
+        c.comment(f"Rapids: {frf}/min")
         # absolute coordinates
         c.absolute()
         # work-plane, by now always xy,
@@ -194,9 +201,15 @@ def export_gcode_path(filename, vertslist, operations):
 
         if o.machine_axes != "3":
             rots = mesh.shape_keys.key_blocks["rotations"].data
+            if hasattr(c, "write_wfl_macro") and len(rots) > 0:
+                # INDEXED (3+2) operation: the compound tilt is constant
+                # for the whole operation, so read it once from the first
+                # vertex's stored rotation rather than per-point.
+                cangle, tilt, _unused = rots[0].co
+                c.write_wfl_macro(cangle, tilt)
 
         # spindle rpm and direction
-        spdir_clockwise = True if o.movement.spindle_rotation == "CW" else False
+        spdir_clockwise = o.movement.spindle_rotation == "CW"
 
         # write tool, not working yet probably
         # print (last_cutter)
@@ -206,23 +219,28 @@ def export_gcode_path(filename, vertslist, operations):
             o.cutter_type,
             o.cutter_flutes,
         ]:
-            if m.output_tool_change:
-                c.tool_change(o.cutter_id)
+            c.current_operation = o
+            c.tool_change(o.cutter_id)
 
         if m.output_tool_definitions:
             c.comment(
-                "Tool: D = %s type %s flutes %s"
-                % (
-                    unit_value_to_string(o.cutter_diameter, 4),
-                    o.cutter_type,
-                    o.cutter_flutes,
-                )
+                f"Tool: D = {unit_value_to_string(o.cutter_diameter, 4)} type {o.cutter_type} flutes {o.cutter_flutes}"
             )
 
         c.flush_nc()
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
 
+        fmh = round(free_height * unitcorr, 2)
+
         if o.cutter_type not in ["LASER", "PLASMA"]:
+            frf = round(m.feedrate_rapid * unitcorr, 2)
+
+            # Raise Z to job start height BEFORE spindle starts,
+            # so the cutter clears toolsetters and fixtures
+            if m.use_job_start_height and not getattr(c, "_native_cutout_active", False):
+                jsh = round(m.job_start_height * unitcorr, 2)
+                c.write(f"G00 Z{jsh} F{frf}\n")
+
             if o.enable_hold:
                 c.write("(Hold Down)\n")
                 lines = o.gcode_start_hold_cmd.split(";")
@@ -254,11 +272,14 @@ def export_gcode_path(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
 
-        # raise the spindle to safe height
-        fmh = round(free_height * unitcorr, 2)
-
-        if o.cutter_type not in ["LASER", "PLASMA"]:
-            c.write("G00 Z" + str(fmh) + "\n")
+        # Raise to free height. When job start height is active the first path
+        # vertex already positions X, Y and Z, so this move is redundant.
+        if (
+            o.cutter_type not in ["LASER", "PLASMA"]
+            and not m.use_job_start_height
+            and not getattr(c, "_native_cutout_active", False)
+        ):
+            c.write(f"G00 Z{fmh} F{frf}\n")
 
         if o.enable_a_axis:
             if o.rotation_a == 0:
@@ -304,6 +325,10 @@ def export_gcode_path(filename, vertslist, operations):
         online = 0
         cut = True  # active cut variable for laser or plasma
         shapes = 0
+        # When job start height is active the origin vertex (X0 Y0) is skipped;
+        # instead the first rapid is split into XY-then-Z so the machine moves
+        # to the actual cut position at full clearance before descending.
+        job_start_pending = m.use_job_start_height and o.cutter_type not in ["LASER", "PLASMA"]
 
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
@@ -312,6 +337,11 @@ def export_gcode_path(filename, vertslist, operations):
             shapes += 1  # Count amount of shapes
 
             if i > 0 and vi == 0:
+                continue
+
+            # Skip origin vertex when job start height is active — the machine is
+            # already at clearance height and the next vertex carries the real XY.
+            if job_start_pending and vi == 0:
                 continue
             v = vert.co
             # redundant point on line detection
@@ -354,8 +384,8 @@ def export_gcode_path(filename, vertslist, operations):
                 fadjustval = shapek.data[vi].co.z / scale_graph
 
             vect = v - last
-            l = vect.length
-            if vi > 0 and l > 0 and downvector.angle(vect) < plungelimit:
+            length = vect.length
+            if vi > 0 and length > 0 and downvector.angle(vect) < plungelimit:
                 if f != plungefeedrate or (fadjust and fadjustval != 1):
                     f = plungefeedrate * fadjustval
                     c.feedrate(f)
@@ -400,7 +430,18 @@ def export_gcode_path(filename, vertslist, operations):
                             cut = False
                         c.rapid(x=vx, y=vy)
                     else:
-                        c.rapid(x=vx, y=vy, z=vz)
+                        if job_start_pending:
+                            # First rapid after job start height: move XY at clearance
+                            # height first, then descend to free height separately.
+                            if vx is None:
+                                vx = 0
+                            if vy is None:
+                                vy = 0
+                            c.rapid(x=vx, y=vy)
+                            c.rapid(z=vz)
+                            job_start_pending = False
+                        else:
+                            c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
                             # compensate for multiple fast move accelerations
@@ -466,7 +507,7 @@ def export_gcode_path(filename, vertslist, operations):
                 c.write(aline + "\n")
 
     o.info.duration = duration * unitcorr
-    log.info(f"Total Time: {round(o.info.duration * 60)} seconds")
+    log.info(f"Cut Time: {round(o.info.duration * 60)}s")
     if bpy.context.scene.unit_settings.system == "METRIC":
         unit_distance = "m"
         cut_distance /= 1000
@@ -484,4 +525,4 @@ def export_gcode_path(filename, vertslist, operations):
 
     c.program_end()
     c.file_close()
-    log.info(f"{time.time() - t}")
+    log.info(f"Calculation TIme: {time.time() - t}")

@@ -1,32 +1,31 @@
+import sys
 from math import (
     pi,
     sqrt,
     tan,
 )
-import sys
 
+import bpy
 from shapely.geometry import (
     LineString,
     MultiPolygon,
     Point,
 )
 from shapely.ops import linemerge
-
-import bpy
+from shapely.prepared import prep
 
 from ..exception import CamException
-
 from ..utilities.chunk_utils import (
-    chunks_to_mesh,
     chunks_refine_threshold,
+    chunks_to_mesh,
     sort_chunks,
 )
 from ..utilities.compare_utils import check_equal, unique
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
 from ..utilities.shapely_utils import (
-    shapely_to_curve,
     shapely_to_chunks,
+    shapely_to_curve,
 )
 from ..utilities.silhouette_utils import get_operation_silhouette
 from ..utilities.simple_utils import (
@@ -63,7 +62,7 @@ async def medial_axis(o):
             is not closed.
     """
 
-    log.info("Strategy: Medial Axis")
+    log.info(heading("Strategy: Medial Axis"))
 
     remove_multiple("medialMesh")
 
@@ -89,7 +88,8 @@ async def medial_axis(o):
     elif o.cutter_type == "BALLNOSE":
         max_depth = -new_cutter_diameter / 2 - o.skin
     else:
-        raise CamException("Only Ballnose and V-carve Cutters Are Supported for Medial Axis.")
+        message = "Only Ballnose and V-carve Cutters Are Supported for Medial Axis."
+        raise CamException(message)
 
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
@@ -106,8 +106,7 @@ async def medial_axis(o):
     for ob in o.objects:
         if ob.type in ["CURVE", "FONT"]:
             resolutions_before.append(ob.data.resolution_u)
-            if ob.data.resolution_u < 64:
-                ob.data.resolution_u = 64
+            ob.data.resolution_u = max(ob.data.resolution_u, 64)
 
     silhouette_polygon = get_operation_silhouette(o)
     silhouette_is_list = isinstance(silhouette_polygon, list)
@@ -122,10 +121,15 @@ async def medial_axis(o):
         # just a multipolygon
         multipolygon = silhouette_polygon
     else:
-        raise CamException("Failed Getting Object Silhouette. Is Input Curve Closed?")
+        message = "Failed Getting Object Silhouette. Is Input Curve Closed?"
+        raise CamException(message)
 
     multipolygon_boundary = multipolygon.boundary
     multipolygon_geometry = multipolygon.geoms
+
+    is_vcarve = o.cutter_type == "VCARVE"
+    is_ballnose = o.cutter_type in ("BALL", "BALLNOSE")
+    cutter_radius = new_cutter_diameter / 2.0
 
     for polygon_index, polygon in enumerate(multipolygon_geometry):
         polygon_index += 1
@@ -145,12 +149,12 @@ async def medial_axis(o):
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
-        log.info("~ Exclude Points ~")
+        log.info(heading("Exclude Points"))
         log.info(f"Duplicate: {duplicate_point_count}")
         log.info(f"Z Colinear: {z_colinear_point_count}")
 
         if vertex_count < 3:
-            log.info("Not Enough Points")
+            log.info("Status: Not Enough Points")
             return {"FINISHED"}
 
         # Check colinear
@@ -158,14 +162,13 @@ async def medial_axis(o):
         y_values = [vertex[1] for vertex in vertices]
 
         if check_equal(x_values) or check_equal(y_values):
-            log.info("Points Are Colinear")
+            log.info("Status: Points Are Colinear")
             return {"FINISHED"}
 
         # Create diagram
-        log.info(f"Tesselation... ({vertex_count} Points)")
+        log.info(f"Tesselating: ({vertex_count} Points)")
 
         x_buffer, y_buffer = 5, 5
-        z_position = 0
         verts_as_points = [Point(vertex[0], vertex[1], vertex[2]) for vertex in vertices]
         points, edges = compute_voronoi_diagram(
             verts_as_points,
@@ -175,10 +178,13 @@ async def medial_axis(o):
             formatOutput=True,
         )
 
+        # `prep()` builds a spatial index for `polygon` once
+        prepared_polygon = prep(polygon)
+
         vertr = []
         filtered_points = []
 
-        log.info("Filtering Points...")
+        log.info(heading("Filtering Points"))
 
         newIdx = 0
         point_count = len(points)
@@ -193,56 +199,52 @@ async def medial_axis(o):
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 
-            if not polygon.contains(Point(point)):
+            # Build the Point once and reuse it for both the containment
+            # test and the distance calc below
+            point_geom = Point(point)
+
+            if not prepared_polygon.contains(point_geom):
                 vertr.append((True, -1))
             else:
                 vertr.append((False, newIdx))
 
-                if o.cutter_type == "VCARVE":
+                if is_vcarve:
                     # start the z depth calc from the "start depth" of the operation.
-                    z = o.max_z - multipolygon.boundary.distance(Point(point)) * slope
-                    z = max_depth if z < max_depth else z
+                    # NOTE: this now uses the cached `multipolygon_boundary` computed
+                    # once above
+                    z = o.max_z - multipolygon_boundary.distance(point_geom) * slope
+                    z = max(z, max_depth)
 
-                elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
-                    d = multipolygon_boundary.distance(Point(point))
-                    r = new_cutter_diameter / 2.0
+                elif is_ballnose:
+                    d = multipolygon_boundary.distance(point_geom)
 
-                    if d >= r:
-                        z = -r
+                    if d >= cutter_radius:
+                        z = -cutter_radius
                     else:
-                        z = -r + sqrt(r * r - d * d)
+                        z = -cutter_radius + sqrt(cutter_radius * cutter_radius - d * d)
                 else:
-                    z = 0  #
+                    z = 0
 
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
-        log.info("-")
-        log.info("Filtering Edges...")
-        log.info("-")
+        log.info(heading("Filtering Edges"))
 
-        filtered_edges = []
         line_edges = []
 
         for edge in edges:
-            # Exclude Edges with already excluded Points
-            do = False if vertr[edge[0]][0] or vertr[edge[1]][0] else True
+            # Exclude edges that touch an already-excluded point.
+            if vertr[edge[0]][0] or vertr[edge[1]][0]:
+                continue
 
-            if do:
-                filtered_edges.append(
+            line_edges.append(
+                LineString(
                     (
-                        vertr[edge[0]][1],
-                        vertr[edge[1]][1],
+                        filtered_points[vertr[edge[0]][1]],
+                        filtered_points[vertr[edge[1]][1]],
                     )
                 )
-                line_edges.append(
-                    LineString(
-                        (
-                            filtered_points[vertr[edge[0]][1]],
-                            filtered_points[vertr[edge[1]][1]],
-                        )
-                    )
-                )
+            )
 
         polygon_buffer = polygon.buffer(-new_cutter_diameter / 2, resolution=64)
         lines = linemerge(line_edges)
@@ -272,15 +274,16 @@ async def medial_axis(o):
     )
     chunk_layers = []
 
-    for layer in layers:
-        for chunk in chunks:
-            if chunk.is_below_z(layer[0]):
-                new_chunk = chunk.copy()
-                new_chunk.clamp_z(layer[1])
-                chunk_layers.append(new_chunk)
-
     if o.first_down:
-        chunk_layers = await sort_chunks(chunk_layers, o)
+        chunk_layer_pairs = ((chunk, layer) for chunk in chunks for layer in layers)
+    else:
+        chunk_layer_pairs = ((chunk, layer) for layer in layers for chunk in chunks)
+
+    for chunk, layer in chunk_layer_pairs:
+        if chunk.is_below_z(layer[0]):
+            new_chunk = chunk.copy()
+            new_chunk.clamp_z(layer[1])
+            chunk_layers.append(new_chunk)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
         join_multiple("medialMesh")

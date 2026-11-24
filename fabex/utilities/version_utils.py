@@ -78,7 +78,7 @@ def opencamlib_version():
     except ImportError:
         try:
             import opencamlib as ocl
-        except ImportError as e:
+        except ImportError:
             return
     return ocl.version()
 

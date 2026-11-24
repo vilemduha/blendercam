@@ -3,22 +3,25 @@
 Various helper functions, less complex than those found in the 'utils' files.
 """
 
-from math import (
-    hypot,
-    pi,
-)
 import os
 import string
-import sys
-import time
 
-from shapely.geometry import Polygon
+# import sys
+import time
+from math import (
+    cos,
+    hypot,
+    pi,
+    sin,
+)
 
 import bpy
+import numpy
 from mathutils import Vector
+from shapely.geometry import Polygon
 
-from .logging_utils import log
 from ..constants import BULLET_SCALE
+from .logging_utils import log
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -316,9 +319,7 @@ def compare(v1, v2, vmiddle, e):
     vect1.normalize()
     vect1 *= vect2.length
     v = vect2 - vect1
-    if v.length < e:
-        return True
-    return False
+    return v.length < e
 
 
 def is_vertical_limit(v1, v2, limit):
@@ -376,12 +377,12 @@ def get_cache_path(o):
         str: The constructed cache path as a string.
     """
     fn = bpy.data.filepath
-    l = len(bpy.path.basename(fn))
+    length = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
-    log.info(f"Folder: {fn[:-l]}")
+    log.info(f"Folder: {fn[:-length]}")
     log.info(f"File: {bn}")
 
-    iname = f"{fn[:-l]}temp_cam{os.sep}{bn}_{o.name}"
+    iname = f"{fn[:-length]}temp_cam{os.sep}{bn}_{o.name}"
     return iname
 
 
@@ -397,8 +398,8 @@ def get_simulation_path():
         str: The path to the temporary CAM directory.
     """
     fn = bpy.data.filepath
-    l = len(bpy.path.basename(fn))
-    iname = f"{fn[:-l]}temp_cam{os.sep}"
+    length = len(bpy.path.basename(fn))
+    iname = f"{fn[:-length]}temp_cam{os.sep}"
     return iname
 
 
@@ -417,7 +418,7 @@ def safe_filename(name):  # for export gcode
         str: A sanitized version of the input string that contains only valid
         characters for a file name.
     """
-    valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
+    valid_chars = f"-_.(){string.ascii_letters}{string.digits}"
     filename = "".join(c for c in name if c in valid_chars)
     return filename
 
@@ -533,6 +534,7 @@ def make_active(name):
     bpy.ops.object.select_all(action="DESELECT")
     bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
+    return ob
 
 
 # change the name of the active object
@@ -546,12 +548,15 @@ def active_name(name):
 
     Args:
         name (str): The new name to assign to the active object.
+
+    Returns: the object
     """
     bpy.context.active_object.name = name
+    return bpy.context.active_object
 
 
 # renames and makes active name and makes it active
-def rename(name, name2):
+def rename(oldName, newName):
     """Rename an object and make it active.
 
     This function renames an object in the Blender context and sets it as
@@ -560,11 +565,11 @@ def rename(name, name2):
     new name provided.
 
     Args:
-        name (str): The current name of the object to be renamed.
-        name2 (str): The new name to assign to the active object.
+        oldName (str): The current name of the object to be renamed.
+        newName (str): The new name to assign to the active object.
     """
-    make_active(name)
-    bpy.context.active_object.name = name2
+    make_active(oldName)
+    bpy.context.active_object.name = newName
 
 
 # boolean union of objects starting with name result is object name.
@@ -608,7 +613,7 @@ def intersect(name):
 
 
 def difference(name, basename):
-    """Perform a boolean difference operation on objects.
+    """Perform a boolean difference operation on curve objects.
 
     This function selects a series of objects specified by `name` and
     performs a boolean difference operation with the object specified by
@@ -632,7 +637,7 @@ def difference(name, basename):
 
 # duplicate active object or duplicate move
 # if x or y not the default, duplicate move will be executed
-def duplicate(x=0.0, y=0.0):
+def duplicate(x=0.0, y=0.0, z=0.0):
     """Duplicate an active object or move it based on the provided coordinates.
 
     This function duplicates the currently active object in Blender. If both
@@ -646,12 +651,12 @@ def duplicate(x=0.0, y=0.0):
         y (float): The y-coordinate offset for the duplication.
             Defaults to 0.
     """
-    if x == 0.0 and y == 0.0:
+    if x == 0.0 and y == 0.0 and z == 0.0:
         bpy.ops.object.duplicate()
     else:
         bpy.ops.object.duplicate_move(
             OBJECT_OT_duplicate={"linked": False, "mode": "TRANSLATION"},
-            TRANSFORM_OT_translate={"value": (x, y, 0.0)},
+            TRANSFORM_OT_translate={"value": (x, y, z)},
         )
 
 
@@ -691,7 +696,7 @@ def mirror_y():
 
 
 # move active object and apply translation
-def move(x=0.0, y=0.0):
+def move(x=0.0, y=0.0, z=0.0):
     """Move the active object in the 3D space by applying a translation.
 
     This function translates the active object in Blender's 3D view by the
@@ -702,8 +707,9 @@ def move(x=0.0, y=0.0):
     Args:
         x (float): The distance to move the object along the x-axis. Defaults to 0.0.
         y (float): The distance to move the object along the y-axis. Defaults to 0.0.
+        Z (float)
     """
-    bpy.ops.transform.translate(value=(x, y, 0.0))
+    bpy.ops.transform.translate(value=(x, y, z))
     bpy.ops.object.transform_apply(location=True)
 
 
@@ -854,9 +860,9 @@ def active_to_coords():
     bpy.ops.object.convert(target="MESH")
     active_name("_tmp_mesh")
 
-    coords = []
-    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        coords.append((v.co.x, v.co.y))
+    # extract X,Y coordinates from the vertices data
+    coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
+
     remove_multiple("_tmp_mesh")
     return coords
 
@@ -872,7 +878,7 @@ def active_to_shapely_poly():
     Returns:
         Polygon: A Shapely Polygon object created from the active object's coordinates.
     """
-    # convert coordinates to shapely Polygon datastructure
+    # convert coordinates to shapely Polygon data structure
     return Polygon(active_to_coords())
 
 
@@ -886,7 +892,7 @@ def make_visible(o):
     bpy.context.scene.collection.children.link(cam_collection)
     cam_collection.objects.link(bpy.context.object)
 
-    for i in range(0, 20):
+    for i in range(20):
         storage[1].append(o.layers[i])
 
         o.layers[i] = bpy.context.scene.layers[i]
@@ -897,7 +903,7 @@ def make_visible(o):
 def restore_visibility(o, storage):
     o.hide_viewport = storage[0]
     # print(storage)
-    for i in range(0, 20):
+    for i in range(20):
         o.layers[i] = storage[1][i]
 
 
@@ -940,24 +946,25 @@ def subdivide_long_edges(ob, threshold):
             subdivided.
     """
 
-    log.info("Subdividing Long Edges")
+    log.info("Status: Subdividing Long Edges")
     m = ob.data
     scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
     subdivides = []
     n = 1
     iter = 0
-    while n > 0:
+    max_iters = 100  # guard against infinite loop if triangulation creates new long edges
+    while n > 0 and iter < max_iters:
         n = 0
         for i, e in enumerate(m.edges):
             v1 = m.vertices[e.vertices[0]].co
             v2 = m.vertices[e.vertices[1]].co
             vec = v2 - v1
-            l = vec.length
-            if l * scale > threshold:
+            length = vec.length
+            if length * scale > threshold:
                 n += 1
                 subdivides.append(i)
         if n > 0:
-            log.info(len(subdivides))
+            log.info(f"Subdivisions: {len(subdivides)}")
             bpy.ops.object.editmode_toggle()
 
             # bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
@@ -979,6 +986,30 @@ def subdivide_long_edges(ob, threshold):
             bpy.ops.object.editmode_toggle()
             ob.update_from_editmode()
         iter += 1
+
+
+def extrude_curve2mesh(height=0.001):
+    """Extrudes a closed curve to mesh with a height.
+    This way of extruding does not produce non manifold mesh"""
+    bpy.context.object.data.dimensions = "2D"
+    bpy.context.object.data.fill_mode = "BOTH"
+    bpy.ops.object.convert(target="MESH")
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.dissolve_limited(angle_limit=0.00872665)  # 0.5 degrees
+    bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, 0, height)})
+    bpy.ops.object.editmode_toggle()
+    return bpy.context.active_object
+
+
+def mesh_difference(toBeRemoved):
+    """subtract toBeRemoved from the active Mesh
+    Both need to be MANIFOLD"""
+    bpy.ops.object.modifier_add(type="BOOLEAN")
+    bpy.context.object.modifiers["Boolean"].solver = "MANIFOLD"
+    bpy.context.object.modifiers["Boolean"].operation = "DIFFERENCE"
+    bpy.context.object.modifiers["Boolean"].object = toBeRemoved  # difference
+    bpy.ops.object.modifier_apply(modifier="Boolean")
 
 
 def dilate_array(ar, cycles):
@@ -1013,7 +1044,7 @@ def dilate_array(ar, cycles):
 
 def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
     ox, oy, oz = originp
-    px, py, oz = p
+    px, py, _pz = p
 
     if ang == abs(pi / 2):
         d = ang / abs(ang)

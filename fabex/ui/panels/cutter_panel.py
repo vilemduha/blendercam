@@ -8,8 +8,8 @@ import textwrap
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAMParentPanel
 from ..icons import preview_collections
+from .parent_panel import CAMParentPanel
 
 
 class CAM_CUTTER_Panel(CAMParentPanel, Panel):
@@ -116,9 +116,8 @@ class CAM_CUTTER_Panel(CAMParentPanel, Panel):
         col.prop(self.op, "cutter_diameter", text="Diameter")
 
         # Cutter Flutes
-        if self.level >= 1:
-            if self.op.cutter_type not in ["LASER", "PLASMA"]:
-                col.prop(self.op, "cutter_flutes", text="Flutes")
+        if self.level >= 1 and self.op.cutter_type not in ["LASER", "PLASMA"]:
+            col.prop(self.op, "cutter_flutes", text="Flutes")
 
         # Cutter ID
         if self.level >= 2:

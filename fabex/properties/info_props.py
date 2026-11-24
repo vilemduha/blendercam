@@ -3,19 +3,16 @@
 'CAM Info Properties'
 """
 
-from datetime import timedelta
-
-import bpy
 from bpy.props import (
-    StringProperty,
     FloatProperty,
+    StringProperty,
 )
 from bpy.types import PropertyGroup
 
 from ..constants import (
-    PRECISION,
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
+    PRECISION,
 )
 from ..utilities.operation_utils import update_operation
 

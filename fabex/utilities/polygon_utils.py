@@ -1,9 +1,8 @@
+import bpy
 from shapely.geometry import (
     MultiPoint,
     MultiPolygon,
 )
-
-import bpy
 
 from .curve_utils import curve_to_shapely
 from .shapely_utils import shapely_to_curve
@@ -32,11 +31,11 @@ def polygon_boolean(context, boolean_type):
 
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
-    obs = []
+    obs = [ob1 for ob1 in bpy.context.selected_objects if ob1 != ob]
 
-    for ob1 in bpy.context.selected_objects:
-        if ob1 != ob:
-            obs.append(ob1)
+    # for ob1 in bpy.context.selected_objects:
+    #     if ob1 != ob:
+    #         obs.append(ob1)
 
     plist = curve_to_shapely(ob)
     p1 = MultiPolygon(plist)

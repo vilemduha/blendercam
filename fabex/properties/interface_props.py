@@ -8,9 +8,7 @@ from bpy.props import EnumProperty
 from bpy.types import PropertyGroup
 
 from .. import __package__ as base_package
-
 from ..ui.panels.area_panel import CAM_AREA_Panel
-from ..ui.panels.basrelief import BASRELIEF_Panel
 from ..ui.panels.chains_panel import CAM_CHAINS_Panel
 from ..ui.panels.curve_create_panel import VIEW3D_PT_tools_create
 from ..ui.panels.curve_tools_panel import VIEW3D_PT_tools_curvetools
@@ -24,8 +22,6 @@ from ..ui.panels.movement_panel import CAM_MOVEMENT_Panel
 from ..ui.panels.op_properties_panel import CAM_OPERATION_PROPERTIES_Panel
 from ..ui.panels.operations_panel import CAM_OPERATIONS_Panel
 from ..ui.panels.optimisation_panel import CAM_OPTIMISATION_Panel
-from ..ui.panels.pack_panel import CAM_PACK_Panel
-from ..ui.panels.slice_panel import CAM_SLICE_Panel
 
 
 def update_interface(self, context):
@@ -36,7 +32,7 @@ def update_interface(self, context):
 
 
 def update_shading(self, context):
-    view3d = [a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D"][0]
+    view3d = next(a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D")
     shading = view3d.shading
     overlay = view3d.overlay
 
@@ -148,10 +144,15 @@ def update_layout(self, context):
         ]
 
         for cls in unregister_classes:
-            bpy.utils.unregister_class(cls)
+            for child in bpy.types.Panel.__subclasses__():
+                if child.__name__ == cls.__name__:
+                    try:
+                        bpy.utils.unregister_class(child)
+                    except RuntimeError:  # This one is not registered
+                        pass
 
-    except AttributeError:
-        pass
+    except AttributeError as e:
+        print(e)
 
     main_classes = [
         CAM_CHAINS_Panel,
@@ -263,7 +264,6 @@ def update_layout(self, context):
 
     # Update Preferences with current settings and save
     addon_prefs.default_layout = panel_layout
-
     addon_prefs.default_main_location = main_location
     addon_prefs.default_operation_location = operation_location
     addon_prefs.default_tools_location = tools_location
@@ -290,34 +290,10 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Interface",
         description="Choose visible options",
         items=[
-            (
-                "0",
-                "Basic",
-                "Only show essential options",
-                "",
-                0,
-            ),
-            (
-                "1",
-                "Advanced",
-                "Show advanced options",
-                "",
-                1,
-            ),
-            (
-                "2",
-                "Complete",
-                "Show all options",
-                "",
-                2,
-            ),
-            (
-                "3",
-                "Experimental",
-                "Show experimental options",
-                "EXPERIMENTAL",
-                3,
-            ),
+            ("0", "Basic", "Only show essential options", "", 0),
+            ("1", "Advanced", "Show advanced options", "", 1),
+            ("2", "Complete", "Show all options", "", 2),
+            ("3", "Experimental", "Show experimental options", "EXPERIMENTAL", 3),
         ],
         default="0",
         update=update_interface,

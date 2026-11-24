@@ -1,18 +1,15 @@
 """Fabex 'addon_utils.py' © 2012 Vilem Novak"""
 
-from pathlib import Path
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import bpy
-from bpy.app.handlers import persistent
 
-from .logging_utils import log
-
-from ..constants import _IS_LOADING_DEFAULTS
-from ..exception import CamException
 from .. import __package__ as base_package
+from ..exception import CamException
+from .logging_utils import log
 
 
 def addon_dependencies():
@@ -24,8 +21,7 @@ def addon_dependencies():
     can't find them, attempts to download them from Blender.
     """
     preferences = bpy.context.preferences
-    addons = preferences.addons
-    online_access = preferences.system.use_online_access
+    preferences.system.use_online_access = True
 
     modules = [
         # Objects & Tools
@@ -40,18 +36,21 @@ def addon_dependencies():
         "export_autocad_dxf_format_dxf",
     ]
 
-    if online_access:
+    try:
         for module in modules:
-            if module not in addons:
-                try:
-                    addons[f"bl_ext.blender_org.{module}"]
-                except KeyError:
-                    bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
-    else:
+            addon_id = f"bl_ext.blender_org.{module}"
+            if addon_id in bpy.context.preferences.addons:
+                continue
+            try:
+                bpy.ops.preferences.addon_enable(module=addon_id)
+            except RuntimeError:
+                bpy.ops.extensions.repo_sync_all(use_active_only=False)
+                bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
+    except:
         log.debug("Could not Access Online Addon Repository!")
-        raise CamException(
-            "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
-        )
+        # raise CamException(
+        #     "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
+        # )
 
 
 def python_dependencies():
@@ -71,9 +70,8 @@ def python_dependencies():
                 subprocess.check_call([sys.executable, "-m", "pip", "install", module])
             except:
                 log.debug("Python Dependencies Not Found!")
-                raise CamException(
-                    "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
-                )
+                message = "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
+                raise CamException(message)
 
 
 def load_defaults(addon_prefs):
@@ -122,7 +120,7 @@ def copy_if_not_exists(src, dst):
         dst (str): The path to the destination where the file should be copied.
     """
 
-    if Path(dst).exists() == False:
+    if not Path(dst).exists():
         shutil.copy2(src, dst)
 
 
@@ -143,8 +141,6 @@ def copy_presets(addon_prefs):
         copy_function=copy_if_not_exists,
         dirs_exist_ok=True,
     )
-
-    bpy.ops.wm.save_userpref()
 
     if not addon_prefs.op_preset_update:
         # Update the Operation presets
@@ -176,7 +172,6 @@ def on_blender_startup(context):
 
     scene = bpy.context.scene
     render_engine = scene.render.engine
-    interface_layout = scene.interface.layout
 
     for o in scene.cam_operations:
         if o.computing:
@@ -213,8 +208,6 @@ def on_blender_startup(context):
         render_engine = "FABEX_RENDER"
 
     if render_engine == "FABEX_RENDER":
-        interface_layout = addon_prefs.default_layout
-
         add_collections()
         log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)
@@ -234,13 +227,10 @@ def on_engine_change(*args):
     scene = context.scene
 
     render_engine = scene.render.engine
-    interface_layout = scene.interface.layout
 
     addon_prefs = context.preferences.addons[base_package].preferences
 
     if render_engine == "FABEX_RENDER":
-        interface_layout = addon_prefs.default_layout
-
         add_collections()
         log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)
@@ -353,7 +343,12 @@ def add_collections():
     simulation_prefix = cam_names.simulation_prefix
 
     scene_collection = context.scene.collection
-    default_collection = collections["Collection"]
+
+    default_collection = collections.get("Collection")
+    if default_collection is None:
+        default_collection = collections.new("Collection")
+        scene_collection.children.link(default_collection)
+
     fabex_collections = [
         ("Bridges (Tabs)", "COLOR_06"),
         ("Paths", "COLOR_04"),
@@ -383,14 +378,14 @@ def add_collections():
         if prefix(path_prefix):
             try:
                 paths_collection.objects[obj.name]
-            except RuntimeError:
+            except (KeyError, RuntimeError):
                 paths_collection.objects.link(obj)
         if prefix(simulation_prefix):
             try:
                 simulations_collection.objects[obj.name]
-            except RuntimeError:
+            except (KeyError, RuntimeError):
                 simulations_collection.objects.link(obj)
-        if prefix in ["bridge", path_prefix, simulation_prefix]:
+        if prefix("bridge") or prefix(path_prefix) or prefix(simulation_prefix):
             default_collection.objects.unlink(obj)
 
 
@@ -408,10 +403,10 @@ def edit_user_post_processor():
 
     try:
         areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
-        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+        text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
         with bpy.context.temp_override(space=text_editor):
-            text_editor.text = bpy.data.texts[f"user.py"]
+            text_editor.text = bpy.data.texts["user.py"]
 
     except IndexError:
         pass
@@ -433,14 +428,14 @@ def append_asset_from_library(asset_type, asset_name):
 
     with bpy.data.libraries.load(str(library_path)) as (data_from, data_to):
         if asset_type == "scene":
-            if asset_name in data_from.scenes:
+            if asset_name in data_from.scenes:  #  and not asset_name in data_to.scenes
                 data_to.scenes = [asset_name]
             bpy.context.window.scene = bpy.data.scenes[asset_name]
 
         elif asset_type == "node_group":
-            if asset_name in data_from.node_groups:
+            if asset_name in data_from.node_groups:  #  and not asset_name in data_to.node_groups
                 data_to.node_groups = [asset_name]
 
         elif asset_type == "material":
-            if asset_name in data_from.materials:
+            if asset_name in data_from.materials:  #  and not asset_name in data_to.materials
                 data_to.materials = [asset_name]

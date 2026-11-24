@@ -15,9 +15,8 @@ from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sample_chunks_n_axis,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
-from ..utilities.simple_utils import progress
 
 
 async def helix_four_axis(o):
@@ -38,10 +37,9 @@ async def helix_four_axis(o):
         list: A list of path chunks generated for the specified operation.
     """
 
-    log.info("~ Strategy: Helix 4 Axis ~")
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    log.info(heading("Strategy: Helix 4 Axis"))
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
-    zlevel = 1
 
     # set axes for various options, Z option is obvious nonsense now.
     if o.rotary_axis_1 == "X":
@@ -68,7 +66,15 @@ async def helix_four_axis(o):
     anglestep = 2 * pi / circlesteps
     # generalized rotation
     e = Euler((0, 0, 0))
-    e[a1] = anglestep
+
+    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
+        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
+    ):
+        direction = -1
+    else:
+        direction = 1
+
+    e[a1] = direction * anglestep
 
     # generalized length of the operation
     maxl = o.max[a1]
@@ -84,26 +90,26 @@ async def helix_four_axis(o):
     # only one chunk, init here
     chunk = CamPathChunkBuilder([])
 
-    for a in range(0, floor(steps) + 1):
+    for a in range(floor(steps) + 1):
         cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
         cutterend[a1] = cutterstart[a1]
         cutterstart[a2] = 0
         cutterstart[a3] = radius
         cutterend[a3] = radiusend
 
-        for b in range(0, floor(circlesteps) + 1):
+        for b in range(floor(circlesteps) + 1):
             cutterstart[a1] += a1step
             cutterend[a1] += a1step
             chunk.startpoints.append(cutterstart.to_tuple())
             chunk.endpoints.append(cutterend.to_tuple())
             rot = [0, 0, 0]
-            rot[a1] = a * 2 * pi + b * anglestep
+            rot[a1] = direction * (a * 2 * pi + b * anglestep)
             chunk.rotations.append(rot)
             cutterstart.rotate(e)
             cutterend.rotate(e)
 
-        chunk = chunk.to_chunk()
-        chunk.depth = radiusend - radius
+    chunk = chunk.to_chunk()
+    chunk.depth = radiusend - radius
 
     pathchunks.append(chunk)
     path_samples = pathchunks

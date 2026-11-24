@@ -10,17 +10,15 @@ Very slow and STUPID, a collision algorithm would be much much faster...
 import random
 import time
 
-import shapely
-from shapely.geometry import Point, Polygon, MultiPolygon
-from shapely import affinity, prepared, speedups
-
 import bpy
+import shapely
 from mathutils import Euler, Vector
-
+from shapely import affinity, prepared, speedups
+from shapely.geometry import MultiPolygon, Point, Polygon
 
 from .curve_utils import curve_to_chunks
 from .logging_utils import log
-from .shapely_utils import shapely_to_curve, chunks_to_shapely
+from .shapely_utils import chunks_to_shapely, shapely_to_curve
 from .simple_utils import activate
 
 
@@ -116,19 +114,22 @@ def pack_curves():
         mindist = -xmin
     else:
         mindist = -ymin
-    i = 0
+
     p = polyfield[0][2]
     placedpolys = []
     rotcenter = Point(0, 0)
-    for pf in polyfield:
+
+    for i, pf in enumerate(polyfield):
         log.info(i)
         rot = 0
         porig = pf[2]
         placed = False
         xmin, ymin, xmax, ymax = p.bounds
+
         if direction == "X":
             x = mindist
             y = -ymin
+
         if direction == "Y":
             x = -xmin
             y = mindist
@@ -137,6 +138,7 @@ def pack_curves():
         best = None
         hits = 0
         besthit = None
+
         while not placed:
             # swap x and y, and add to x
             # print(x,y)
@@ -157,20 +159,22 @@ def pack_curves():
                     (direction == "Y" and xmax < sheetsizex)
                     or (direction == "X" and ymax < sheetsizey)
                 )
-            ):
-                if not allpoly.intersects(ptrans):
-                    # we do more good solutions, choose best out of them:
-                    hits += 1
-                    if best is None:
+            ) and not allpoly.intersects(ptrans):
+                # we do more good solutions, choose best out of them:
+                hits += 1
+
+                if best is None:
+                    best = [x, y, rot, xmax, ymax]
+                    besthit = hits
+
+                if direction == "X":
+                    if xmax < best[3]:
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
-                    if direction == "X":
-                        if xmax < best[3]:
-                            best = [x, y, rot, xmax, ymax]
-                            besthit = hits
-                    elif ymax < best[4]:
-                        best = [x, y, rot, xmax, ymax]
-                        besthit = hits
+
+                elif ymax < best[4]:
+                    best = [x, y, rot, xmax, ymax]
+                    besthit = hits
 
             if hits >= 15 or (itera > 20000 and hits > 0):
                 # here was originally more, but 90% of best solutions are still 1
@@ -180,39 +184,38 @@ def pack_curves():
                 pf[3].location.z = pf[4]
                 pf[3].rotation_euler.z = best[2]
                 pf[3].select_set(state=True)
-
-                # print(mindist)
                 mindist = mindist - 0.5 * (xmax - xmin)
-                # print(mindist)
-                # print(iter)
 
                 # reset polygon to best position here:
                 ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
-
                 log.info(f"{best[0]}, {best[1]}, {itera}")
                 placedpolys.append(ptrans)
                 allpoly = prepared.prep(MultiPolygon(placedpolys))
-
                 # cleanup allpoly
                 log.info(f"{itera}, {hits}, {besthit}")
+
             if not placed:
                 if direction == "Y":
                     x += shift
                     mindist = y
+
                     if xmax + shift > sheetsizex:
                         x = x - xmin
                         y += shift
+
                 if direction == "X":
                     y += shift
                     mindist = x
+
                     if ymax + shift > sheetsizey:
                         y = y - ymin
                         x += shift
+
                 if rotate:
                     rot += rotchange
+
             itera += 1
-        i += 1
     t = time.time() - t
 
     shapely_to_curve("test", MultiPolygon(placedpolys), 0)

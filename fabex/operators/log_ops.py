@@ -5,11 +5,11 @@ They mostly call the functions from 'utils.py'
 """
 
 from os import listdir
-from platform import system
 from pathlib import Path
+from platform import system
 from subprocess import call
+from typing import ClassVar
 
-import bpy
 from bpy.types import Operator
 
 log_folder = str(Path(__file__).parent.parent / "logs")
@@ -20,7 +20,7 @@ class CamOpenLogFolder(Operator):
 
     bl_idname = "scene.cam_open_log_folder"
     bl_label = "Open Log Folder"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -55,7 +55,7 @@ class CamPurgeLogs(Operator):
 
     bl_idname = "scene.cam_purge_logs"
     bl_label = "Purge CAM Logs"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -76,7 +76,7 @@ class CamPurgeLogs(Operator):
 
         for file in listdir(log_folder):
             file_name = Path(log_folder) / file
-            if not file_name == ".gitignore":
+            if file_name != ".gitignore":
                 Path.unlink(file_name)
 
         return {"FINISHED"}

@@ -4,7 +4,7 @@ Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
 """
 
-import inspect
+from typing import ClassVar
 
 import bpy
 
@@ -12,7 +12,7 @@ import bpy
 # Panel definitions
 class CAMParentPanel:
     always_show_panel = False
-    COMPAT_ENGINES = {"FABEX_RENDER"}
+    COMPAT_ENGINES: ClassVar = {"FABEX_RENDER"}
 
     @classmethod
     def poll(cls, context):
@@ -33,7 +33,7 @@ class CAMParentPanel:
         check_1 = engine_check and show_check
         check_2 = engine_check and op_check and level_check
 
-        return True if check_1 or check_2 else False
+        return bool(check_1 or check_2)
 
     def __init__(self, *args, **kwargs):
         context = bpy.context
@@ -47,6 +47,6 @@ class CAMParentPanel:
         self.op = operations[operation_index] if operations_count > 0 else None
 
         # Auto-title and widen panels when called from pie_menu
-        if not context.area.type == "PROPERTIES" and not context.region.type in ["UI", "TOOLS"]:
+        if context.area.type != "PROPERTIES" and context.region.type not in ["UI", "TOOLS"]:
             self.layout.ui_units_x = 20
             # self.layout.label(text=self.bl_label)

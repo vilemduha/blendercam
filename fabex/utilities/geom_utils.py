@@ -6,10 +6,10 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-from shapely.geometry import Polygon
-
 import bpy
+import numpy
 from mathutils import Euler, Vector
+from shapely.geometry import Polygon
 
 
 def circle(r, np):
@@ -32,7 +32,7 @@ def circle(r, np):
     c = []
     v = Vector((r, 0, 0))
     e = Euler((0, 0, 2.0 * pi / np))
-    for a in range(0, np):
+    for a in range(np):
         c.append((v.x, v.y))
         v.rotate(e)
 
@@ -66,7 +66,7 @@ def helix(r, np, zstart, pend, rev):
     v = Vector((r, 0, zstart))
     e = Euler((0, 0, 2.0 * pi / np))
     zstep = (zstart - pend[2]) / (np * rev)
-    for a in range(0, int(np * rev)):
+    for a in range(int(np * rev)):
         c.append((v.x + pend[0], v.y + pend[1], zstart - (a * zstep)))
         v.rotate(e)
     c.append((v.x + pend[0], v.y + pend[1], pend[2]))
@@ -95,7 +95,7 @@ def get_container():
         container = bpy.context.active_object
         container.name = "CAM_OBJECTS"
         container.location = [0, 0, 0]
-        container.hide = True
+        container.hide_set(True)
     else:
         container = s.objects["CAM_OBJECTS"]
 
@@ -153,9 +153,9 @@ def get_circle(r, z):
     res = 2 * r
     m = r
     v = Vector((0, 0, 0))
-    for a in range(0, res):
+    for a in range(res):
         v.x = a + 0.5 - m
-        for b in range(0, res):
+        for b in range(res):
             v.y = b + 0.5 - m
             if v.length <= r:
                 car[a, b] = z
@@ -183,10 +183,10 @@ def get_circle_binary(r):
     res = 2 * r
     m = r
     v = Vector((0, 0, 0))
-    for a in range(0, res):
+    for a in range(res):
         v.x = a + 0.5 - m
-        for b in range(0, res):
+        for b in range(res):
             v.y = b + 0.5 - m
             if v.length <= r:
-                car.itemset((a, b), True)
+                car[a, b] = True
     return car

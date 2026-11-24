@@ -31,14 +31,14 @@ class HxmlWriter:
             (cd1, cd2) = ("<![CDATA[", "]]>")
         else:
             (cd1, cd2) = ("", "")
-        if col != None:
+        if col is not None:
             self.file_out.write('\t\t<text col="' + col + '">' + cd1 + s + cd2 + "</text>\n")
         else:
             self.file_out.write("\t\t<text>" + cd1 + s + cd2 + "</text>\n")
 
     def set_mode(self, units):
         self.file_out.write("\t\t<mode")
-        if units != None:
+        if units is not None:
             self.file_out.write(' units="' + str(units) + '"')
         self.file_out.write(" />\n")
 
@@ -49,7 +49,7 @@ class HxmlWriter:
         self.set_mode(units=25.4)
 
     def begin_path(self, col):
-        if col != None:
+        if col is not None:
             self.file_out.write('\t\t<path col="' + col + '">\n')
         else:
             self.file_out.write("\t\t<path>\n")
@@ -79,7 +79,7 @@ class HxmlWriter:
 
     def tool_change(self, id):
         self.file_out.write("\t\t<tool")
-        if id != None:
+        if id is not None:
             self.file_out.write(' number="' + str(id) + '"')
             self.file_out.write(" />\n")
 
@@ -91,48 +91,48 @@ class HxmlWriter:
 
     def add_line(self, x, y, z, a=None, b=None, c=None):
         self.file_out.write("\t\t\t<line")
-        if x != None:
-            self.file_out.write(' x="%.6f"' % x)
-        if y != None:
-            self.file_out.write(' y="%.6f"' % y)
-        if z != None:
-            self.file_out.write(' z="%.6f"' % z)
-        if a != None:
-            self.file_out.write(' a="%.6f"' % a)
-        if b != None:
-            self.file_out.write(' b="%.6f"' % b)
-        if c != None:
-            self.file_out.write(' c="%.6f"' % c)
+        if x is not None:
+            self.file_out.write(f' x="{x:.6f}"')
+        if y is not None:
+            self.file_out.write(f' y="{y:.6f}"')
+        if z is not None:
+            self.file_out.write(f' z="{z:.6f}"')
+        if a is not None:
+            self.file_out.write(f' a="{a:.6f}"')
+        if b is not None:
+            self.file_out.write(f' b="{b:.6f}"')
+        if c is not None:
+            self.file_out.write(f' c="{c:.6f}"')
         self.file_out.write(" />\n")
-        if x != None:
+        if x is not None:
             self.oldx = x
-        if y != None:
+        if y is not None:
             self.oldy = y
-        if z != None:
+        if z is not None:
             self.oldz = z
 
     def add_arc(self, x, y, z, i, j, k, r=None, d=None):
         self.file_out.write("\t\t\t<arc")
-        if x != None:
-            self.file_out.write(' x="%.6f"' % x)
-        if y != None:
-            self.file_out.write(' y="%.6f"' % y)
-        if z != None:
-            self.file_out.write(' z="%.6f"' % z)
-        if i != None:
+        if x is not None:
+            self.file_out.write(f' x="{x:.6f}"')
+        if y is not None:
+            self.file_out.write(f' y="{y:.6f}"')
+        if z is not None:
+            self.file_out.write(f' z="{z:.6f}"')
+        if i is not None:
             self.file_out.write(' i="%.6f"' % (i - self.oldx))
-        if j != None:
+        if j is not None:
             self.file_out.write(' j="%.6f"' % (j - self.oldy))
-        if k != None:
+        if k is not None:
             self.file_out.write(' k="%.6f"' % (k - self.oldz))
-        if r != None:
-            self.file_out.write(' r="%.6f"' % r)
-        if d != None:
-            self.file_out.write(' d="%i"' % d)
+        if r is not None:
+            self.file_out.write(f' r="{r:.6f}"')
+        if d is not None:
+            self.file_out.write(f' d="{d}"')
         self.file_out.write(" />\n")
-        if x != None:
+        if x is not None:
             self.oldx = x
-        if y != None:
+        if y is not None:
             self.oldy = y
-        if z != None:
+        if z is not None:
             self.oldz = z

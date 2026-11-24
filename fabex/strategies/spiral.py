@@ -2,20 +2,19 @@ from math import (
     pi,
 )
 
-
 from mathutils import (
     Euler,
     Vector,
 )
 
+from ..bridges import use_bridges
 from ..chunk_builder import CamPathChunkBuilder
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -23,10 +22,10 @@ from ..utilities.operation_utils import (
 
 
 async def spiral(o):
-    log.info("~ Strategy: Spiral ~")
+    log.info(heading("Strategy: Spiral"))
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
     zlevel = 1
     chunk = CamPathChunkBuilder([])
@@ -34,8 +33,8 @@ async def spiral(o):
     pathstep = o.distance_along_paths
     midx = (o.max.x + o.min.x) / 2
     midy = (o.max.y + o.min.y) / 2
-    x = pathd / 4
-    y = pathd / 4
+    pathd / 4
+    pathd / 4
     v = Vector((pathd / 4, 0, 0))
     e = Euler((0, 0, 0))
     chunk.points.append((midx + v.x, midy + v.y, zlevel))
@@ -72,14 +71,14 @@ async def spiral(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     if o.movement.ramp:
         for ch in chunks:
             ch.ramp_zig_zag(ch.zstart, None, o)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

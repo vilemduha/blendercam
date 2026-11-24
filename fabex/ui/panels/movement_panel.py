@@ -3,9 +3,6 @@
 'CAM Movement' properties and panel in Properties > Render
 """
 
-from math import pi
-
-import bpy
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
@@ -71,27 +68,31 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
         row.prop(self.op.movement, "stay_low", text="Stay Low (if possible)")
         row.prop(self.op.movement, "merge_distance")
 
-        # Parallel Stepback
-        if self.level >= 1:
-            if self.op.strategy in ["PARALLEL", "CROSS"]:
-                if not self.op.movement.ramp:
-                    row = layout.row()
-                    row.use_property_split = False
-                    row.prop(self.op.movement, "parallel_step_back")
+        if self.level >= 2 and context.scene.cam_machine.post_processor not in [
+            "GRBL",
+            "RTCNC_RTSX",
+        ]:
+            # Use G64
+            # Currently checking against a hard-coded value here,
+            # Consider moving this to a scene property
+            layout.use_property_split = False
+            header, panel = layout.panel("g64", default_closed=True)
+            header.prop(self.op.movement, "useG64", text="G64 Trajectory")
+            if panel:
+                panel.enabled = self.op.movement.useG64
+                col = panel.column(align=True)
+                col.use_property_split = True
+                col.prop(self.op.movement, "G64", text="Tolerance")
 
-            if self.level >= 2:
-                # Use G64
-                # Currently checking against a hard-coded value here,
-                # Consider moving this to a scene property
-                if context.scene.cam_machine.post_processor not in ["GRBL"]:
-                    layout.use_property_split = False
-                    header, panel = layout.panel("g64", default_closed=True)
-                    header.prop(self.op.movement, "useG64", text="G64 Trajectory")
-                    if panel:
-                        panel.enabled = self.op.movement.useG64
-                        col = panel.column(align=True)
-                        col.use_property_split = True
-                        col.prop(self.op.movement, "G64", text="Tolerance")
+        # Parallel Stepback
+        if (
+            self.level >= 1
+            and self.op.strategy in ["PARALLEL", "CROSS"]
+            and not self.op.movement.ramp
+        ):
+            row = layout.row()
+            row.use_property_split = False
+            row.prop(self.op.movement, "parallel_step_back")
 
             # Retract Tangential
             if self.op.strategy in ["POCKET"]:
@@ -106,16 +107,15 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
                     col.prop(self.op.movement, "retract_height", text="Arc Height")
 
         # Protect Vertical
-        if self.level >= 1:
-            if self.op.cutter_type not in ["BALLCONE"]:
-                layout.use_property_split = False
-                header, panel = layout.panel("vertical", default_closed=False)
-                header.prop(self.op.movement, "protect_vertical", text="Protect Vertical")
-                if panel:
-                    panel.enabled = self.op.movement.protect_vertical
-                    col = panel.column(align=True)
-                    col.use_property_split = True
-                    col.prop(self.op.movement, "protect_vertical_limit", text="Angle Limit")
+        if self.level >= 1 and self.op.cutter_type not in ["BALLCONE"]:
+            layout.use_property_split = False
+            header, panel = layout.panel("vertical", default_closed=False)
+            header.prop(self.op.movement, "protect_vertical", text="Protect Vertical")
+            if panel:
+                panel.enabled = self.op.movement.protect_vertical
+                col = panel.column(align=True)
+                col.use_property_split = True
+                col.prop(self.op.movement, "protect_vertical_limit", text="Angle Limit")
 
         if self.level >= 3:
             header, parent_panel = layout.panel("experiment", default_closed=True)

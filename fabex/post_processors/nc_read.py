@@ -4,8 +4,9 @@
 # Base class for NC code parsing
 
 ################################################################################
-import area
 import math
+
+import area
 
 count = 0
 
@@ -28,24 +29,21 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if len(self.line):
-            return True
-        else:
-            return False
+        return bool(len(self.line))
 
     def set_current_pos(self, x, y, z):
-        if x != None:
-            if self.absolute_flag or self.currentx == None:
+        if x is not None:
+            if self.absolute_flag or self.currentx is None:
                 self.currentx = x
             else:
                 self.currentx = self.currentx + x
-        if y != None:
-            if self.absolute_flag or self.currenty == None:
+        if y is not None:
+            if self.absolute_flag or self.currenty is None:
                 self.currenty = y
             else:
                 self.currenty = self.currenty + y
-        if z != None:
-            if self.absolute_flag or self.currentz == None:
+        if z is not None:
+            if self.absolute_flag or self.currentz is None:
                 self.currentz = z
             else:
                 self.currentz = self.currentz + z
@@ -105,12 +103,11 @@ class Parser:
                 self.ParseWord(word)
                 self.writer.add_text(word, self.col, self.cdata)
 
-            if self.t != None:
-                if (self.m6 == True) or (self.need_m6_for_t_change == False):
-                    self.writer.tool_change(self.t)
+            if self.t is not None and ((self.m6) or (not self.need_m6_for_t_change)):
+                self.writer.tool_change(self.t)
 
             if self.drill:
-                if self.z != None:
+                if self.z is not None:
                     self.drillz = self.z
                 self.writer.rapid(self.x, self.y, self.r)
                 self.writer.feed(self.x, self.y, self.drillz)
@@ -130,21 +127,21 @@ class Parser:
                         i = self.i
                         j = self.j
                         k = self.k
-                        if self.arc_centre_absolute == True:
+                        if self.arc_centre_absolute:
                             pass
                         else:
                             if (
-                                (self.arc_centre_positive == True)
-                                and (self.oldx != None)
-                                and (self.oldy != None)
+                                (self.arc_centre_positive)
+                                and (self.oldx is not None)
+                                and (self.oldy is not None)
                             ):
                                 x = self.oldx
-                                if self.x != None:
+                                if self.x is not None:
                                     x = self.x
                                 if (self.x > self.oldx) != (self.arc > 0):
                                     j = -j
                                 y = self.oldy
-                                if self.y != None:
+                                if self.y is not None:
                                     y = self.y
                                 if (self.y > self.oldy) != (self.arc < 0):
                                     i = -i
@@ -154,8 +151,8 @@ class Parser:
                                 p0 = area.Point(self.oldx, self.oldy)
                                 p1 = area.Point(x, y)
                                 v = p1 - p0
-                                l = v.length()
-                                h = l / 2
+                                length = v.length()
+                                h = length / 2
                                 d = math.sqrt(r * r - h * h)
                                 n = area.Point(-v.y, v.x)
                                 n.normalize()
@@ -181,11 +178,11 @@ class Parser:
                             self.writer.arc_cw(self.x, self.y, self.z, i, j, k)
                         else:
                             self.writer.arc_ccw(self.x, self.y, self.z, i, j, k)
-                    if self.x != None:
+                    if self.x is not None:
                         self.oldx = self.x
-                    if self.y != None:
+                    if self.y is not None:
                         self.oldy = self.y
-                    if self.z != None:
+                    if self.z is not None:
                         self.oldz = self.z
 
             self.writer.end_ncblock()

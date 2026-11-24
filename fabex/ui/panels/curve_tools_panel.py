@@ -37,7 +37,7 @@ class VIEW3D_PT_tools_curvetools(Panel):
         col.operator(
             "object.curve_remove_doubles",
             icon="FORCE_CHARGE",
-            text="Remove Curve Doubles",
+            text="Validate/Remove Curve Doubles",
         )
         col.operator(
             "object.mesh_get_pockets",

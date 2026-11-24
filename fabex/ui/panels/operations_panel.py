@@ -87,24 +87,22 @@ class CAM_OPERATIONS_Panel(CAMParentPanel, Panel):
         )
 
         # Export Gcode
-        if self.level >= 1:
-            if self.op.valid:
-                if self.op.name is not None:
-                    path_name = context.scene.cam_names.path_name_full
-                    name = path_name  # f"cam_path_{self.op.name}"
-                    if bpy.context.scene.objects.get(name) is not None:
-                        col.operator("object.cam_export", text="Export Gcode", icon="EXPORT")
+        if self.level >= 1 and self.op.valid:
+            if self.op.name is not None:
+                path_name = context.scene.cam_names.path_name_full
+                name = path_name  # f"cam_path_{self.op.name}"
+                if bpy.context.scene.objects.get(name) is not None:
+                    col.operator("object.cam_export", text="Export Gcode", icon="EXPORT")
 
-                # Simulate Op
-                col.operator(
-                    "object.cam_simulate",
-                    text="Simulate This Operation",
-                    icon="MESH_GRID",
-                )
+            # Simulate Op
+            col.operator(
+                "object.cam_simulate",
+                text="Simulate This Operation",
+                icon="MESH_GRID",
+            )
 
         box = layout.box()
         col = box.column(align=True)
-        cam_names = context.scene.cam_names
         link_names = self.op.link_operation_file_names
 
         row = col.row(align=True)

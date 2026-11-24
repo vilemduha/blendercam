@@ -12,6 +12,13 @@ from bpy.props import (
     StringProperty,
 )
 
+from ..utilities.operation_utils import (
+    update_active_operation,
+)
+from ..utilities.operation_utils import (
+    update_operation as update_operation,
+)
+
 # All properties are imported and registered here EXCEPT
 # CAM_OPERATION_Properties, which is imported and registered
 # in the main ('cam') __init__ file, to allow these and other dependencies
@@ -27,41 +34,38 @@ from .optimisation_props import CAM_OPTIMISATION_Properties
 from .preset_props import (
     # Machine Presets
     avidcnc_presets,
+    cadence_presets,
     carbide3d_presets,
     cnc4all_presets,
+    # Operation Presets
+    finishing_presets,
+    # Cutter Presets
+    idcwoodcraft_presets,
     inventables_presets,
     millright_presets,
     onefinity_presets,
     ooznest_presets,
+    roughing_presets,
     sienci_presets,
-    user_machine_presets,
     update_avidcnc,
+    update_cadence,
     update_carbide3d,
     update_cnc4all,
+    update_finishing,
+    update_idcwoodcraft,
     update_inventables,
     update_millright,
     update_onefinity,
     update_ooznest,
-    update_sienci,
-    update_user_machine,
-    # Cutter Presets
-    idcwoodcraft_presets,
-    cadence_presets,
-    user_cutter_presets,
-    update_idcwoodcraft,
-    update_cadence,
-    update_user_cutter,
-    # Operation Presets
-    finishing_presets,
-    update_finishing,
-    roughing_presets,
     update_roughing,
-    user_operation_presets,
+    update_sienci,
+    update_user_cutter,
+    update_user_machine,
     update_user_operation,
+    user_cutter_presets,
+    user_machine_presets,
+    user_operation_presets,
 )
-
-from ..utilities.operation_utils import update_operation
-
 
 classes = [
     CAM_OP_REFERENCE_Properties,
@@ -91,7 +95,7 @@ def register():
     scene.cam_active_operation = IntProperty(
         name="CAM Active Operation",
         description="The selected operation",
-        update=update_operation,
+        update=update_active_operation,
     )
     scene.cam_chains = CollectionProperty(
         type=CAM_CHAIN_Properties,

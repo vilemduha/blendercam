@@ -1,6 +1,7 @@
 ### IDC_Extended_⅛in_Downcut.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
 correction = 0.0254

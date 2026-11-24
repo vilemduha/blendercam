@@ -4,9 +4,7 @@
 # Post Processor for the Heidenhain TNC151 machine
 #
 
-from . import nc
-from . import iso_modal
-import math
+from . import iso_modal, nc
 
 ################################################################################
 
@@ -40,7 +38,7 @@ class Creator(iso_modal.Creator):
         self.waiting_for_program_begin = True
 
     def write_waiting_program_begin(self):
-        if self.waiting_for_program_begin == True:
+        if self.waiting_for_program_begin:
             self.write("% 123")
             self.waiting_for_program_begin = False
 

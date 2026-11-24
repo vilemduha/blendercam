@@ -7,8 +7,7 @@
 #
 ################################################################################
 
-from . import nc
-from . import iso
+from . import iso, nc
 from .format import Format
 
 
@@ -32,7 +31,7 @@ class Creator(iso.Creator):
     def program_begin(self, id, name=""):
         if self.use_this_program_id:
             id = self.use_this_program_id
-        if self.PROGRAM() != None:
+        if self.PROGRAM() is not None:
             self.write("%")
             self.write("\n")
             self.writem([(self.PROGRAM() % id), self.SPACE(), (self.COMMENT(name))])
@@ -41,7 +40,7 @@ class Creator(iso.Creator):
         self.program_name = name
 
     def program_end(self):
-        if self.z_for_g53 != None:
+        if self.z_for_g53 is not None:
             self.write(
                 self.SPACE()
                 + self.MACHINE_COORDINATES()
@@ -53,7 +52,7 @@ class Creator(iso.Creator):
         self.write(self.SPACE() + self.PROGRAM_END() + "\n")
         self.write("%")
 
-        if self.temp_file_to_append_on_close != None:
+        if self.temp_file_to_append_on_close is not None:
             f_in = open(self.temp_file_to_append_on_close, "r")
             while True:
                 line = f_in.readline()

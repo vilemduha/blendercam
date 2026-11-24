@@ -60,6 +60,11 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="Post Processor",
         items=(
             (
+                "BIESSE_CIX",
+                "Biesse CIX",
+                "Biesse Rover CIX (CID3) - embedded ISO rows, TP=/M3 tool change",
+            ),
+            (
                 "ISO",
                 "Iso",
                 "Exports standardized gcode ISO 6983 (RS-274)",
@@ -140,6 +145,11 @@ class CAM_MACHINE_Properties(PropertyGroup):
                 "Lynx Otter o",
             ),
             (
+                "RTCNC_RTSX",
+                "RealTime CNC RTS-X",
+                "RealTime CNC RTS-X Controllers",
+            ),
+            (
                 "USER",
                 "User Custom",
                 "Customizable User Post Processor (based on ISO)",
@@ -178,6 +188,24 @@ class CAM_MACHINE_Properties(PropertyGroup):
         subtype="XYZ",
         update=update_machine,
     )
+    use_job_start_height: BoolProperty(
+        name="Use Job Start Height",
+        description="Raise Z to a safe height before any XY move at job start, "
+        "guaranteeing clearance over toolsetters and fixtures",
+        default=False,
+        update=update_machine,
+    )
+    job_start_height: FloatProperty(
+        name="Job Start Height",
+        description="Z height the spindle retracts to before moving to the XY start position. "
+        "Must be high enough to clear all fixtures and toolsetters",
+        default=0.05,
+        min=0.0,
+        max=10.0,
+        precision=PRECISION,
+        unit="LENGTH",
+        update=update_machine,
+    )
     working_area: FloatVectorProperty(
         name="Work Area",
         default=(0.500, 0.500, 0.100),
@@ -205,6 +233,16 @@ class CAM_MACHINE_Properties(PropertyGroup):
     feedrate_default: FloatProperty(
         name="Feedrate Default /min",
         default=1.5,
+        min=0.00001,
+        max=320000,
+        precision=PRECISION,
+        unit="LENGTH",
+    )
+    feedrate_rapid: FloatProperty(
+        name="Rapids /min",
+        description="Rapid traverse speed. Output as a comment in the G-code header and "
+        "as an F word on G00 moves",
+        default=5.0,
         min=0.00001,
         max=320000,
         precision=PRECISION,
@@ -241,8 +279,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
     )
     spindle_start_time: FloatProperty(
         name="Spindle Start Delay Seconds",
-        description="Wait for the spindle to start spinning before starting "
-        "the feeds , in seconds",
+        description="Wait for the spindle to start spinning before starting the feeds , in seconds",
         default=0,
         min=0.0000,
         max=320000,
@@ -328,7 +365,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
 
     block_number_increment: IntProperty(
         name="Block Number Increment",
-        description="How much the block number should " "increment for the next line",
+        description="How much the block number should increment for the next line",
         default=10,
     )
 

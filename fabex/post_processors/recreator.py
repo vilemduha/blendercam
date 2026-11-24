@@ -1,5 +1,7 @@
 import nc
 
+from ..exception import CamException
+
 units = 1.0
 
 
@@ -11,11 +13,11 @@ class Redirector(nc.Creator):
         self.x = None
         self.y = None
         self.z = None
-        if original.x != None:
+        if original.x is not None:
             self.x = original.x * units
-        if original.y != None:
+        if original.y is not None:
             self.y = original.y * units
-        if original.z != None:
+        if original.z is not None:
             self.z = original.z * units
         self.imperial = False
 
@@ -175,15 +177,12 @@ class Redirector(nc.Creator):
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.cut_path()
         self.original.rapid(x, y, z, a, b, c)
-        if x != None:
+        if x is not None:
             self.x = x * units
-        if y != None:
+        if y is not None:
             self.y = y * units
-        if z != None:
+        if z is not None:
             self.z = z * units
-
-    def cut_path(self):
-        pass
 
     def z2(self, z):
         return z
@@ -192,13 +191,13 @@ class Redirector(nc.Creator):
         px = self.x
         py = self.y
         pz = self.z
-        if x != None:
+        if x is not None:
             self.x = x * units
-        if y != None:
+        if y is not None:
             self.y = y * units
-        if z != None:
+        if z is not None:
             self.z = z * units
-        if self.x == None or self.y == None or self.z == None:
+        if self.x is None or self.y is None or self.z is None:
             self.cut_path()
             self.original.feed(x, y, z)
             return
@@ -209,16 +208,17 @@ class Redirector(nc.Creator):
             return
 
     def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw=True):
-        if self.x == None or self.y == None or self.z == None:
-            raise "first attached move can't be an arc"
+        if self.x is None or self.y is None or self.z is None:
+            message = "first attached move can't be an arc"
+            raise CamException(message)
         px = self.x
         py = self.y
         pz = self.z
-        if x != None:
+        if x is not None:
             self.x = x * units
-        if y != None:
+        if y is not None:
             self.y = y * units
-        if z != None:
+        if z is not None:
             self.z = z * units
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):

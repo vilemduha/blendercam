@@ -80,7 +80,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             sub.prop(self.op, "lead_in", text="Lead-in")
             sub.prop(self.op, "lead_out", text="Lead-out")
 
-        if self.op.strategy in ["CUTOUT"] and not self.op.cut_type == "ONLINE":
+        if self.op.strategy in ["CUTOUT"] and self.op.cut_type != "ONLINE":
             # if self.op.strategy == "CURVE":
             #     col = box.column(align=True)
             # Outlines Box
@@ -199,9 +199,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             row = col.row()
             row.use_property_split = False
             row.prop(self.op, "inverse")
+            col.prop(self.op, "skin")
             if self.op.strategy in ["PARALLEL", "CROSS"]:
-                col.prop(self.op, "skin")
                 col.prop(self.op, "parallel_angle")
+            if self.op.strategy == "PENCIL":
+                col.prop(self.op, "pencil_threshold", text="Pencil Threshold")
             box = col.box()
             col = box.column(align=True)
             col.label(text="Toolpath")

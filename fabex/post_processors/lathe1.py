@@ -5,9 +5,11 @@
 #
 # Dan Falck 2010/09/28
 
+import math
+
+from ..exception import CamException
 from . import iso_lathe_codes as iso
 from . import nc
-import math
 
 ################################################################################
 
@@ -145,23 +147,23 @@ class CreatorIso(nc.Creator):
             self.g += iso.codes.PLANE_YZ()
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        self.write((iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM()))
-        if x != None:
+        self.write(iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM())
+        if x is not None:
             self.write(iso.codes.SPACE() + "X " + (self.fmt % x))
-        if y != None:
+        if y is not None:
             self.write(iso.codes.SPACE() + "Y " + (self.fmt % y))
-        if z != None:
+        if z is not None:
             self.write(iso.codes.SPACE() + "Z " + (self.fmt % z))
-        if a != None:
+        if a is not None:
             self.write(iso.codes.SPACE() + "A " + (self.fmt % a))
-        if b != None:
+        if b is not None:
             self.write(iso.codes.SPACE() + "B " + (self.fmt % b))
-        if c != None:
+        if c is not None:
             self.write(iso.codes.SPACE() + "C " + (self.fmt % c))
         self.write("\n")
 
     def remove_temporary_origin(self):
-        self.write((iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM()))
+        self.write(iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM())
         self.write("\n")
 
     ############################################################################
@@ -195,9 +197,7 @@ class CreatorIso(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g += iso.codes.WORKPLANE() % (id + iso.codes.WORKPLANE_BASE())
         if (id >= 7) and (id <= 9):
-            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (
-                ".%i" % (id - 6)
-            )
+            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (f".{(id - 6)}")
 
     ############################################################################
     ##  Rates + Modes
@@ -241,7 +241,7 @@ class CreatorIso(nc.Creator):
         if gear <= 0:
             self.m.append(iso.codes.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(iso.codes.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(iso.codes.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -256,8 +256,8 @@ class CreatorIso(nc.Creator):
             self.write(iso.codes.RAPID())
         self.write_preps()
 
-        if y != None:
-            dy = y - self.y
+        if y is not None:
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
             else:
@@ -265,16 +265,16 @@ class CreatorIso(nc.Creator):
 
             self.y = y
 
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
 
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.Z() + (self.fmt % z))
@@ -284,24 +284,24 @@ class CreatorIso(nc.Creator):
 
             self.z = z
 
-        if a != None:
-            da = a - self.a
+        if a is not None:
+            da = a - self.a if self.a is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.A() + (self.fmt % a))
             else:
                 self.write(iso.codes.A() + (self.fmt % da))
             self.a = a
 
-        if b != None:
-            db = b - self.b
+        if b is not None:
+            db = b - self.b if self.b is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.B() + (self.fmt % b))
             else:
                 self.write(iso.codes.B() + (self.fmt % db))
             self.b = b
 
-        if c != None:
-            dc = c - self.c
+        if c is not None:
+            dc = c - self.c if self.c is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.C() + (self.fmt % c))
             else:
@@ -324,8 +324,8 @@ class CreatorIso(nc.Creator):
         self.write_preps()
         dx = dy = dz = 0
 
-        if y != None:
-            dy = y - self.y
+        if y is not None:
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
             else:
@@ -333,16 +333,16 @@ class CreatorIso(nc.Creator):
 
             self.y = y
 
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
 
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.Z() + (self.fmt % z))
@@ -359,17 +359,11 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x != None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y != None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z != None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if self.same_xyz(x, y, z):
@@ -388,7 +382,7 @@ class CreatorIso(nc.Creator):
             self.write(arc_g_code)
         self.write_preps()
         # make X take y values and multiply by 2 for diameter values for lathe
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
@@ -397,15 +391,15 @@ class CreatorIso(nc.Creator):
             self.y = y
 
         # make Z take x values for lathe
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.X() + (self.fmt % z))
@@ -414,13 +408,13 @@ class CreatorIso(nc.Creator):
                 # self.write(iso.codes.X() + (self.fmt % dz))
             self.z = z
 
-        if j != None:
+        if j is not None:
             self.write(iso.codes.CENTRE_X() + (self.fmt % j))  # change the order
-        if i != None:
+        if i is not None:
             self.write(iso.codes.CENTRE_Z() + (self.fmt % i))  # and reversed i and j
-        if k != None:
+        if k is not None:
             pass  # self.write(iso.codes.CENTRE_Z() + (self.fmt % k))
-        if r != None:
+        if r is not None:
             self.write(iso.codes.RADIUS() + (self.fmt % r))
         #       use horizontal feed rate
         if self.fhv:
@@ -461,8 +455,9 @@ class CreatorIso(nc.Creator):
 
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
-        if self.t == None:
-            raise "No tool specified for start_CRC()"
+        if self.t is None:
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         self.g = ("G41" + iso.codes.SPACE() + "D%i") % self.t
 
     def end_CRC(self):
@@ -494,7 +489,7 @@ class CreatorIso(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((iso.codes.COMMENT(text) + "\n"))
+        self.write(iso.codes.COMMENT(text) + "\n")
 
     def insert(self, text):
         pass

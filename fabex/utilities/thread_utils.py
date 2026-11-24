@@ -61,30 +61,27 @@ def timer_update(context):
         context: The context in which the function is called, typically
             containing information about the current scene and operations.
     """
-    text = ""
     s = bpy.context.scene
     if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, "cam_processes"):
         processes = bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
         for p in processes:
-            # proc=p[1].proc
             readthread = p[0]
             tcom = p[1]
             if not readthread.is_alive():
                 readthread.join()
-                # readthread.
                 tcom.lasttext = tcom.out_text
+
                 if tcom.out_text != "":
                     log.info(f"{tcom.opname}, {tcom.out_text}")
                     tcom.out_text = ""
 
                 if "finished" in tcom.lasttext:
                     processes.remove(p)
-
                     o = s.cam_operations[tcom.opname]
                     o.computing = False
                     reload_paths(o)
-                    update_z_buffer_image_tag = False
-                    update_offset_image_tag = False
+                    o.update_z_buffer_image_tag = False
+                    o.update_offset_image_tag = False
                 else:
                     readthread = threading.Thread(target=thread_read, args=([tcom]), daemon=True)
                     readthread.start()

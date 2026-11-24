@@ -9,25 +9,23 @@ from math import (
     pi,
 )
 
-from shapely.ops import unary_union
+import bpy
+from bpy_extras.object_utils import object_data_add
+from mathutils import Vector
+from shapely import prepared
 from shapely.geometry import (
     GeometryCollection,
     LineString,
     Point,
 )
-from shapely import prepared
+from shapely.ops import unary_union
 
-import bpy
-from bpy_extras.object_utils import object_data_add
-from mathutils import Vector
-
+from .utilities.curve_utils import curve_to_shapely
 from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.silhouette_utils import (
     get_object_silhouette,
-    get_operation_silhouette,
 )
-from .utilities.curve_utils import curve_to_shapely
 from .utilities.simple_utils import (
     join_multiple,
     remove_doubles,
@@ -233,12 +231,11 @@ def use_bridges(ch, o):
         faces = []
         while vi < len(ch_points):
             i1 = vi
-            i2 = vi
             chp1 = ch_points[i1]
             # Vector(v1)#this is for case of last point and not closed chunk..
             chp2 = ch_points[i1]
             if vi + 1 < len(ch_points):
-                i2 = vi + 1
+                vi + 1
                 chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
             v1 = Vector(chp1)
             v2 = Vector(chp2)
@@ -252,9 +249,9 @@ def use_bridges(ch, o):
                     interrupted = False
 
                 endinside = o.bridgespoly.contains(p2)
-                l = LineString([chp1, chp2])
-                if o.bridgespoly_boundary_prep.intersects(l):
-                    intersections = o.bridgespoly_boundary.intersection(l)
+                line = LineString([chp1, chp2])
+                if o.bridgespoly_boundary_prep.intersects(line):
+                    intersections = o.bridgespoly_boundary.intersection(line)
 
                 else:
                     intersections = GeometryCollection()
@@ -383,4 +380,4 @@ def auto_cut_bridge(o):
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
-        log.info("Bridges")
+        log.info("Bridges/Tabs: True")

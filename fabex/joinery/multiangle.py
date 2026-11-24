@@ -8,6 +8,27 @@ from math import (
 
 import bpy
 
+from ..constants import DT
+from ..utilities.compare_utils import angle as compare_angle
+from ..utilities.logging_utils import log
+from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.simple_utils import (
+    active_name,
+    add_rectangle,
+    difference,
+    duplicate,
+    intersect,
+    join_multiple,
+    make_active,
+    mirror_x,
+    mirror_y,
+    move,
+    remove_doubles,
+    remove_multiple,
+    rename,
+    rotate,
+    union,
+)
 from .arc_bar import (
     arc,
     bar,
@@ -17,29 +38,6 @@ from .interlock_twist import (
     distributed_interlock,
     twist_female,
     twist_male,
-)
-
-from ..constants import DT
-
-from ..utilities.compare_utils import angle as compare_angle
-from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve
-from ..utilities.simple_utils import (
-    duplicate,
-    mirror_x,
-    mirror_y,
-    union,
-    intersect,
-    rename,
-    difference,
-    active_name,
-    move,
-    rotate,
-    make_active,
-    remove_multiple,
-    join_multiple,
-    remove_doubles,
-    add_rectangle,
 )
 
 
@@ -577,7 +575,7 @@ def open_curve(
             Blender context.
     """
 
-    log.info("Starting Open Curve Function")
+    log.info("Status: Starting Open Curve Function")
 
     coords = list(line.coords)
 
@@ -586,8 +584,8 @@ def open_curve(
     p_start = coords[0]
     p_end = coords[-1]
 
-    log.info(f"Start Angle {start_angle}")
-    log.info(f"End Angle {end_angle}")
+    log.info(f"Start Angle: {start_angle}")
+    log.info(f"End Angle: {end_angle}")
 
     bpy.ops.curve.simple(
         align="WORLD",
@@ -601,7 +599,7 @@ def open_curve(
         shape="3D",
     )
 
-    log.info("Created Open Curve")
+    log.info("Status: Created Open Curve")
 
     active_name("tmprect")
     move(y=thick)
@@ -615,7 +613,7 @@ def open_curve(
     dilated = line.buffer(thick / 2)  # expand shapely object to thickness
     shapely_to_curve("tmp_curve", dilated, 0.0)
 
-    log.info("Dilated and Processed with Shapely")
+    log.info("Status: Dilated and Processed with Shapely")
 
     # truncate curve at both ends with the rectangles
     difference("tmp", "tmp_curve")
@@ -627,7 +625,7 @@ def open_curve(
     union("tmp_")
     active_name("tmp_curve")
 
-    log.info("Adding Twists")
+    log.info("Status: Adding Twists")
 
     twist_male(
         "tmp_curve",

@@ -2,15 +2,14 @@ from math import pi
 
 import bpy
 
-from .finger import finger_pair
-from .mortise import mortise
-
 from ..utilities.simple_utils import (
     active_name,
+    join_multiple,
     make_active,
     remove_multiple,
-    join_multiple,
 )
+from .finger import finger_pair
+from .mortise import mortise
 
 
 def create_base_plate(height, width, depth):

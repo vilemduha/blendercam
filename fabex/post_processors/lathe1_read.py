@@ -5,9 +5,9 @@
 #
 # Hirutso Enni, 2009-01-13
 
-from . import nclathe_read as nc
 import re
-import sys
+
+from . import nclathe_read as nc
 
 ################################################################################
 
@@ -17,7 +17,7 @@ class Parser(nc.Parser):
         nc.Parser.__init__(self, writer)
 
         self.pattern_main = re.compile(
-            "([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)"
+            r"([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)"
         )
 
         # if ( or ! or ; at least one space or a letter followed by some character or not followed by a +/- followed by decimal, with a possible decimal point
@@ -113,9 +113,7 @@ class Parser(nc.Parser):
                     path_col = "feed"
                     col = "feed"
                     arc = +1
-                elif word == "G10" or word == "g10":
-                    no_move = True
-                elif word == "L1" or word == "l1":
+                elif word == "G10" or word == "g10" or word == "L1" or word == "l1":
                     no_move = True
                 elif word == "G20" or word == "G70":
                     col = "prep"
@@ -123,17 +121,14 @@ class Parser(nc.Parser):
                 elif word == "G21" or word == "G71":
                     col = "prep"
                     self.set_mode(units=1.0)
-                elif word == "G81" or word == "g81":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G82" or word == "g82":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G83" or word == "g83":
+                elif (
+                    word == "G81"
+                    or word == "g81"
+                    or word == "G82"
+                    or word == "g82"
+                    or word == "G83"
+                    or word == "g83"
+                ):
                     drill = True
                     no_move = True
                     path_col = "feed"
@@ -205,11 +200,7 @@ class Parser(nc.Parser):
                     col = "axis"
                     z = eval(word[1:])
                     move = True
-                elif word[0] == "(":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == "!":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == ";":
+                elif word[0] == "(" or word[0] == "!" or word[0] == ";":
                     (col, cdata) = ("comment", True)
                 elif word[0] == "#":
                     col = "variable"

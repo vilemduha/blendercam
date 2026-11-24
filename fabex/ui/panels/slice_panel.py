@@ -3,6 +3,8 @@
 'Slice Model to Plywood Sheets' panel in Properties > Render
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.types import Panel
 
@@ -18,7 +20,7 @@ class CAM_SLICE_Panel(CAMParentPanel, Panel):
 
     bl_label = "[ Slice ]"
     bl_idname = "FABEX_PT_CAM_SLICE"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options: ClassVar = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
     use_property_split = True
 

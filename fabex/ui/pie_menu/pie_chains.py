@@ -3,7 +3,6 @@
 'Operations & Chains' Pie Menu
 """
 
-import bpy
 from bpy.types import Menu
 
 
@@ -43,7 +42,7 @@ class VIEW3D_MT_PIE_Chains(Menu):
             column.label(text="Depth Start > Free Movement Height")
             column.label(text="!ERROR! COLLISION!")
             column.prop(operation.movement, "free_height")
-            separator = column.separator(factor=1)
+            column.separator(factor=1)
         column.scale_x = 2
         column.emboss = "NONE"
         column.operator("wm.call_menu_pie", text="", icon="HOME").name = "VIEW3D_MT_PIE_CAM"

@@ -3,8 +3,10 @@
 'CAM Chains' panel in Properties > Render
 """
 
+from typing import ClassVar
+
 import bpy
-from bpy.types import UIList, Panel
+from bpy.types import Panel, UIList
 
 from .parent_panel import CAMParentPanel
 
@@ -44,7 +46,8 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
     bl_label = "[ Chains ]"
     bl_idname = "FABEX_PT_CAM_CHAINS"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options: ClassVar = {"DEFAULT_CLOSED"}
+
     panel_interface_level = 1
     always_show_panel = True
 
@@ -152,7 +155,6 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
                     box = layout.box()
                     col = box.column(align=True)
-                    cam_names = context.scene.cam_names
                     link_names = chain.link_chain_file_names
 
                     row = col.row(align=True)

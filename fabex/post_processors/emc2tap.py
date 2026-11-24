@@ -1,6 +1,4 @@
-from . import nc
-from . import iso_codes
-from . import emc2
+from . import emc2, iso, iso_codes, nc
 
 
 class CodesEMC2(iso_codes.Codes):
@@ -47,14 +45,14 @@ class CreatorEMC2tap(emc2.CreatorEMC2):
         # zretract=None, dwell_bottom=None,pitch=None, stoppos=None, spin_in=None, spin_out=None):
         # I dont see how to map these to EMC Gcode
 
-        if standoff == None:
+        if standoff is None:
             # This is a bad thing.  All the drilling cycles need a retraction (and starting) height.
             return
-        if z == None:
+        if z is None:
             return  # We need a Z value as well.  This input parameter represents the top of the hole
-        if pitch == None:
+        if pitch is None:
             return  # We need a pitch value.
-        if direction == None:
+        if direction is None:
             return  # We need a direction value.
 
         if tap_mode != 0:
@@ -76,15 +74,15 @@ class CreatorEMC2tap(emc2.CreatorEMC2):
             self.rapid(z=retract_height)
 
         # then continue to x,y if given
-        if (x != None) or (y != None):
+        if (x is not None) or (y is not None):
             self.write_blocknum()
             self.write(iso_codes.codes.RAPID())
 
-            if x != None:
+            if x is not None:
                 self.write(iso_codes.codes.X() + (self.fmt % x))
                 self.x = x
 
-            if y != None:
+            if y is not None:
                 self.write(iso_codes.codes.Y() + (self.fmt % y))
                 self.y = y
             self.write("\n")

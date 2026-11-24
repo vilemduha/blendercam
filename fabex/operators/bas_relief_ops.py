@@ -4,9 +4,9 @@ Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
-import bpy
+from typing import ClassVar
 
-from bpy.types import Operator
+import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -14,14 +14,14 @@ from bpy.props import (
     IntProperty,
     StringProperty,
 )
+from bpy.types import Operator
 
 from ..constants import PRECISION
-
 from ..utilities.relief_utils import (
-    problem_areas,
-    render_scene,
-    relief,
     ReliefError,
+    problem_areas,
+    relief,
+    render_scene,
 )
 
 
@@ -30,9 +30,9 @@ class DoBasRelief(Operator):
 
     bl_idname = "scene.calculate_bas_relief"
     bl_label = "Calculate Bas Relief"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
-    processes = []
+    processes: ClassVar = []
 
     # Bas Relief Properties
     use_image_source: BoolProperty(
@@ -58,7 +58,7 @@ class DoBasRelief(Operator):
     )
     pass_per_radius: IntProperty(
         name="Passes per Radius",
-        description="Amount of passes per radius\n(more passes, " "more mesh precision)",
+        description="Amount of passes per radius\n(more passes, more mesh precision)",
         default=2,
         min=1,
         max=10,
@@ -310,8 +310,6 @@ class DoBasRelief(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        scene = context.scene
-
         box = layout.box()
         col = box.column(align=True)
         col.label(text="Source")
@@ -376,9 +374,9 @@ class ProblemAreas(Operator):
 
     bl_idname = "scene.problemareas_bas_relief"
     bl_label = "Problem Areas Bas Relief"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
-    processes = []
+    processes: ClassVar = []
 
     # @classmethod
     # def poll(cls, context):

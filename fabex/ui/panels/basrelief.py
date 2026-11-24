@@ -3,6 +3,8 @@
 'Bas Relief' properties and panel in Properties > Render
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.types import Panel
 
@@ -12,11 +14,11 @@ class BASRELIEF_Panel(Panel):
 
     bl_label = "[ Bas Relief ]"
     bl_idname = "FABEX_PT_BASRELIEF"
-    bl_options = {"DEFAULT_CLOSED"}
+    bl_options: ClassVar = {"DEFAULT_CLOSED"}
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "render"
-    COMPAT_ENGINES = {"FABEX_RENDER"}
+    COMPAT_ENGINES: ClassVar = {"FABEX_RENDER"}
 
     @classmethod
     def poll(cls, context):

@@ -5,13 +5,13 @@ except ImportError:
         import opencamlib as ocl
     except ImportError:
         pass
+import sys
 
-
+from ..chunk_builder import CamPathChunk
 from ..constants import (
     OCL_SCALE,
 )
 from .async_utils import progress_async
-from ..chunk_builder import CamPathChunk
 from .chunk_utils import sort_chunks
 from .logging_utils import log
 from .ocl_utils import get_oclSTL
@@ -69,7 +69,7 @@ async def oclGetWaterline(operation, chunks):
     oclSTL = get_oclSTL(operation)
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
-    op_minz = operation.min_z
+    # op_minz = operation.min_z
 
     if op_cutter_type == "VCARVE":
         op_cutter_tip_angle = operation["cutter_tip_angle"]
@@ -88,7 +88,7 @@ async def oclGetWaterline(operation, chunks):
         )
     else:
         log.info(f"Cutter Unsupported: {op_cutter_type}\n")
-        quit()
+        sys.exit()
 
     waterline = ocl.Waterline()
     waterline.setSTL(oclSTL)
@@ -104,11 +104,8 @@ async def oclGetWaterline(operation, chunks):
         waterline.run2()
         wl_loops = waterline.getLoops()
 
-        for l in wl_loops:
-            inpoints = []
-
-            for p in l:
-                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+        for loop in wl_loops:
+            inpoints = [(p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE) for p in loop]
 
             inpoints.append(inpoints[0])
             chunk = CamPathChunk(inpoints=inpoints)

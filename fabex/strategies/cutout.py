@@ -7,14 +7,13 @@ from math import (
 import bpy
 
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -51,7 +50,7 @@ async def cutout(o):
             on the provided object.
     """
 
-    log.info("Strategy: Cutout")
+    log.info(heading("Strategy: Cutout"))
 
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
@@ -74,11 +73,11 @@ async def cutout(o):
 
     try:
         cutter_offset = offset_by_type[o.cutter_type]
-    except:
-        pass
+    except Exception as e:
+        log.debug(e)
 
     # Add Skin for Profile
-    cutter_offset = (r if cutter_offset > r else cutter_offset) + o.skin
+    cutter_offset = (min(cutter_offset, r)) + o.skin
 
     log.info(f"Offset: {cutter_offset}")
 
@@ -97,7 +96,7 @@ async def cutout(o):
 
     # Separate to allow open Curves :)
     if o.cut_type == "ONLINE" and o.onlycurves:
-        log.info("Separate")
+        log.info("Separate: True")
         chunks_from_curve = []
 
         for ob in o.objects:
@@ -143,7 +142,7 @@ async def cutout(o):
     if o.outlines_count == 1:
         chunks_from_curve = await sort_chunks(chunks_from_curve, o)
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
 
     if climb_CCW or conventional_CW:
         [chunk.reverse() for chunk in chunks_from_curve]
@@ -197,9 +196,8 @@ async def cutout(o):
         remove_multiple(o.name + "_cut_bridges")
         bridge_height = min(o.max.z, o.min.z + abs(o.bridges_height))
 
-        log.info("-")
-        log.info("Using Bridges")
-        log.info("Old Briddge Cut Removed")
+        log.info("Using Bridges/Tabs: True")
+        log.info("Status: Old Briddge Cut Removed")
 
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
@@ -209,7 +207,7 @@ async def cutout(o):
                 use_bridges(chunk, o)
 
     if o.profile_start > 0:
-        log.info("Cutout Change Profile Start")
+        log.info("Status: Cutout Change Profile Start")
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
 
@@ -218,7 +216,7 @@ async def cutout(o):
 
     # Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
-        log.info("Cutout Lead-in")
+        log.info("Status: Cutout Lead-in")
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
 
@@ -257,5 +255,7 @@ async def cutout(o):
     else:
         for chunk_layer in chunk_copies:
             chunks.append(chunk_layer[0])
+
+        # chunks.extend(chunk_layer[0] for chunk_layer in chunk_copies)
 
     chunks_to_mesh(chunks, o)

@@ -4,20 +4,22 @@ Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
-from math import ceil, floor, sqrt
 import re
 import time
-
-import numpy as np
+from math import ceil, floor, sqrt
 
 import bpy
+import numpy as np
 
 from ..constants import EPS, NUMPYALG
 from .image_utils import (
     image_to_numpy,
     numpy_to_image,
 )
-from .logging_utils import log
+from .logging_utils import heading, log
+
+rows = 0
+size = 0
 
 
 class ReliefError(Exception):
@@ -90,7 +92,7 @@ def restrict_buffer(inbuf, outbuf):
         # 3 is the maximum value...?pff.
         indices = np.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
 
-        r = sxendrange - sxstartrange
+        sxendrange - sxstartrange
 
         indices[0] = sxstartrange.repeat(outy)
         indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
@@ -104,13 +106,12 @@ def restrict_buffer(inbuf, outbuf):
         outbuf[:] = tempbuf.reshape((outx, outy))
 
     else:  # old method
-        for y in range(0, outy):
+        for y in range(outy):
             sx = dx / 2 - 0.5
-            for x in range(0, outx):
+            for x in range(outx):
                 pixVal = 0
                 w = 0
 
-                #
                 for ix in range(
                     max(0, ceil(sx - dx * filterSize)),
                     min(floor(sx + dx * filterSize), inx - 1) + 1,
@@ -188,9 +189,9 @@ def prolongate(inbuf, outbuf):
 
     else:
         sy = -dy / 2
-        for y in range(0, outy):
+        for y in range(outy):
             sx = -dx / 2
-            for x in range(0, outx):
+            for x in range(outx):
                 pixVal = 0
                 weight = 0
 
@@ -271,9 +272,8 @@ def calculate_defect(D, U, F):
     sy = F.shape[1]
 
     h = 1.0 / sqrt(sx * sy * 1.0)
-    h2i = 1.0 / (h * h)
+    1.0 / (h * h)
 
-    h2i = 1
     D[1:-1, 1:-1] = (
         F[1:-1, 1:-1] - U[:-2, 1:-1] - U[2:, 1:-1] - U[1:-1, :-2] - U[1:-1, 2:] + 4 * U[1:-1, 1:-1]
     )
@@ -348,7 +348,7 @@ def solve_pde_multigrid(
     IU = []
     VF = []
     PLANAR = []
-    for a in range(0, levels + 1):
+    for a in range(levels + 1):
         RHS.append(None)
         IU.append(None)
         VF.append(None)
@@ -363,7 +363,7 @@ def solve_pde_multigrid(
     sx = xmax
     sy = ymax
     # print(planar)
-    for k in range(0, levels):
+    for k in range(levels):
         # calculate size of next level
         sx = int(sx / 2)
         sy = int(sy / 2)
@@ -401,7 +401,7 @@ def solve_pde_multigrid(
 
         # 5. V-cycle (twice repeated)
 
-        for cycle in range(0, vcycleiterations):
+        for cycle in range(vcycleiterations):
             log.info(f"V-Cycle Iteration: {cycle}")
 
             # 6. downward stroke of V
@@ -412,7 +412,7 @@ def solve_pde_multigrid(
                 if k2 != k:
                     IU[k2].fill(0.0)
 
-                for i in range(0, smoothiterations):
+                for i in range(smoothiterations):
                     smooth(IU[k2], VF[k2], linbcgiterations, PLANAR[k2])
 
                 # 8. calculate defect at level
@@ -451,7 +451,7 @@ def solve_pde_multigrid(
                 add_correction(IU[k2], C)
 
                 # 14. post-smoothing of current sollution using target function
-                for i in range(0, smoothiterations):
+                for i in range(smoothiterations):
                     smooth(IU[k2], VF[k2], linbcgiterations, PLANAR[k2])
 
                 if useplanar and k2 == 0:
@@ -603,7 +603,7 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
         temp = z * rr
 
         bknum = temp.sum()  # -z[0]*rr[0]????
-
+        bkden = bknum
         if iter == 1:
             p[:] = z
             pp[:] = zz
@@ -612,7 +612,7 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
             bk = bknum / bkden
             p = bk * p + z
             pp = bk * pp + zz
-        bkden = bknum
+        # bkden = bknum
         atimes(p, z)
         temp = z * pp
         akden = temp.sum()
@@ -673,7 +673,7 @@ def tonemap(i, exponent):
     minheight = i.min()
     i[:] = np.clip(i, minheight, maxheight)
 
-    i[:] = ((i - minheight)) / (maxheight - minheight)
+    i[:] = (i - minheight) / (maxheight - minheight)
     i[:] **= exponent
 
 
@@ -715,8 +715,6 @@ def build_mesh(mesh_z, br):
             thickness, justification, and decimation ratio.
     """
 
-    global rows
-    global size
     scale = 1
     scalez = 1
     decimateRatio = br.decimate_ratio  # get variable from interactive table
@@ -726,20 +724,20 @@ def build_mesh(mesh_z, br):
             bpy.data.objects.remove(object)
             log.info("Old BasRelief Removed")
 
-    log.info("Building Mesh")
+    log.info(heading("Building Mesh"))
     numY = mesh_z.shape[1]
     numX = mesh_z.shape[0]
     log.info(f"{numX}, {numY}")
 
-    verts = list()
-    faces = list()
+    verts = []
+    faces = []
 
     for i, row in enumerate(mesh_z):
         for j, col in enumerate(row):
             verts.append(vert(i, j, col, scale, scalez))
 
     count = 0
-    for i in range(0, numY * (numX - 1)):
+    for i in range(numY * (numX - 1)):
         if count < numY - 1:
             A = i  # the first vertex
             B = i + 1  # the second vertex
@@ -832,7 +830,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     if make_nodes:
         # If Blender is v5 or greater, use the new Compositor settings
         if blender_version >= 5:
-            if scene.compositing_node_group == None:
+            if scene.compositing_node_group is None:
                 bpy.ops.node.new_compositing_node_group()
 
             for group in bpy.data.node_groups:
@@ -841,8 +839,11 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
 
             node_tree = scene.compositing_node_group
             nodes = node_tree.nodes
-            render_layers = nodes["Render Layers"]
-            reroute = nodes["Reroute"]
+            try:
+                render_layers = nodes["Render Layers"]
+            except KeyError:
+                render_layers = nodes.new("CompositorNodeRLayers")
+            reroute = nodes.new("NodeReroute")
 
             node_tree.links.new(
                 render_layers.outputs[render_layers.outputs.find("Depth")],
@@ -851,7 +852,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
         # If Blender is v4 or lower, use the legacy Compositor settings
         else:
             # make depth render node and viewer node
-            if scene.use_nodes == False:
+            if not scene.use_nodes:
                 scene.use_nodes = True
             node_tree = scene.node_tree
             nodes = node_tree.nodes
@@ -928,7 +929,7 @@ def problem_areas(br):
             saves the result.
     """
 
-    t = time.time()
+    # t = time.time()
     if br.use_image_source:
         i = bpy.data.images[br.source_image_name]
     else:
@@ -936,11 +937,11 @@ def problem_areas(br):
     silh_thres = br.silhouette_threshold
     recover_silh = br.recover_silhouettes
     silh_scale = br.silhouette_scale
-    MINS = br.min_gridsize
-    smoothiterations = br.smooth_iterations
-    vcycleiterations = br.vcycle_iterations
-    linbcgiterations = br.linbcg_iterations
-    useplanar = br.use_planar
+    # MINS = br.min_gridsize
+    # smoothiterations = br.smooth_iterations
+    # vcycleiterations = br.vcycle_iterations
+    # linbcgiterations = br.linbcg_iterations
+    # useplanar = br.use_planar
     if br.gradient_scaling_mask_use:
         m = bpy.data.images[br.gradient_scaling_mask_name]
 
@@ -960,13 +961,13 @@ def problem_areas(br):
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
-    planar = nar < (nar.min() + 0.0001)
+    # planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = np.abs(gx)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrarx = np.sqrt(sqrarx)
     sqrary = np.abs(gy)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
@@ -993,7 +994,7 @@ def problem_areas(br):
     divga = np.abs(divg)
     divgp = divga > silh_thres / 4.0
     divgp = 1 - divgp
-    for a in range(0, 2):
+    for a in range(2):
         atimes(divgp, divga)
         divga = divgp
 
@@ -1071,9 +1072,8 @@ def relief(br):
     nar = 1 - nar  # reverse z buffer+ add something
     log.info(f"Range: {nar.min()}, {nar.max()}")
     if nar.min() - nar.max() == 0:
-        raise ReliefError(
-            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
-        )
+        message = "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
+        raise ReliefError(message)
 
     gx = nar.copy()
     gx.fill(0)
@@ -1088,10 +1088,10 @@ def relief(br):
     planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = np.abs(gx)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrarx = np.sqrt(sqrarx)
     sqrary = np.abs(gy)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
@@ -1129,10 +1129,10 @@ def relief(br):
         divgf = np.fft.fft2(divg)
         divgfshift = np.fft.fftshift(divgf)
         mask = divg.copy()
-        pos = np.array((crow, ccol))
+        # pos = np.array((crow, ccol))
 
         def filterwindow(x, y, cx=0, cy=0):
-            return abs((cx - x)) + abs((cy - y))
+            return abs(cx - x) + abs(cy - y)
 
         mask = np.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)
         mask = np.sqrt(mask)

@@ -4,6 +4,8 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.types import Operator
 
@@ -15,7 +17,7 @@ class CamOrientationAdd(Operator):
 
     bl_idname = "scene.cam_orientation_add"
     bl_label = "Add Orientation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):

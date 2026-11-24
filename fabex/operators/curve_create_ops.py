@@ -4,18 +4,15 @@ Operators to create a number of predefined curve objects.
 """
 
 from math import (
+    cos,  # noqa: F401
     degrees,
     hypot,
     pi,
     radians,
+    sin,  # noqa: F401
+    sqrt,  # noqa: F401
 )
-
-from shapely import affinity
-from shapely.geometry import (
-    LineString,
-    MultiLineString,
-    box,
-)
+from typing import ClassVar
 
 import bpy
 from bpy.props import (
@@ -25,7 +22,19 @@ from bpy.props import (
     IntProperty,
 )
 from bpy.types import Operator
+from shapely import affinity
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+    box,
+)
 
+from ..joinery.arc_bar import (
+    arc,
+    arc_bar,
+    arc_bar_arc,
+    bar,
+)
 from ..joinery.finger import (
     finger,
     finger_amount,
@@ -39,29 +48,23 @@ from ..joinery.finger import (
 from ..joinery.flex import (
     create_base_plate,
     create_flex_side,
-    make_variable_flex_pocket,
     make_flex_pocket,
+    make_variable_flex_pocket,
 )
 from ..joinery.interlock_twist import (
     distributed_interlock,
-    single_interlock,
     interlock_twist_separator,
-)
-from ..joinery.arc_bar import (
-    arc,
-    bar,
-    arc_bar,
-    arc_bar_arc,
+    single_interlock,
 )
 from ..joinery.multiangle import (
+    curved_t,
     mitre,
     multiangle,
-    t,
-    curved_t,
-    tile,
     open_curve,
+    t,
+    tile,
 )
-
+from ..utilities.curve_utils import curve_to_shapely
 from ..utilities.gear_utils import (
     gear,
     rack,
@@ -71,24 +74,23 @@ from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
+from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.simple_utils import (
-    remove_multiple,
-    select_multiple,
+    active_name,
+    add_overcut,
+    deselect,
+    difference,
+    duplicate,
     join_multiple,
     make_active,
-    deselect,
-    active_name,
-    remove_doubles,
-    rename,
-    duplicate,
-    add_overcut,
     move,
-    difference,
-    union,
+    remove_doubles,
+    remove_multiple,
+    rename,
     rotate,
+    select_multiple,
+    union,
 )
-from ..utilities.curve_utils import curve_to_shapely
-from ..utilities.shapely_utils import shapely_to_curve
 
 
 def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob=None):
@@ -116,7 +118,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
     else:
         bpy.ops.object.curve_remove_doubles()
 
-    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
     depth = ob.location[2]
     shapes = curve_to_shapely(ob)
 
@@ -169,7 +170,7 @@ class CamCurveHatch(Operator):
 
     bl_idname = "object.curve_hatch"
     bl_label = "CrossHatch Curve"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     angle: FloatProperty(
         default=0,
@@ -248,8 +249,9 @@ class CamCurveHatch(Operator):
             join = 1
         ob = context.active_object
         obname = ob.name
+        crosshatch_prefix = f"{obname}_crosshatch"
         ob.select_set(True)
-        remove_multiple("crosshatch")
+        remove_multiple(crosshatch_prefix)
         depth = ob.location[2]
         xingOffset = self.offset
 
@@ -263,7 +265,7 @@ class CamCurveHatch(Operator):
             self.pocket_shape,
             join,
         )
-        shapely_to_curve("crosshatch_lines", xing, depth)
+        shapely_to_curve(f"{crosshatch_prefix}_lines", xing, depth)
 
         if self.xhatch:
             make_active(obname)
@@ -275,24 +277,24 @@ class CamCurveHatch(Operator):
                 self.pocket_shape,
                 join,
             )
-            shapely_to_curve("crosshatch_lines_ra", xingra, depth)
+            shapely_to_curve(f"{crosshatch_prefix}_lines_ra", xingra, depth)
 
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
-        join_multiple("crosshatch")
+        join_multiple(crosshatch_prefix)
         if self.contour:
             deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
             bpy.ops.object.silhouette_offset(offset=self.offset)
             if self.contour_separate:
-                active_name("contour_hatch")
+                active_name(f"{obname}_contour_hatch")
                 deselect()
             else:
-                active_name("crosshatch_contour")
-                join_multiple("crosshatch")
+                active_name(f"{obname}_crosshatch_contour")
+                join_multiple(crosshatch_prefix)
                 remove_doubles()
         else:
-            join_multiple("crosshatch")
+            join_multiple(crosshatch_prefix)
             remove_doubles()
         return {"FINISHED"}
 
@@ -302,7 +304,7 @@ class CamCurvePlate(Operator):
 
     bl_idname = "object.curve_plate"
     bl_label = "Sign Plate"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     radius: FloatProperty(
         name="Corner Radius",
@@ -336,9 +338,17 @@ class CamCurvePlate(Operator):
         precision=4,
         unit="LENGTH",
     )
-    hole_tolerance: FloatProperty(
+    holev_tolerance: FloatProperty(
         name="Hole V Tolerance",
-        default=0.005,
+        default=0.0,
+        min=0,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
+    holeh_tolerance: FloatProperty(
+        name="Hole H Tolerance",
+        default=0.0,
         min=0,
         max=3.0,
         precision=4,
@@ -402,7 +412,10 @@ class CamCurvePlate(Operator):
         layout.prop(self, "width")
         layout.prop(self, "height")
         layout.prop(self, "hole_diameter")
-        layout.prop(self, "hole_tolerance")
+        if self.holeh_tolerance == 0.0:
+            layout.prop(self, "holev_tolerance")
+        if self.holev_tolerance == 0.0:
+            layout.prop(self, "holeh_tolerance")
         layout.prop(self, "hole_vdist")
         layout.prop(self, "hole_hdist")
         layout.prop(self, "hole_hamount")
@@ -626,17 +639,17 @@ class CamCurvePlate(Operator):
                 radius=self.hole_diameter / 2,
                 enter_editmode=False,
                 align="WORLD",
-                location=(0, self.hole_tolerance / 2, 0),
+                location=(self.holeh_tolerance / 2, self.holev_tolerance / 2, 0),
                 scale=(1, 1, 1),
             )
             active_name("_hole_Top")
             bpy.context.object.data.resolution_u = int(self.resolution / 4)
-            if self.hole_tolerance > 0:
+            if self.holev_tolerance > 0.0 or self.holeh_tolerance > 0.0:
                 bpy.ops.curve.primitive_bezier_circle_add(
                     radius=self.hole_diameter / 2,
                     enter_editmode=False,
                     align="WORLD",
-                    location=(0, -self.hole_tolerance / 2, 0),
+                    location=(-self.holeh_tolerance / 2, -self.holev_tolerance / 2, 0),
                     scale=(1, 1, 1),
                 )
                 active_name("_hole_Bottom")
@@ -685,10 +698,13 @@ class CamCurvePlate(Operator):
             # Make the plate base active
             bpy.context.view_layer.objects.active = bpy.data.objects["plate_base"]
             # Remove holes from the base
-            polygon_boolean(context, "DIFFERENCE")
-            remove_multiple("plate_")  # Remove temporary base and holes
-            remove_multiple("_")
+            if self.hole_diameter > 0:  # only make holes if not 0
+                polygon_boolean(context, "DIFFERENCE")
+            else:
+                active_name("tmp")
 
+        remove_multiple("plate_")  # Remove temporary base and holes
+        remove_multiple("_")
         active_name("plate")
         bpy.context.active_object.select_set(True)
         bpy.ops.object.curve_remove_doubles()
@@ -701,7 +717,7 @@ class CamCurveFlatCone(Operator):
 
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone Flat Calculator"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     small_d: FloatProperty(
         name="Small Diameter",
@@ -839,12 +855,12 @@ class CamCurveMortise(Operator):
 
     bl_idname = "object.curve_mortise"
     bl_label = "Mortise"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
-    finger_size: BoolProperty(
-        name="Kurf Bending only",
-        default=False,
-    )
+    # finger_size: BoolProperty(
+    #     name="Kurf Bending only",
+    #     default=False,
+    # )
     finger_size: FloatProperty(
         name="Maximum Finger Size",
         default=0.015,
@@ -944,9 +960,8 @@ class CamCurveMortise(Operator):
         active_name("_temp_mesh")
 
         if self.opencurve:
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+            # extract X,Y coordinates from the vertices data
+            coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
             remove_multiple("-converted")
@@ -1032,7 +1047,7 @@ class CamCurveInterlock(Operator):
 
     bl_idname = "object.curve_interlock"
     bl_label = "Interlock"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     finger_size: FloatProperty(
         name="Finger Size",
@@ -1127,9 +1142,8 @@ class CamCurveInterlock(Operator):
             active_name("_temp_mesh")
 
             if self.opencurve:
-                coords = []
-                for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                    coords.append((v.co.x, v.co.y))
+                # extract X,Y coordinates from the vertices data
+                coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
                 # convert coordinates to shapely LineString datastructure
                 line = LineString(coords)
                 remove_multiple("-converted")
@@ -1137,7 +1151,7 @@ class CamCurveInterlock(Operator):
             shapes = curve_to_shapely(o1)
 
             for s in shapes.geoms:
-                if s.boundary.type == "LineString":
+                if s.boundary.geom_type == "LineString":
                     loops = [s.boundary]
                 else:
                     loops = s.boundary
@@ -1189,7 +1203,7 @@ class CamCurveDrawer(Operator):
 
     bl_idname = "object.curve_drawer"
     bl_label = "Drawer"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     depth: FloatProperty(
         name="Drawer Depth",
@@ -1235,7 +1249,7 @@ class CamCurveDrawer(Operator):
         name="Finger Inset",
         default=0.0,
         min=0.0,
-        max=0.01,
+        max=0.04,
         precision=4,
         unit="LENGTH",
     )
@@ -1445,7 +1459,7 @@ class CamCurvePuzzle(Operator):
 
     bl_idname = "object.curve_puzzle"
     bl_label = "Puzzle Joints"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
         name="Tool Diameter",
@@ -1762,7 +1776,7 @@ class CamCurvePuzzle(Operator):
         """
 
         curve_detected = False
-        log.info(f"{len(context.selected_objects)} Selected Object {context.selected_objects}")
+        log.info(f"{len(context.selected_objects)} Selected Object(s): {context.selected_objects}")
         if len(context.selected_objects) > 0 and context.active_object.type == "CURVE":
             curve_detected = True
             # bpy.context.object.data.resolution_u = 60
@@ -1989,7 +2003,7 @@ class CamCurveGear(Operator):
 
     bl_idname = "object.curve_gear"
     bl_label = "Gears"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     tooth_spacing: FloatProperty(
         name="Distance per Tooth",

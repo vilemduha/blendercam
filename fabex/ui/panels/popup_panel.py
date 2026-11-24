@@ -1,7 +1,5 @@
-import bpy
-from bpy.types import Operator
 from bpy.props import StringProperty
-
+from bpy.types import Operator
 
 from ...utilities.logging_utils import log
 
@@ -34,7 +32,7 @@ class CAM_Popup_Panel(Operator):
     def draw(self, context):
         layout = self.layout
 
-        if not self.text == "":
+        if self.text:
             layout.label(text=self.text, icon="INFO")
 
         operations = context.scene.cam_operations
@@ -45,7 +43,7 @@ class CAM_Popup_Panel(Operator):
         if self.op is None:
             return
         else:
-            if not self.op.info.warnings == "":
+            if self.op.info.warnings:
                 # Operation Warnings
                 box = layout.box()
                 col = box.column(align=True)
@@ -58,6 +56,6 @@ class CAM_Popup_Panel(Operator):
                             icon = "MOD_WIREFRAME"
                         if line.startswith(("Memory", "Detail")):
                             icon = "MEMORY"
-                        if line.startswith(("!!!")):
+                        if line.startswith("!!!"):
                             icon = "ERROR"
                         col.label(text=line, icon=icon)

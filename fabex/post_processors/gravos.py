@@ -1,5 +1,4 @@
-from . import nc
-from . import iso
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -10,13 +9,13 @@ class Creator(iso.Creator):
         return " "
 
     def COMMENT(self, comment):
-        return ";%s" % comment
+        return f";{comment}"
 
     def PROGRAM(self):
         return None
 
     def program_begin(self, id, comment):
-        self.write((";" + comment + "\n"))
+        self.write(";" + comment + "\n")
 
     def TIME(self):
         return "X"

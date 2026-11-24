@@ -1,5 +1,4 @@
-from . import nc
-from . import emc2
+from . import emc2, nc
 
 
 class Creator(emc2.Creator):
@@ -7,7 +6,7 @@ class Creator(emc2.Creator):
         emc2.Creator.__init__(self)
 
     def program_begin(self, id, comment):
-        self.write(("(" + comment + ")" + "\n"))
+        self.write("(" + comment + ")" + "\n")
 
     def tool_change(self, id):
         self.write("G53 G00 Z30\n")

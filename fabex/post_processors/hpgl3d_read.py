@@ -1,6 +1,4 @@
 from . import num_reader
-import sys
-import math
 
 
 class Parser(num_reader.NumReader):

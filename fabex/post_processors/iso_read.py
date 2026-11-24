@@ -5,9 +5,9 @@
 #
 # Hirutso Enni, 2009-01-13
 
-from . import nc_read as nc
 import re
-import sys
+
+from . import nc_read as nc
 
 ################################################################################
 
@@ -17,7 +17,7 @@ class Parser(nc.Parser):
         nc.Parser.__init__(self, writer)
 
         self.pattern_main = re.compile(
-            "([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)"
+            r"([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)"
         )
         self.arc_centre_absolute = False
         self.arc_centre_positive = False
@@ -80,17 +80,19 @@ class Parser(nc.Parser):
             self.path_col = "feed"
             self.col = "feed"
             self.arc = +1
-        elif word == "G10" or word == "g10":
-            self.no_move = True
-        elif word == "L1" or word == "l1":
-            self.no_move = True
         elif (
-            word == "G61.1"
-            or word == "g61.1"
-            or word == "G61"
-            or word == "g61"
-            or word == "G64"
-            or word == "g64"
+            word == "G10"
+            or word == "g10"
+            or word == "L1"
+            or word == "l1"
+            or (
+                word == "G61.1"
+                or word == "g61.1"
+                or word == "G61"
+                or word == "g61"
+                or word == "G64"
+                or word == "g64"
+            )
         ):
             self.no_move = True
         elif word == "G20" or word == "G70":
@@ -104,17 +106,14 @@ class Parser(nc.Parser):
             self.move = True
             self.path_col = "rapid"
             self.col = "rapid"
-        elif word == "G81" or word == "g81":
-            self.drill = True
-            self.no_move = True
-            self.path_col = "feed"
-            self.col = "feed"
-        elif word == "G82" or word == "g82":
-            self.drill = True
-            self.no_move = True
-            self.path_col = "feed"
-            self.col = "feed"
-        elif word == "G83" or word == "g83":
+        elif (
+            word == "G81"
+            or word == "g81"
+            or word == "G82"
+            or word == "g82"
+            or word == "G83"
+            or word == "g83"
+        ):
             self.drill = True
             self.no_move = True
             self.path_col = "feed"
@@ -144,12 +143,12 @@ class Parser(nc.Parser):
         elif word[0] == "O":
             self.col = "program"
         elif word[0] == "P" or word[0] == "p":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.p = eval(word[1:])
                 self.move = True
         elif word[0] == "Q" or word[0] == "q":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.q = eval(word[1:])
                 self.move = True
@@ -175,11 +174,7 @@ class Parser(nc.Parser):
             self.col = "axis"
             self.z = eval(word[1:])
             self.move = True
-        elif word[0] == "(":
-            (self.col, self.cdata) = ("comment", True)
-        elif word[0] == "!":
-            (self.col, self.cdata) = ("comment", True)
-        elif word[0] == ";":
+        elif word[0] == "(" or word[0] == "!" or word[0] == ";":
             (self.col, self.cdata) = ("comment", True)
         elif word[0] == "#":
             self.col = "variable"

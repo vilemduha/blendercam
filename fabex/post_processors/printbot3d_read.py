@@ -1,5 +1,4 @@
 from . import iso_read as iso
-import sys
 
 # based on the iso reader
 

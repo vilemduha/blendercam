@@ -7,37 +7,48 @@ from math import (
     pi,
     tan,
 )
+from typing import ClassVar
 
+import bpy
 import shapely
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+)
+from bpy.types import Operator
+from mathutils import Vector
 from shapely.geometry import (
     LineString,
     MultiLineString,
 )
 
-import bpy
-from bpy.props import (
-    BoolProperty,
-    EnumProperty,
-    FloatProperty,
-)
-from bpy.types import Operator
-from mathutils import Vector
-
+from ..utilities.curve_utils import curve_to_shapely, curve_validate
 from ..utilities.geom_utils import circle
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
-from ..utilities.curve_utils import curve_to_shapely
 from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.silhouette_utils import (
-    silhouette_offset,
     get_object_silhouette,
+    silhouette_offset,
 )
 from ..utilities.simple_utils import (
-    remove_multiple,
+    active_name,
+    deselect,
+    difference,
+    duplicate,
+    extrude_curve2mesh,
     join_multiple,
+    make_active,
+    mesh_difference,
+    move,
+    remove_doubles,
+    remove_multiple,
+    rename,
 )
 
 
@@ -47,7 +58,7 @@ class CamCurveBoolean(Operator):
 
     bl_idname = "object.curve_boolean"
     bl_label = "Curve Boolean"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     boolean_type: EnumProperty(
         name="Type",
@@ -81,7 +92,7 @@ class CamCurveConvexHull(Operator):
 
     bl_idname = "object.convex_hull"
     bl_label = "Convex Hull"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -92,19 +103,40 @@ class CamCurveConvexHull(Operator):
         return {"FINISHED"}
 
 
+def simple_intarsion(context, radius=0.0):
+    """
+    Rounds sharp corners of a curve with radius
+    Args:
+        context: bpy.context
+        radius: Radius of rounding
+
+    Returns:  Renames result to original curve name
+
+    """
+    active_name("_intar_temp")
+    silhouette_offset(context, -radius, style=1)
+    active_name("_intar_temp")
+    silhouette_offset(context, radius * 2, style=1)
+    active_name("_intar_temp")
+    silhouette_offset(context, -radius, style=1)
+    active_name("simple_intarsion")
+    remove_multiple("_intar_temp")
+    make_active("simple_intarsion")
+
+
 # intarsion or joints
 class CamCurveIntarsion(Operator):
     """Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints"""
 
     bl_idname = "object.curve_intarsion"
-    bl_label = "Intarsion"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_label = "Intarsia"
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
         name="Cutter Diameter",
-        default=0.001,
+        default=0.003175,
         min=0,
-        max=0.025,
+        max=0.500,
         precision=4,
         unit="LENGTH",
     )
@@ -148,9 +180,96 @@ class CamCurveIntarsion(Operator):
         precision=4,
         unit="LENGTH",
     )
-    backlight_depth_from_top: FloatProperty(
-        name="Backlight Well Depth",
+
+    backlight_depth_from_bottom: FloatProperty(
+        name="Backlight distance from bottom",
         default=0.000,
+        min=0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    resolution: IntProperty(
+        name="Curve Resolution",
+        default=100,
+        min=12,
+        max=500,
+    )
+
+    keep_outer: BoolProperty(
+        name="Keep outer sharp angles",
+        default=False,
+    )
+
+    includeStandoff: BoolProperty(
+        name="Block Standoff",
+        default=False,
+    )
+
+    standoffHeight: FloatProperty(
+        name="Standoff Height",
+        default=0.01,
+        min=0.0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    standoffSilhouette: FloatProperty(
+        name="Standoff Offset",
+        default=-0.001,
+        min=-0.100,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    includeBacklightInsert: BoolProperty(
+        name="backlight insert",
+        default=False,
+    )
+
+    includeDiffuser: BoolProperty(
+        name="Diffuser",
+        default=False,
+    )
+
+    diffuserTopThickness: FloatProperty(
+        name="diffuser top thickness",
+        default=0.0006,
+        min=0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    stripPerimetre: BoolProperty(
+        name="Strip glued around Perimetre",
+        default=False,
+    )
+
+    stripWidth: FloatProperty(
+        name="LED strip width",
+        default=0.004,
+        min=0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    stripThickness: FloatProperty(
+        name="LED thickness",
+        default=0.002,
+        min=0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH",
+    )
+
+    stripBendRadius: FloatProperty(
+        name="LED strip bend radius",
+        default=0.0015,
         min=0,
         max=0.100,
         precision=4,
@@ -163,37 +282,92 @@ class CamCurveIntarsion(Operator):
             context.active_object.type in ["CURVE", "FONT"]
         )
 
+    def draw(self, context):
+        """Draws the user interface layout for interlock type properties.
+
+        This method is responsible for creating and displaying the layout of
+        various properties related to different interlock types in the user
+        interface. It dynamically adjusts the layout based on the selected
+        interlock type, allowing users to input relevant parameters such as
+        dimensions, tolerances, and other characteristics specific to the chosen
+        interlock type.
+
+        Args:
+            context: The context in which the layout is being drawn, typically
+                provided by the user interface framework.
+
+        Returns:
+            None: This method does not return any value; it modifies the layout
+                directly.
+        """
+
+        layout = self.layout
+        layout.prop(self, "diameter")
+        layout.prop(self, "tolerance")
+        layout.prop(self, "backlight")
+        layout.prop(self, "perimeter_cut")
+        layout.prop(self, "base_thickness")
+        layout.prop(self, "intarsion_thickness")
+        layout.prop(self, "backlight_depth_from_bottom")
+        layout.prop(self, "resolution")
+        layout.prop(self, "keep_outer")
+        if self.keep_outer:
+            layout.prop(self, "includeStandoff")
+            if self.includeStandoff:
+                layout.prop(self, "standoffHeight")
+                layout.prop(self, "standoffSilhouette")
+            layout.prop(self, "includeBacklightInsert")
+            layout.prop(self, "includeDiffuser")
+            if self.includeDiffuser:
+                layout.prop(self, "diffuserTopThickness")
+                layout.prop(self, "stripPerimetre")
+                if self.stripPerimetre:
+                    layout.prop(self, "stripWidth")
+                layout.prop(self, "stripThickness")
+                layout.prop(self, "stripBendRadius")
+
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
 
-        remove_multiple("intarsion_")
+        remove_multiple("intarsion_")  # Clear previous intarsion
 
         for ob in selected:
             ob.select_set(True)  # select original curves
+            bpy.ops.object.duplicate()
+            bpy.ops.object.convert(target="CURVE")
+            bpy.context.object.data.resolution_u = self.resolution
+            remove_doubles()
+            bpy.context.object.data.dimensions = "2D"
+            original_copy = bpy.context.active_object
 
         #  Perimeter cut largen then intarsion pocket externally, optional
 
-        # make the diameter 5% larger and compensate for backlight
-        diam = self.diameter * 1.05 + self.backlight * 2
-        silhouette_offset(context, -diam / 2)
+        # make the diameter 2.5% larger and compensate for backlight
+        diam = self.diameter * 1.025 + self.backlight * 2
 
+        silhouette_offset(context, -diam / 2)
         o1 = bpy.context.active_object
+
         silhouette_offset(context, diam)
         o2 = bpy.context.active_object
+
         silhouette_offset(context, -diam / 2)
         o3 = bpy.context.active_object
+        o3.name = "intarsion_pocket"  # this is the pocket for intarsion
+
+        #        delete o1 and o2 temporary working curves
         o1.select_set(True)
         o2.select_set(True)
         o3.select_set(False)
-        # delete o1 and o2 temporary working curves
         bpy.ops.object.delete(use_global=False)
-        o3.name = "intarsion_pocket"  # this is the pocket for intarsion
+
         bpy.context.object.location[2] = -self.intarsion_thickness
 
-        if self.perimeter_cut > 0.0:
+        if self.perimeter_cut > 0.0 and not self.keep_outer:
             silhouette_offset(context, self.perimeter_cut)
-            bpy.context.active_object.name = "intarsion_perimeter"
-            bpy.context.object.location[2] = -self.base_thickness
+            extrude_curve2mesh(self.base_thickness)
+            active_name("intarsion_perimeter")
+            move(z=-self.base_thickness)
             bpy.ops.object.select_all(action="DESELECT")  # deselect new curve
 
         o3.select_set(True)
@@ -202,18 +376,20 @@ class CamCurveIntarsion(Operator):
         # make smaller curve for material profile
         silhouette_offset(context, -self.tolerance / 2)
         bpy.context.object.location[2] = self.intarsion_thickness
-        o4 = bpy.context.active_object
-        bpy.context.active_object.name = "intarsion_profil"
-        o4.select_set(False)
+        intarsion_profile = bpy.context.active_object
+        active_name("intarsion_profile")
 
-        if self.backlight > 0.0:  # Make a smaller curve for backlighting purposes
+        if (
+            self.backlight > 0.0 and not self.keep_outer
+        ):  # Make a smaller curve for backlighting purposes
             silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
-            bpy.context.active_object.name = "intarsion_backlight"
-            bpy.context.object.location[2] = (
-                -self.backlight_depth_from_top - self.intarsion_thickness
-            )
-            o4.select_set(True)
+            _intarsion_backlight = active_name("_intarsion_backlight")
+            extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom)
+
+            intarsion_profile.select_set(True)
         o3.select_set(True)
+###
+        remove_multiple("_")
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -226,7 +402,7 @@ class CamCurveSimpleOvercuts(Operator):
 
     bl_idname = "object.curve_overcuts"
     bl_label = "Simple Fillet Overcuts"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(
         name="Diameter",
@@ -289,7 +465,7 @@ class CamCurveSimpleOvercuts(Operator):
                         v1 = v1.xy  # Vector((v1.x,v1.y,0))
                         v2 = Vector(c.coords[i2]) - Vector(co)
                         v2 = v2.xy  # v2 = Vector((v2.x,v2.y,0))
-                        if not v1.length == 0 and not v2.length == 0:
+                        if v1.length != 0 and v2.length != 0:
                             a = v1.angle_signed(v2)
                             sign = 1
 
@@ -308,10 +484,10 @@ class CamCurveSimpleOvercuts(Operator):
                                     shape = circle(diameter / 2, 64)
                                     shape = shapely.affinity.translate(shape, p.x, p.y)
                                 else:
-                                    l = tan(a / 2) * diameter / 2
-                                    p1 = p - sign * v * l
-                                    l = shapely.geometry.LineString((p, p1))
-                                    shape = l.buffer(diameter / 2, resolution=64)
+                                    line = tan(a / 2) * diameter / 2
+                                    p1 = p - sign * v * line
+                                    line = shapely.geometry.LineString((p, p1))
+                                    shape = line.buffer(diameter / 2, resolution=64)
 
                                 if sign > 0:
                                     negative_overcuts.append(shape)
@@ -338,7 +514,7 @@ class CamCurveBoneFilletOvercuts(Operator):
 
     bl_idname = "object.curve_overcuts_b"
     bl_label = "Bone Fillet Overcuts"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(
         name="Tool Diameter",
@@ -410,22 +586,22 @@ class CamCurveBoneFilletOvercuts(Operator):
         sign = -1 if self.do_invert else 1
         isTBone = self.style == "TBONE"
         # indexes in insideCorner tuple
-        POS, V1, V2, A, IDX = range(5)
+        _POS, V1, V2, _A, IDX = range(5)
 
         def add_overcut(a):
             nonlocal pos, centerv, radius, extendedv, sign, negative_overcuts, positive_overcuts
             # move the overcut shape center position 1 radius in direction v
             pos -= centerv * radius
-            log.info(f"abs(a) {abs(a)}")
+            log.info(f"abs(a): {abs(a)}")
             if abs(a) <= pi / 2 + 0.0001:
-                log.info("<=pi/2")
+                log.info("<=pi/2: True")
                 shape = circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
             else:  # elongate overcut circle to make sure tool bit can fit into slot
-                log.info(">pi/2")
+                log.info(">pi/2: True")
                 p1 = pos + (extendedv * radius)
-                l = shapely.geometry.LineString((pos, p1))
-                shape = l.buffer(radius, resolution=64)
+                line = shapely.geometry.LineString((pos, p1))
+                shape = line.buffer(radius, resolution=64)
 
             if sign > 0:
                 negative_overcuts.append(shape)
@@ -492,7 +668,7 @@ class CamCurveBoneFilletOvercuts(Operator):
                         v1 = Vector(co).xy - Vector(c.coords[i1]).xy
                         v2 = Vector(c.coords[i2]).xy - Vector(co).xy
 
-                        if not v1.length == 0 and not v2.length == 0:
+                        if v1.length != 0 and v2.length != 0:
                             a = v1.angle_signed(v2)
                             insideCornerFound = False
                             outsideCornerFound = False
@@ -537,9 +713,8 @@ class CamCurveBoneFilletOvercuts(Operator):
                     # check if t-bone processing required
                     # if no inside corners then nothing to do
                     if isTBone and len(insideCorners) > 0:
-                        log.info(
-                            f"Corner Count {cornerCnt} Inside Corner Count {len(insideCorners)}"
-                        )
+                        log.info(f"Corner Count: {cornerCnt}")
+                        log.info(f"Inside Corner Count: {len(insideCorners)}")
                         # process all of the inside corners
                         for i, corner in enumerate(insideCorners):
                             pos, v1, v2, a, idx = corner
@@ -547,44 +722,48 @@ class CamCurveBoneFilletOvercuts(Operator):
                             # if prev corner is outside corner
                             # calc index distance between current corner and prev
                             prevCorner = get_corner(i, -1)
-                            log.info(f"First: {i} {idx} {prevCorner[IDX]}")
+                            log.info(heading(f"First: {i} {idx} {prevCorner[IDX]}"))
                             if get_corner_delta(prevCorner[IDX], idx) == 1:
                                 # make sure there is an outside corner
-                                log.info(get_corner_delta(get_corner(i, -2)[IDX], idx))
+                                log.info(
+                                    f"Corner Delta: {get_corner_delta(get_corner(i, -2)[IDX], idx)}"
+                                )
                                 if get_corner_delta(get_corner(i, -2)[IDX], idx) > 2:
                                     set_other_edge(v1, v2, a)
-                                    log.info("First Won")
+                                    log.info("First: Won")
                                     continue
 
                             nextCorner = get_corner(i, 1)
-                            log.info(f"Second: {i} {idx} {nextCorner[IDX]}")
+                            log.info(heading(f"Second: {i} {idx} {nextCorner[IDX]}"))
                             if get_corner_delta(idx, nextCorner[IDX]) == 1:
                                 # make sure there is an outside corner
-                                log.info(get_corner_delta(idx, get_corner(i, 2)[IDX]))
+                                log.info(
+                                    f"Corner Delta: {get_corner_delta(idx, get_corner(i, 2)[IDX])}"
+                                )
                                 if get_corner_delta(idx, get_corner(i, 2)[IDX]) > 2:
-                                    log.info("Second Won")
+                                    log.info("Second: Won")
                                     set_other_edge(-v2, -v1, a)
                                     continue
 
-                            log.info("Third")
+                            log.info(heading("Third"))
                             if get_corner_delta(prevCorner[IDX], idx) == 3:
                                 # check if they share the same edge
                                 a1 = v1.angle_signed(prevCorner[V2]) * 180.0 / pi
-                                log.info(f"Third Won {a1}")
+                                log.info(f"Third: Won {a1}")
                                 if a1 < -135 or a1 > 135:
                                     set_other_edge(-v2, -v1, a)
                                     continue
 
-                            log.info("Fourth")
+                            log.info(heading("Fourth"))
                             if get_corner_delta(idx, nextCorner[IDX]) == 3:
                                 # check if they share the same edge
                                 a1 = v2.angle_signed(nextCorner[V1]) * 180.0 / pi
-                                log.info(f"Fourth Won {a1}")
+                                log.info(f"Fourth: Won {a1}")
                                 if a1 < -135 or a1 > 135:
                                     set_other_edge(v1, v2, a)
                                     continue
 
-                            log.info("***No Win***")
+                            log.info(heading("No Win"))
                             # the default if no other rules pass
                             set_center_offset(a)
 
@@ -605,8 +784,13 @@ class CamCurveRemoveDoubles(Operator):
     """Remove Duplicate Points from the Selected Curve"""
 
     bl_idname = "object.curve_remove_doubles"
-    bl_label = "Remove Curve Doubles"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_label = "Validate/Remove Curve Doubles"
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
+
+    validateCurve: BoolProperty(
+        name="Validate curve",
+        default=False,
+    )
 
     merge_distance: FloatProperty(
         name="Merge distance",
@@ -626,40 +810,50 @@ class CamCurveRemoveDoubles(Operator):
 
     def execute(self, context):
         obj = bpy.context.selected_objects
-        for ob in obj:
-            if ob.type == "CURVE":
-                if self.keep_bezier:
-                    if ob.data.splines and ob.data.splines[0].type == "BEZIER":
-                        # Switch to Curve Edit Mode
-                        bpy.ops.object.mode_set(mode="EDIT")
-                        # Curve Operators should now Poll correctly
-                        bpy.ops.curvetools.operatorsplinesremoveshort()
-                        bpy.context.view_layer.objects.active = ob
-                        ob.data.resolution_u = 64
-                        bpy.ops.curve.select_all()
-                        bpy.ops.curve.remove_double(distance=self.merge_distance)
-                        # Switch back to OBJECT mode only after finishing curve ops
-                        bpy.ops.object.mode_set(mode="OBJECT")
-
+        if self.validateCurve:  # validate curve
+            error_msg = curve_validate()
+            if error_msg is not None:
+                if error_msg == "Valid Geometry":
+                    self.report({"INFO"}, error_msg)
                 else:
-                    self.merge_distance = 0
-                    bpy.ops.object.mode_set(mode="OBJECT")
-                    bpy.ops.object.convert(target="MESH")
-                    bpy.ops.object.mode_set(mode="EDIT")
-                    bpy.ops.mesh.select_all(action="SELECT")
-                    bpy.ops.mesh.remove_doubles(threshold=self.merge_distance)
-                    bpy.ops.object.mode_set(mode="OBJECT")
-                    bpy.ops.object.convert(target="CURVE")
+                    validation_error = "Validation Error\n" + error_msg
+                    self.report({"ERROR"}, validation_error)
+        else:
+            for ob in obj:
+                if ob.type == "CURVE":
+                    if self.keep_bezier:
+                        if ob.data.splines and ob.data.splines[0].type == "BEZIER":
+                            # Switch to Curve Edit Mode
+                            bpy.ops.object.mode_set(mode="EDIT")
+                            # Curve Operators should now Poll correctly
+                            bpy.ops.curvetools.operatorsplinesremoveshort()
+                            bpy.context.view_layer.objects.active = ob
+                            ob.data.resolution_u = 64
+                            bpy.ops.curve.select_all()
+                            bpy.ops.curve.remove_double(distance=self.merge_distance)
+                            # Switch back to OBJECT mode only after finishing curve ops
+                            bpy.ops.object.mode_set(mode="OBJECT")
+
+                    else:
+                        self.merge_distance = 0
+                        bpy.ops.object.mode_set(mode="OBJECT")
+                        bpy.ops.object.convert(target="MESH")
+                        bpy.ops.object.mode_set(mode="EDIT")
+                        bpy.ops.mesh.select_all(action="SELECT")
+                        bpy.ops.mesh.remove_doubles(threshold=self.merge_distance)
+                        bpy.ops.object.mode_set(mode="OBJECT")
+                        bpy.ops.object.convert(target="CURVE")
 
         return {"FINISHED"}
 
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        if obj.type == "CURVE":
-            if obj.data.splines and obj.data.splines[0].type == "BEZIER":
-                layout.prop(self, "keep_bezier", text="Keep Bezier")
-        layout.prop(self, "merge_distance", text="Merge Distance")
+        if obj.type == "CURVE" and obj.data.splines and obj.data.splines[0].type == "BEZIER":
+            layout.prop(self, "keep_bezier", text="Keep Bezier")
+        layout.prop(self, "validateCurve", text="Validate Curve")
+        if not self.validateCurve:
+            layout.prop(self, "merge_distance", text="Merge Distance")
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -670,7 +864,7 @@ class CamMeshGetPockets(Operator):
 
     bl_idname = "object.mesh_get_pockets"
     bl_label = "Get Pocket Surfaces"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     threshold: FloatProperty(
         name="Horizontal Threshold",
@@ -683,7 +877,7 @@ class CamMeshGetPockets(Operator):
     )
     z_limit: FloatProperty(
         name="Z Limit",
-        description="Maximum z height considered for pocket operation, " "default is 0.0",
+        description="Maximum z height considered for pocket operation, default is 0.0",
         default=0.0,
         min=-1000.0,
         max=1000.0,
@@ -708,31 +902,34 @@ class CamMeshGetPockets(Operator):
                 bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type="FACE")
                 bpy.ops.mesh.select_all(action="DESELECT")
                 bpy.ops.object.editmode_toggle()
-                i = 0
-                for face in mesh.polygons:
+
+                for i, face in enumerate(mesh.polygons):
                     # n = mw @ face.normal
                     n = face.normal.to_4d()
                     n.w = 0
                     n = (mw @ n).to_3d().normalized()
+
                     if n.z > self.threshold:
                         face.select = True
                         z = (mw @ mesh.vertices[face.vertices[0]].co).z
+
                         if z < self.z_limit:
                             if pockets.get(z) is None:
                                 pockets[z] = [i]
                             else:
                                 pockets[z].append(i)
-                    i += 1
-                log.info(len(pockets))
-                for p in pockets:
-                    log.info(p)
-                ao = bpy.context.active_object
-                i = 0
-                for p in pockets:
-                    log.info(i)
-                    i += 1
 
+                log.info(f"Pockets: {len(pockets)}")
+
+                for p in pockets:
+                    log.info(f"Pocket: {p}")
+
+                ao = bpy.context.active_object
+
+                for i, p in enumerate(pockets):
+                    log.info(f"Pocket: {i}")
                     sf = pockets[p]
+
                     for face in mesh.polygons:
                         face.select = False
 
@@ -778,7 +975,7 @@ class CamOffsetSilhouete(Operator):
 
     bl_idname = "object.silhouette_offset"
     bl_label = "Silhouette & Offset"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     offset: FloatProperty(
         name="Offset",
@@ -798,15 +995,27 @@ class CamOffsetSilhouete(Operator):
     )
     style: EnumProperty(
         name="Corner Type",
-        items=(("1", "Round", ""), ("2", "Mitre", ""), ("3", "Bevel", "")),
+        items=(
+            ("1", "Round", ""),
+            ("2", "Mitre", ""),
+            ("3", "Bevel", ""),
+        ),
     )
     caps: EnumProperty(
         name="Cap Type",
-        items=(("round", "Round", ""), ("square", "Square", ""), ("flat", "Flat", "")),
+        items=(
+            ("round", "Round", ""),
+            ("square", "Square", ""),
+            ("flat", "Flat", ""),
+        ),
     )
     align: EnumProperty(
         name="Alignment",
-        items=(("worldxy", "World XY", ""), ("bottom", "Base Bottom", ""), ("top", "Base Top", "")),
+        items=(
+            ("worldxy", "World XY", ""),
+            ("bottom", "Base Bottom", ""),
+            ("top", "Base Top", ""),
+        ),
     )
     open_type: EnumProperty(
         name="Curve Type",
@@ -833,13 +1042,8 @@ class CamOffsetSilhouete(Operator):
         end_pt = geom.interpolate(1, normalized=True)
         straight_dist = start_pt.distance(end_pt)
         if straight_dist == 0.0:
-            if length == 0.0:
-                return True
-            return False
-        elif length / straight_dist == 1:
-            return True
-        else:
-            return False
+            return length == 0.0
+        return length / straight_dist == 1
 
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
@@ -883,9 +1087,7 @@ class CamOffsetSilhouete(Operator):
             point = 0
 
         # extract X,Y coordinates from the vertices data and put them into a LineString object
-        coords = []
-        for v in obj.data.vertices:
-            coords.append((v.co.x, v.co.y))
+        coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
         remove_multiple("temp_mesh")  # delete temporary mesh
         remove_multiple("dilation")  # delete old dilation objects
 
@@ -898,7 +1100,7 @@ class CamOffsetSilhouete(Operator):
 
         # make the dilate or open curve offset
         if (self.open_type != "closecurve") and ob.type == "CURVE":
-            log.info(f"line length= {round(line.length * 1000)}mm")
+            log.info(f"Line Length: {round(line.length * 1000)}mm")
 
             if self.style == "3":
                 style = "bevel"
@@ -908,10 +1110,9 @@ class CamOffsetSilhouete(Operator):
                 style = "round"
 
             if self.open_type == "leaveopen":
-                new_shape = shapely.offset_curve(
-                    line, self.offset, join_style=style
-                )  # use shapely to expand without closing the curve
-                name = "Offset: " + "%.2f" % round(self.offset * 1000) + "mm - " + ob.name
+                new_shape = shapely.offset_curve(line, self.offset, join_style=style)
+                # use shapely to expand without closing the curve
+                name = f"Offset: {round(self.offset * 1000):.2f}mm - {ob.name}"
             else:
                 new_shape = line.buffer(
                     self.offset,
@@ -919,8 +1120,9 @@ class CamOffsetSilhouete(Operator):
                     resolution=16,
                     join_style=style,
                     mitre_limit=self.mitre_limit,
-                )  # use shapely to expand, closing the curve
-                name = "Dilation: " + "%.2f" % round(self.offset * 1000) + "mm - " + ob.name
+                )
+                # use shapely to expand, closing the curve
+                name = f"Dilation: {round(self.offset * 1000):.2f}mm - {ob.name}"
 
             # create the actual offset object based on the Shapely offset
             shapely_to_curve(name, new_shape, 0, self.open_type != "leaveopen")
@@ -957,7 +1159,7 @@ class CamObjectSilhouette(Operator):
 
     bl_idname = "object.silhouette"
     bl_label = "Object Silhouette"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):

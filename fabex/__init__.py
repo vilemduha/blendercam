@@ -3,46 +3,47 @@
 Import Modules, Register and Unregister  Classes
 """
 
-# Python Standard Library
-import subprocess
-import sys
-
-# pip Wheels
-import opencamlib
-import shapely
-
-# Blender Library
 import bpy
 from bpy.props import CollectionProperty
 
-# Relative Imports - from 'cam' module
+# Relative Imports - from 'fabex' module
 from .engine import (
     FABEX_ENGINE,
     get_panels,
 )
 from .operators import (
     register as ops_register,
+)
+from .operators import (
     unregister as ops_unregister,
 )
+from .preferences import CamAddonPreferences
 from .properties import (
     register as props_register,
+)
+from .properties import (
     unregister as props_unregister,
 )
 from .properties.operation_props import CAM_OPERATION_Properties
-from .preferences import CamAddonPreferences
 from .ui import (
     register as ui_register,
+)
+from .ui import (
     unregister as ui_unregister,
 )
 from .ui.icons import (
     register as icons_register,
+)
+from .ui.icons import (
     unregister as icons_unregister,
 )
 from .utilities.addon_utils import (
-    on_blender_startup,
     keymap_register,
     keymap_unregister,
-    on_engine_change,
+    on_blender_startup,
+)
+from .utilities.addon_utils import (
+    on_engine_change as on_engine_change,
 )
 from .utilities.thread_utils import timer_update
 
@@ -53,7 +54,6 @@ classes = (
 
 
 def register() -> None:
-
     # Register classes from the list above
     for cls in classes:
         bpy.utils.register_class(cls)

@@ -1,24 +1,23 @@
-import time, bmesh
+import time
 
+import bmesh
+import bpy
 import numpy as np
-from shapely.ops import unary_union
 from shapely.geometry import (
     MultiPolygon,
     Polygon,
 )
-
-import bpy
+from shapely.ops import unary_union
 
 from .curve_utils import (
-    curve_to_shapely,
     curve_to_chunks,
+    curve_to_shapely,
 )
 from .image_utils import (
     image_to_chunks,
     render_sample_image,
 )
-
-from .logging_utils import log
+from .logging_utils import heading, log
 from .shapely_utils import (
     chunks_to_shapely,
     shapely_to_curve,
@@ -135,7 +134,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
         if totfaces < 20000000:
             # boolean polygons method originaly was 20 000 poly limit, now limitless,
             t = time.time()
-            log.info("Shapely Getting Silhouette")
+            log.info("Status: Shapely Getting Silhouette")
             # polys = [] #removed EH
 
             for ob in objects:
@@ -148,12 +147,12 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
                     m = ob.data
 
                 mw = ob.matrix_world
-                mwi = mw.inverted()
+                # mwi = mw.inverted()
                 r = ob.rotation_euler
                 m.calc_loop_triangles()
                 id = 0
                 e = 0.000001
-                scaleup = 100
+                # scaleup = 100
 
                 for tri in m.loop_triangles:
                     n = tri.normal.copy()
@@ -255,8 +254,8 @@ def get_operation_silhouette(operation):
         Silhouette: The computed silhouette for the operation.
     """
     if operation.update_silhouette_tag:
-        image = None
-        objects = None
+        # image = None
+        # objects = None
 
         if operation.geometry_source in ["OBJECT", "COLLECTION"]:
             if not operation.onlycurves:
@@ -294,7 +293,7 @@ def get_operation_silhouette(operation):
             operation.silhouette = chunks_to_shapely(chunks)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
-            log.info("~ Object Method for Retrieving Silhouette ~")
+            log.info(heading("Object Method for Retrieving Silhouette"))
             operation.silhouette = get_object_silhouette(
                 stype,
                 objects=operation.objects,
@@ -327,19 +326,16 @@ def get_object_outline(radius, o, Offset):
     # circle detail, optimize, optimize thresold.
 
     polygons = get_operation_silhouette(o)
-    i = 0
 
     offset = 1 if Offset else -1
 
     outlines = []
-    i = 0
 
     join = 2 if o.straight else 1
 
     polygon_list = polygons if isinstance(polygons, list) else polygons.geoms
 
-    for p1 in polygon_list:  # sort by size before this???
-        i += 1
+    for i, p1 in enumerate(polygon_list):  # sort by size before this???
         if radius > 0:
             p1 = p1.buffer(
                 radius * offset,

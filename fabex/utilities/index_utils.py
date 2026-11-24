@@ -1,15 +1,10 @@
-"""Fabex 'index_utils.py' © 2012 Vilem Novak
-"""
-
-from pathlib import Path
-
-import shapely
+"""Fabex 'index_utils.py' © 2012 Vilem Novak"""
 
 import bpy
 
-from .simple_utils import activate
-from .orient_utils import rotation_to_2_axes
 from .logging_utils import log
+from .orient_utils import rotation_to_2_axes
+from .simple_utils import activate
 
 
 def prepare_indexed(o):
@@ -31,6 +26,7 @@ def prepare_indexed(o):
     # first store objects positions/rotations
     o.matrices = []
     o.parents = []
+
     for ob in o.objects:
         o.matrices.append(ob.matrix_world.copy())
         o.parents.append(ob.parent)
@@ -38,27 +34,29 @@ def prepare_indexed(o):
     # then rotate them
     for ob in o.objects:
         ob.select_set(True)
-    s.objects.active = ob
-    bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
 
+    activate(ob)
+    bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
     s.cursor.location = (0, 0, 0)
-    oriname = o.name + " orientation"
+    oriname = f"{o.name}_Orientation"
     ori = s.objects[oriname]
     o.orientation_matrix = ori.matrix_world.copy()
     o.rotationaxes = rotation_to_2_axes(ori.rotation_euler, "CA")
     ori.select_set(True)
-    s.objects.active = ori
+    activate(ori)
     # we parent all objects to the orientation object
     bpy.ops.object.parent_set(type="OBJECT", keep_transform=True)
+
     for ob in o.objects:
         ob.select_set(False)
+
     # then we move the orientation object to 0,0
     bpy.ops.object.location_clear()
     bpy.ops.object.rotation_clear()
     ori.select_set(False)
+
     for ob in o.objects:
         activate(ob)
-
         bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
 
 
@@ -77,7 +75,7 @@ def cleanup_indexed(operation):
     """
 
     s = bpy.context.scene
-    oriname = operation.name + "orientation"
+    oriname = f"{operation.name}_Orientation"
 
     path_name = s.cam_names.path_name_full
 

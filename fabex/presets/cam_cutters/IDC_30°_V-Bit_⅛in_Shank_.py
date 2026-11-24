@@ -1,6 +1,7 @@
 ### IDC_30°_V-Bit_⅛in_Shank_.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
 correction = 0.0254

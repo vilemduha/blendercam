@@ -3,21 +3,19 @@
 Class to store all Addon preferences.
 """
 
-import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
-    IntProperty,
     StringProperty,
 )
 from bpy.types import AddonPreferences
 
 from . import __package__ as base_package
 from .utilities.version_utils import (
+    get_llvmlite_version,
+    get_numba_version,
     opencamlib_version,
     shapely_version,
-    get_numba_version,
-    get_llvmlite_version,
 )
 
 
@@ -474,26 +472,26 @@ class CamAddonPreferences(AddonPreferences):
             if ocl_version is None:
                 l_col.label(text="OpenCAMLib is not Installed")
             else:
-                l_col.label(text=f"OpenCAMLib")
+                l_col.label(text="OpenCAMLib")
                 r_col.label(text=f"v{ocl_version}")
             # Shapely Version
             shape_version = shapely_version()
             if shape_version is None:
                 l_col.label(text="Shapely is not Installed")
             else:
-                l_col.label(text=f"Shapely")
+                l_col.label(text="Shapely")
                 r_col.label(text=f"v{shape_version}")
             # Numba Version
             numba_version = get_numba_version()
             if numba_version is None:
                 l_col.label(text="Numba is not Installed")
             else:
-                l_col.label(text=f"Numba")
+                l_col.label(text="Numba")
                 r_col.label(text=f"v{numba_version}")
             # LLVMLite Version
             llvmlite_version = get_llvmlite_version()
             if llvmlite_version is None:
                 l_col.label(text="LLVMLite is not Installed")
             else:
-                l_col.label(text=f"LLVMLite")
+                l_col.label(text="LLVMLite")
                 r_col.label(text=f"v{llvmlite_version}")

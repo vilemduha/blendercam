@@ -1,6 +1,7 @@
 ### Cadence_⅛in_Downtown_Jenny_Downshear.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
 correction = 0.0254

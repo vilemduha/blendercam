@@ -3,7 +3,8 @@
 Operators and Menus for CAM Machine, Cutter and Operation Presets.
 """
 
-import bpy
+from typing import ClassVar
+
 from bl_operators.presets import AddPresetBase
 from bpy.types import Operator
 
@@ -17,11 +18,11 @@ class AddPresetCamCutter(AddPresetBase, Operator):
     bl_label = "Add Cutter Preset"
     preset_menu = "CAM_CUTTER_MT_presets"
 
-    preset_defines = [
+    preset_defines: ClassVar = [
         "d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
     ]
 
-    preset_values = [
+    preset_values: ClassVar = [
         "d.cutter_id",
         "d.cutter_type",
         "d.cutter_diameter",
@@ -41,7 +42,7 @@ class AddPresetCamOperation(AddPresetBase, Operator):
     bl_label = "Add Operation Preset"
     preset_menu = "CAM_OPERATION_MT_presets"
 
-    preset_defines = [
+    preset_defines: ClassVar = [
         "from pathlib import Path",
         "if '__file__' in globals(): bpy.ops.scene.cam_operation_add()",
         "scene = bpy.context.scene",
@@ -49,7 +50,7 @@ class AddPresetCamOperation(AddPresetBase, Operator):
         "if '__file__' in globals(): o.name = f'OP_{o.object_name}_{scene.cam_active_operation + 1}_{Path(__file__).stem}'",
     ]
 
-    preset_values = [
+    preset_values: ClassVar = [
         "o.info.duration",
         "o.info.chipload",
         "o.info.warnings",
@@ -145,8 +146,11 @@ class AddPresetCamMachine(AddPresetBase, Operator):
     bl_label = "Add Machine Preset"
     preset_menu = "CAM_MACHINE_MT_presets"
 
-    preset_defines = ["d = bpy.context.scene.cam_machine", "s = bpy.context.scene.unit_settings"]
-    preset_values = [
+    preset_defines: ClassVar = [
+        "d = bpy.context.scene.cam_machine",
+        "s = bpy.context.scene.unit_settings",
+    ]
+    preset_values: ClassVar = [
         "d.post_processor",
         "d.unit_system",
         "d.use_position_definitions",

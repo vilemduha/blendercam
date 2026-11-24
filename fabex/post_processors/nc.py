@@ -56,91 +56,72 @@ class Creator:
 
     def program_begin(self, id, name=""):
         """Begin a program"""
-        pass
 
     def add_stock(self, type_name, params):
         pass
 
     def program_stop(self, optional=False):
         """Stop the machine"""
-        pass
 
     def program_end(self):
         """End the program"""
-        pass
 
     def flush_nc(self):
         """Flush all pending codes"""
-        pass
 
     ############################################################################
     # Subprograms
 
     def sub_begin(self, id, name=""):
         """Begin a subprogram"""
-        pass
 
     def sub_call(self, id):
         """Call a subprogram"""
-        pass
 
     def sub_end(self):
         """Return from a subprogram"""
-        pass
 
     ############################################################################
     # Settings
 
     def imperial(self):
         """Set imperial units"""
-        pass
 
     def metric(self):
         """Set metric units"""
-        pass
 
     def absolute(self):
         """Set absolute coordinates"""
-        pass
 
     def incremental(self):
         """Set incremental coordinates"""
-        pass
 
     def polar(self, on=True):
         """Set polar coordinates"""
-        pass
 
     def set_plane(self, plane):
         """Set plane"""
-        pass
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Set temporary origin G92"""
-        pass
 
     def remove_temporary_origin(self):
         """Remote temporary origin G92.1"""
-        pass
 
     ############################################################################
     # Tools
 
     def tool_change(self, id):
         """Change the tool"""
-        pass
 
     def tool_defn(self, id, name="", params=None):
         """Define a tool"""
-        pass
 
     def offset_radius(self, id, radius=None):
         """Set tool radius offsetting"""
-        pass
 
     def offset_length(self, id, length=None):
         """Set tool length offsetting"""
-        pass
 
     def current_tool(self):
         return None
@@ -150,19 +131,15 @@ class Creator:
 
     def datum_shift(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Shift the datum"""
-        pass
 
     def datum_set(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Set the datum"""
-        pass
 
     def workplane(self, id):
         """Set the workplane"""
-        pass
 
     def clearanceplane(self, z=None):
         """set clearance plane"""
-        pass
 
     ############################################################################
     # APT360 like Transformation Definitions
@@ -173,89 +150,69 @@ class Creator:
         self, a1=None, b1=None, c1=None, a2=None, b2=None, c2=None, a3=None, b3=None, c3=None
     ):
         """Create a matrix for transformations"""
-        pass
 
     def translate(self, x=None, y=None, z=None):
         """Translate in x,y,z direction"""
-        pass
 
     def rotate(self, xyrot=None, yzrot=None, zxrot=None, angle=None):
         """Rotate about a coordinate axis"""
-        pass
 
     def scale(self, k=None):
         """Scale by factor k"""
-        pass
 
     def matrix_product(self, matrix1=None, matrix2=None):
         """Create matrix that is the product of two other matrices"""
-        pass
 
     def mirror_plane(self, plane1=None, plane2=None, plane3=None):
         """Mirror image about one or more coordinate planes"""
-        pass
 
     def mirror_line(self, line=None):
         """Mirror about a line"""
-        pass
 
     ############################################################################
     ##	Rates + Modes
 
     def feedrate(self, f):
         """Set the feedrate"""
-        pass
 
     def feedrate_hv(self, fh, fv):
         """Set the horizontal and vertical feedrates"""
-        pass
 
     def spindle(self, s, clockwise=True):
         """Set the spindle speed"""
-        pass
 
     def coolant(self, mode=0):
         """Set the coolant mode"""
-        pass
 
     def gearrange(self, gear=0):
         """Set the gear range"""
-        pass
 
     ############################################################################
     # Moves
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Rapid move"""
-        pass
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Feed move"""
-        pass
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         """Clockwise arc move"""
-        pass
 
     def arc_ccw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         """Counterclockwise arc move"""
-        pass
 
     def dwell(self, t):
         """Dwell"""
-        pass
 
     def rapid_home(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Rapid relative to home position"""
-        pass
 
     def rapid_unhome(self):
         """Return from rapid home"""
-        pass
 
     def set_machine_coordinates(self):
         """Set machine coordinates"""
-        pass
 
     ############################################################################
     # Cutter radius compensation
@@ -269,15 +226,12 @@ class Creator:
 
     def pattern(self):
         """Simple pattern eg. circle, rect"""
-        pass
 
     def pocket(self):
         """Pocket routine"""
-        pass
 
     def profile(self):
         """Profile routine"""
-        pass
 
     def drill(
         self,
@@ -291,7 +245,6 @@ class Creator:
         rapid_to_clearance=None,
     ):
         """Drilling routines"""
-        pass
 
     # original prototype was:
     # def tap(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None):
@@ -317,7 +270,6 @@ class Creator:
         direction=None,
     ):
         """Tapping routines"""
-        pass
 
     def bore(
         self,
@@ -337,7 +289,6 @@ class Creator:
         stop=False,
     ):
         """Boring routines"""
-        pass
 
     def end_canned_cycle(self):
         pass
@@ -347,23 +298,18 @@ class Creator:
 
     def comment(self, text):
         """Insert a comment"""
-        pass
 
     def insert(self, text):
         """APT style INSERT statement"""
-        pass
 
     def block_delete(self, on=False):
         """block to ignore if block delete switch is on"""
-        pass
 
     def variable(self, id):
         """Insert a variable"""
-        pass
 
     def variable_set(self, id, value):
         """Set a variable"""
-        pass
 
     def probe_linear_centre_outside(self, x1=None, y1=None, depth=None, x2=None, y2=None):
         pass
@@ -459,39 +405,30 @@ class Creator:
 
     def wipe(self):
         """wipe routine"""
-        pass
 
     def extruder_on(self):
         """Turn on the extruder"""
-        pass
 
     def extruder_off(self):
         """turn off the extruder"""
-        pass
 
     def set_extruder_flowrate(self, flowrate):
         """Set the flowrate for the extruder"""
-        pass
 
     def extruder_temp(self, temp):
         """Set the extruder temp in celsius"""
-        pass
 
     def fan_on(self):
         """turn on the cooling fan"""
-        pass
 
     def fan_off(self):
         """turn off the cooling fan"""
-        pass
 
     def build_bed_temp(self, temp):
         """Set the bed temp in celsius"""
-        pass
 
     def chamber_temp(self, temp):
         """Set the chamber temp in celsius"""
-        pass
 
     def begin_ncblock(self):
         # if the moves have come from backplotting nc code, then the nc code text can be given with these three functions
@@ -848,7 +785,7 @@ def bore(
         zretract,
         depth,
         standoff,
-        dwell_Bottom,
+        dwell_bottom,
         feed_in,
         feed_out,
         stoppos,
@@ -866,9 +803,9 @@ def end_canned_cycle():
 def peck(count, first, last=None, step=0.0):
     pecks = []
     peck = first
-    if last == None:
+    if last is None:
         last = first
-    for i in range(0, count):
+    for i in range(count):
         pecks.append(peck)
         if peck - step > last:
             peck -= step

@@ -4,25 +4,23 @@ from math import (
     tan,
 )
 
+import bpy
+from mathutils import Euler, Vector
 from shapely import affinity
 from shapely.geometry import Polygon
 
-import bpy
-from mathutils import Euler, Vector
-
 from ..operators.curve_create_ops import generate_crosshatch
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
-    sort_chunks,
     set_chunks_z,
+    sort_chunks,
 )
 from ..utilities.geom_utils import (
     circle,
     helix,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -30,14 +28,13 @@ from ..utilities.operation_utils import (
 )
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import (
-    shapely_to_curve,
     shapely_to_chunks,
+    shapely_to_curve,
 )
 from ..utilities.silhouette_utils import get_object_outline
 from ..utilities.simple_utils import (
     activate,
     join_multiple,
-    progress,
     remove_multiple,
 )
 
@@ -60,10 +57,9 @@ async def pocket(o):
         based on the pocketing operation.
     """
 
-    log.info("Strategy: Pocket")
+    log.info(heading("Strategy: Pocket"))
 
     join = 2 if o.straight else 1
-    scene = bpy.context.scene
     remove_multiple("3D_poc")
     max_depth = check_min_z(o) + o.skin
     cutter_angle = radians(o.cutter_tip_angle / 2)
@@ -76,8 +72,7 @@ async def pocket(o):
     elif o.cutter_type == "BALLCONE":
         cutter_offset = -max_depth * tan(cutter_angle) + o.ball_radius
 
-    if cutter_offset > o.cutter_diameter / 2:
-        cutter_offset = o.cutter_diameter / 2
+    cutter_offset = min(cutter_offset, o.cutter_diameter / 2)
 
     cutter_offset += o.skin  # add skin
     log.info(f"Cutter Offset: {cutter_offset}")
@@ -150,14 +145,12 @@ async def pocket(o):
         approximate_area = (min(size_x, size_y) / stepover) / 2
 
         log.info(f"Approximative: {approximate_area}")
-        log.info(o.name)
+        log.info(f"Object: {o.name}")
 
         i = 0
         chunks = []
         last_chunks = []
-        centers = None
-        first_outline = point  # for testing in the end.
-        prest = point.buffer(-cutter_offset, circle_detail)
+        point.buffer(-cutter_offset, circle_detail)
 
         while not point.is_empty:
             if o.pocket_to_curve:
@@ -189,7 +182,8 @@ async def pocket(o):
             parent_child_distance(last_chunks, nchunks, o)
             last_chunks = nchunks
             percent = int(i / approximate_area * 100)
-            progress("Outlining Polygons ", percent)
+            log.info(f"Outlining Polygons: {percent}")
+            # progress("Outlining Polygons ", percent)
             point = pnew
             i += 1
 
@@ -257,16 +251,23 @@ async def pocket(o):
 
                         # invert helix if not the typical direction
                         if conventional_CW or climb_CCW:
-                            inverse_helix = []
-
-                            for vector in entry_helix:
-                                inverse_helix.append(
-                                    (
-                                        2 * point[0] - vector[0],
-                                        vector[1],
-                                        vector[2],
-                                    )
+                            inverse_helix = [
+                                (
+                                    2 * point[0] - vector[0],
+                                    vector[1],
+                                    vector[2],
                                 )
+                                for vector in entry_helix
+                            ]
+
+                            # for vector in entry_helix:
+                            #     inverse_helix.append(
+                            #         (
+                            #             2 * point[0] - vector[0],
+                            #             vector[1],
+                            #             vector[2],
+                            #         )
+                            #     )
 
                             entry_helix = inverse_helix
 
@@ -292,10 +293,13 @@ async def pocket(o):
                     vector_2 = Vector(chunk.get_point(i))
                     vector = vector_1 - vector_2
 
-                    while vector.length == 0:
-                        i = i - 1
+                    while vector.length == 0 and abs(i) < len(chunk.points):
+                        i -= 1
                         vector_2 = Vector(chunk.get_point(i))
                         vector = vector_1 - vector_2
+
+                    if vector.length == 0:
+                        continue  # all points identical — cannot compute entry helix direction
 
                     vector.normalize()
                     rotate_angle = Vector((vector.x, vector.y)).angle_signed(Vector((1, 0)))

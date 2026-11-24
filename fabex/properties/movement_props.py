@@ -5,7 +5,6 @@
 
 from math import pi
 
-import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -13,11 +12,10 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from ..utilities.operation_utils import update_operation
 from ..constants import (
     PRECISION,
-    G64_INCOMPATIBLE_MACHINES,
 )
+from ..utilities.operation_utils import update_operation
 
 
 class CAM_MOVEMENT_Properties(PropertyGroup):
@@ -136,13 +134,13 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 
     ramp: BoolProperty(
         name="Ramp-in - EXPERIMENTAL",
-        description="Ramps down the whole contour, so the cutline looks " "like helix",
+        description="Ramps down the whole contour, so the cutline looks like helix",
         default=False,
         update=update_operation,
     )
     zig_zag_ramp: BoolProperty(
         name="Zigzag_ramp - EXPERIMENTAL",
-        description="Ramps down the whole contour, so the cutline looks " "like zigzag_",
+        description="Ramps down the whole contour, so the cutline looks like zigzag_",
         default=False,
         update=update_operation,
     )

@@ -1,5 +1,4 @@
-"""Fabex 'material_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'material_utils.py' © 2012 Vilem Novak"""
 
 import bpy
 
@@ -30,7 +29,7 @@ def add_transparent_material(ob, mname, color, alpha):
     else:
         mat = bpy.data.materials.new(name=mname)
         mat.use_nodes = True
-        bsdf = mat.node_tree.nodes["Principled BSDF"]
+        mat.node_tree.nodes["Principled BSDF"]
 
         # Assign it to object
         if ob.data.materials:
@@ -55,14 +54,22 @@ def add_material_area_object():
     None
     """
 
-    s = bpy.context.scene
-    operation = s.cam_operations[s.cam_active_operation]
+    scene = bpy.context.scene
+
+    if (
+        not hasattr(scene, "cam_operations")
+        or len(scene.cam_operations) == 0
+        or scene.cam_active_operation >= len(scene.cam_operations)
+    ):
+        return
+
+    operation = scene.cam_operations[scene.cam_active_operation]
     get_operation_sources(operation)
     get_bounds(operation)
 
     ao = bpy.context.active_object
-    if s.objects.get("CAM_Material") is not None:
-        o = s.objects["CAM_Material"]
+    if scene.objects.get("CAM_Material") is not None:
+        o = scene.objects["CAM_Material"]
     else:
         bpy.ops.mesh.primitive_cube_add(
             align="WORLD", enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0)
@@ -74,7 +81,7 @@ def add_material_area_object():
 
         # addTranspMat(o, 'blue_transparent', (0.458695, 0.794658, 0.8), 0.1)
         o.display_type = "WIRE"
-        o.color = s.cam_material.wire_color  # (1, 1, 1, 1)
+        o.color = scene.cam_material.wire_color  # (1, 1, 1, 1)
         o.hide_render = True
         o.hide_select = True
         o.select_set(state=True, view_layer=None)
@@ -107,5 +114,5 @@ def update_material(self, context):
         context: The context in which the material update is performed.
     """
 
-    log.info("Update Material")
+    log.info("Status: Updated Material")
     add_material_area_object()

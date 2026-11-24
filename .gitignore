@@ -1,31 +1,21 @@
-config/bookmarks.txt
-/python
-/datafiles
-/scripts/freestyle/
-/scripts/modules/
-/scripts/startup/
-/scripts/templates_osl/
-/scripts/templates_py/
-/scripts/addons_contrib/
 *.spi1d
 *.pyc
 *.ocio
 *.spi3d
-*.blend1
-config/recent-files.txt
-scripts/addons_contrib/add_mesh_rocks/add_mesh_rocks.xml
-scripts/addons_contrib/online_mat_lib/material-library/bundled/cycles/wood/rough_pine.bcm
-acp
-syncWithUpstream
-forceSyncWithUpstream
+# *.blend1
+*.zip
 
-\.idea/
-
+.venv
+.env
 .vscode
-
 .project
-
 .pydevproject
-__pycache__/
+.pytest_cache
+.ruff_cache
 # profiler output files
 *.prof
+.idea
+
+__pycache__/
+.DS_Store
+Thumbs.db

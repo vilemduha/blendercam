@@ -1,0 +1,145 @@
+name: Build Split Platform Extension
+on:
+  workflow_dispatch:
+    inputs:
+        version_bump:
+          description: 'New version:'
+          required: true
+          default: 'patch'
+          type: choice
+          options:
+          - overwrite previous tag
+          - minor
+          - major
+          - patch
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest']
+        blender_version: ['5.2']
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v5
+    - name: Install Blender
+      uses: bradyajohnston/setup-blender@v5
+      with:
+        version: ${{ matrix.blender_version }}
+
+    # Check out the Fabex repo
+    - name: Checkout repository
+      uses: actions/checkout@v4.1.1
+
+    - name: Bump version
+      shell: python
+      env:
+        VERSION_BUMP: ${{ inputs.version_bump }} 
+      run: |
+        from pathlib import Path
+        import re
+        import os
+
+        # Path to the file with the version number
+        v_file=Path("fabex","version.py")
+        version_txt=v_file.read_text()
+
+        # Separate each number in the version into its own variable
+        major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
+
+        # Convert from String to Integer to add numbers
+        major=int(major)
+        minor=int(minor)
+        patch=int(patch)
+
+        # Get the release type - patch, minor or major
+        bump = os.getenv("VERSION_BUMP")
+
+        # Increase the version and clear lower numbers
+        # When a minor version is released, patch is reset to zero
+        # For a major version, patch and minor are both reset
+        if bump=='patch':
+          patch+=1
+        elif bump=='minor':
+          minor+=1
+          patch=0
+        elif bump=='major':
+          major+=1
+          minor=0
+          patch=0
+
+        # Write the new number to the version file
+        v_file.write_text(f"__version__=({major},{minor},{patch})")
+
+        # Update in blender_manifest for Blender to read
+        toml_file=Path("fabex","blender_manifest.toml")
+        toml_text=toml_file.read_text()
+        version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
+        toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',toml_text)
+        toml_file.write_text(toml_text)
+
+        # Write the version number to an env file for the 'make release' action
+        env_file = Path(os.getenv('GITHUB_ENV'))  
+        env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+
+        print(f"New version: {major}.{minor}.{patch}")
+
+    - name: Write version number
+      if: ${{ inputs.version_bump }} != "overwrite previous tag"
+      run: |
+        git config --global user.name 'Release robot'
+        git config --global user.email 'release-robot@users.noreply.github.com'
+        git commit -am "Version number" || true
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+
+    # Build the Extension using Blender
+    - name: Build Extension
+      id: build
+      shell: bash
+      run: |
+        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath=fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}.zip
+
+    # Upload the Linux Extension file for download
+    - name: Upload Linux Build
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-${{ env.OS }}_${{env.ARCH}}
+        path: ./fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-${{ env.OS }}_${{env.ARCH}}.zip
+
+    # Upload the Windows Extension file for download
+    - name: Upload Windows Build
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-windows_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-windows_x64.zip
+
+    # Upload the Mac x64 Extension file for download
+    - name: Upload Mac x86 Build
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-macos_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-macos_x64.zip
+
+    # Upload the Mac ARM Extension file for download
+    - name: Upload Mac ARM Build
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-macos_arm64
+        path: ./fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}-macos_arm64.zip
+
+    - name: make release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "./fabex-*.zip"
+        tag: ${{ env.VERSION_TAG }}
+        allowUpdates: true
+        bodyFile: './docs/RELEASE.md'

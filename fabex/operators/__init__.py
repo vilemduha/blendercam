@@ -32,12 +32,12 @@ from .curve_equation_ops import (
     CamSineCurve,
 )
 from .curve_tools_ops import (
+    CamCurveBoneFilletOvercuts,
     CamCurveBoolean,
     CamCurveConvexHull,
     CamCurveIntarsion,
-    CamCurveSimpleOvercuts,
-    CamCurveBoneFilletOvercuts,
     CamCurveRemoveDoubles,
+    CamCurveSimpleOvercuts,
     CamMeshGetPockets,
     CamObjectSilhouette,
     CamOffsetSilhouete,
@@ -53,13 +53,13 @@ from .operation_ops import (
 from .orient_op import CamOrientationAdd
 from .pack_op import CamPackObjects
 from .path_ops import (
+    CalculatePath,
+    KillPathsBackground,
     PathExport,
     PathExportChain,
     PathsAll,
     PathsBackground,
     PathsChain,
-    KillPathsBackground,
-    CalculatePath,
 )
 from .position_op import CAM_MATERIAL_PositionObject
 from .preset_ops import (
@@ -70,7 +70,6 @@ from .preset_ops import (
 )
 from .simulation_ops import CAMSimulate, CAMSimulateChain
 from .slice_op import CamSliceObjects
-
 
 classes = [
     DoBasRelief,

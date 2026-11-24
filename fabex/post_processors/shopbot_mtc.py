@@ -11,13 +11,11 @@
 # 		4.	get arcs working
 #
 
-from . import nc
-import math
-from .format import Format
-from .format import *
-
 # to allow access to other CAM data:
 import bpy
+
+from . import nc
+from .format import Format
 
 ################################################################################
 
@@ -51,7 +49,7 @@ class Creator(nc.Creator):
         return ""
 
     def COMMENT(self, comment):
-        return "' %s" % comment
+        return f"' {comment}"
 
     def TOOL(self):
         return "T%i" + self.SPACE() + "M06"
@@ -140,7 +138,7 @@ class Creator(nc.Creator):
     ##	Rates + Modes
 
     def feedrate(self, f):
-        if self.metric_flag == True:
+        if self.metric_flag:
             self.write("MS," + (self.sfmt.string(f)) + "," + (self.sfmt.string(f)) + "\n")
         else:
             self.write(
@@ -159,41 +157,41 @@ class Creator(nc.Creator):
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         # different commands for X only, or Y only, or Z only, or (X and Y), or (X, Y, and Z)
-        if x != None and y != None and z != None:
+        if x is not None and y is not None and z is not None:
             self.write("J3," + (self.fmt.string(x * self.unitscale)))
             self.write("," + (self.fmt.string(y * self.unitscale)))
             self.write("," + (self.fmt.string(z * self.unitscale)))
             self.write("\n")
-        elif x != None and y != None and z == None:
+        elif x is not None and y is not None and z is None:
             self.write("J2," + (self.fmt.string(x * self.unitscale)))
             self.write("," + (self.fmt.string(y * self.unitscale)))
             self.write("\n")
-        elif x != None:
+        elif x is not None:
             self.write("JX," + (self.fmt.string(x * self.unitscale)) + "\n")
-        elif y != None:
+        elif y is not None:
             self.write("JY," + (self.fmt.string(y * self.unitscale)) + "\n")
-        elif z != None:
+        elif z is not None:
             self.write("JZ," + (self.fmt.string(z * self.unitscale)) + "\n")
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        if x != None and y != None and z != None:
+        if x is not None and y is not None and z is not None:
             self.write("M3," + (self.fmt.string(x * self.unitscale)))
             self.write("," + (self.fmt.string(y * self.unitscale)))
             self.write("," + (self.fmt.string(z * self.unitscale)))
             self.write("\n")
-        elif x != None and y != None and z == None:
+        elif x is not None and y is not None and z is None:
             self.write("M2," + (self.fmt.string(x * self.unitscale)))
             self.write("," + (self.fmt.string(y * self.unitscale)))
             self.write("\n")
-        elif x != None:
+        elif x is not None:
             self.write("MX," + (self.fmt.string(x * self.unitscale)) + "\n")
-        elif y != None:
+        elif y is not None:
             self.write("MY," + (self.fmt.string(y * self.unitscale)) + "\n")
-        elif z != None:
+        elif z is not None:
             self.write("MZ," + (self.fmt.string(z * self.unitscale)) + "\n")
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
-        if r != None:
+        if r is not None:
             self.write("CG," + self.fmt.string(r * self.unitscale * 2))
             self.write("," + self.fmt.string(x * self.unitscale))
             self.write("," + self.fmt.string(y * self.unitscale))
@@ -208,7 +206,6 @@ class Creator(nc.Creator):
             self.write("," + self.fmt.string(j * self.unitscale))
             self.write(",T,1")
             self.write("\n")
-        return
 
     ############################################################################
     # CRC
@@ -220,7 +217,7 @@ class Creator(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
     def variable(self, id):
         return self.VARIABLE() % id

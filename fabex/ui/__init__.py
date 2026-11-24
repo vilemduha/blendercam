@@ -4,18 +4,16 @@ Import UI, Register and Unregister Classes
 """
 
 import bpy
-from bpy.props import PointerProperty
 
-from .menus.import_gcode import TOPBAR_MT_import_gcode
 from .menus.curve_creators import VIEW3D_MT_tools_add, VIEW3D_MT_tools_create
 from .menus.curve_tools import VIEW3D_MT_tools_curvetools
+from .menus.import_gcode import TOPBAR_MT_import_gcode
 from .menus.preset_menus import (
     CAM_CUTTER_MT_presets,
     CAM_MACHINE_MT_presets,
     CAM_OPERATION_MT_presets,
 )
-from .menus.viewport import Fabex_SubMenu, Fabex_Menu
-
+from .menus.viewport import Fabex_Menu, Fabex_SubMenu
 from .panels.area_panel import CAM_AREA_Panel
 from .panels.blank_panel import CAM_BLANK_Panel
 from .panels.chains_panel import (
@@ -36,12 +34,10 @@ from .panels.op_properties_panel import CAM_OPERATION_PROPERTIES_Panel
 from .panels.operations_panel import CAM_OPERATIONS_Panel
 from .panels.optimisation_panel import CAM_OPTIMISATION_Panel
 from .panels.popup_panel import CAM_Popup_Panel
-
 from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
 from .pie_menu.pie_chains import VIEW3D_MT_PIE_Chains
-from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
 from .pie_menu.pie_operation import VIEW3D_MT_PIE_Operation
-
+from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
 
 classes = [
     # .menus
